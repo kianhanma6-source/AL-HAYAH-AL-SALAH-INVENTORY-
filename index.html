@@ -67,16 +67,19 @@
             z-index:10;
             margin: auto;
         }
-        .login-logo{
+        
+    width.login-logo{
     width:120px;
     height:120px;
     margin:auto;
     display:block;
-    object-fit:cover;
-    
-    border:4px solid #38bdf8; /* palitan ng kulay na asul o alisin din */
-    box-shadow: 0 0 0 4px #38bdf8, 0 0 30px rgba(56,189,248,.8), 0 15px 35px rgba(0,0,0,.2);
-        }
+    object-fit:contain; /* ✅ Ito para buong logo makita at hindi maputol */
+    background: transparent !important; /* ✅ Walang kulay sa likod */
+    padding:0; /* ✅ Tanggalin ang espasyo sa paligid */
+    border: none; /* ✅ Tanggalin ang border */
+    box-shadow: none; /* ✅ Tanggalin ang anino kung ayaw mo rin */
+}
+
         .login-box .title{ text-align:center; color:#fff; font-size:24px; font-weight:bold; margin-top:18px; }
         .login-box .subtitle{ text-align:center; color:#7dd3fc; margin-top:8px; font-size:15px; }
         .login-box .system{ text-align:center; margin-top:8px; margin-bottom:25px; color:#facc15; font-size:18px; font-weight:bold; }
