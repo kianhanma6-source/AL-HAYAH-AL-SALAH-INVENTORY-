@@ -70,18 +70,16 @@
         
     
 .login-logo {
-    width: 100%;          /* Sasakupin ang buong width ng container */
-    max-width: 100%;      /* Siguradong hindi lalampas sa container */
-    height: auto;         /* Pananatilihing tama ang ratio ng logo */
-    margin: 0 auto 20px;  /* 0 sa gilid, 20px space sa ilalim */
+    width: 100%;          /* Gagawin nitong 100% ang lapad base sa parent container */
+    max-width: 100%;      /* Sisiguraduhin na aabot ito sa mismong dulo */
+    height: auto;
     display: block;
+    margin: 0 auto 20px;
+    padding: 0;           /* Siguraduhing 0 ang padding */
+    border-radius: 0;     /* Dahil rectangle ang logo */
     object-fit: contain;
-    border-radius: 0;     /* Alisin ang curve dahil square na ang fit */
-    background: transparent !important;
-    padding: 0;           /* Alisin ang padding para dumikit sa gilid */
-    border: none;
-    box-shadow: none;
 }
+
 
 
 
