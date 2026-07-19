@@ -70,17 +70,17 @@
         
     
 .login-logo {
-    width: 200px;         /* I-adjust ang lapad ayon sa gusto mo */
-    height: auto;         /* Awtomatikong a-adjust ang taas para hindi ma-distort ang logo */
-    margin: auto;
+    width: 100%;          /* Sasakupin ang buong width ng container */
+    max-width: 100%;      /* Siguradong hindi lalampas sa container */
+    height: auto;         /* Pananatilihing tama ang ratio ng logo */
+    margin: 0 auto 20px;  /* 0 sa gilid, 20px space sa ilalim */
     display: block;
     object-fit: contain;
-    border-radius: 10px;  /* Gawing bahagyang kurbado ang kanto (optional) */
+    border-radius: 0;     /* Alisin ang curve dahil square na ang fit */
     background: transparent !important;
-    padding: 0;
+    padding: 0;           /* Alisin ang padding para dumikit sa gilid */
     border: none;
     box-shadow: none;
-    margin-bottom: 20px;  /* Distansya sa ilalim para hindi dikit sa INVENTORY SYSTEM */
 }
 
 
