@@ -70,27 +70,30 @@
         }
        
         /* ALISIN ANG PUTING BILOG SA PAIKOT NG LOGO SA LOGIN PAGE LANG AT GAWING CLEAR */
-        .login-logo {
-            width: 110px;
-            height: 110px;
-            object-fit: contain;
-            margin: 0 auto 10px auto;
-            display: block;
-            border-radius: 0 !important;
-            background: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
+           .login-logo {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 215, 0, 0.7);
+        box-shadow: 
+            0 8px 16px rgba(0, 0, 0, 0.5),
+            inset 0 2px 4px rgba(255, 255, 255, 0.4),
+            0 0 15px rgba(255, 215, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: block;
+        margin: 0 auto 15px auto;
+        background: transparent;
+    }
 
-        /* WAREHOUSE INVENTORY SYSTEM TITLE SA LOGIN PAGE */
-        .login-system-title {
-            color: #facc15;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+    .login-logo:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 12px 20px rgba(0, 0, 0, 0.6),
+            inset 0 2px 4px rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
 
         .login-box .title{ text-align:center; color:#fff; font-size:24px; font-weight:bold; margin-top:18px; }
         .login-box .subtitle{ text-align:center; color:#7dd3fc; margin-top:8px; font-size:15px; }
