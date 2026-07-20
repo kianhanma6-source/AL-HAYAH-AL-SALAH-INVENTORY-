@@ -42,8 +42,8 @@
             content:"";
             position:fixed;
             inset:0;
-            background: radial-gradient(circle,#38bdf855 1px,transparent 1px);
-            background-size:60px 60px;
+            background: radial-gradient(circle,#38bdf855 2px,transparent 2px);
+            background-size:80px 80px;
             animation:movebg 25s linear infinite;
             z-index: 1;
         }
@@ -67,27 +67,18 @@
             z-index:10;
             margin: auto;
         }
-        
- /* GLASSMORPHISM LOGIN BOX - I-update ang bahaging ito */
-.login-logo{
-    width:120px;
-    height:120px;
-    margin:auto;
-    display:block;
-    /* Binago: object-fit ginawang contain para fit ang buong logo */
-    object-fit:contain; 
-    border-radius:50%;
-    /* Binago: Tinanggal ang background:#fff para transparent */
-    background: transparent; 
-    padding:6px;
-    border:4px solid #38bdf8; /* Ginawang blue ang border para mas bumagay sa theme */
-    box-shadow: 0 0 0 4px rgba(56,189,248,0.3), 0 0 30px rgba(56,189,248,.8), 0 15px 35px rgba(0,0,0,.45);
-}
-
-
-
-
-
+        .login-logo{
+            width:120px;
+            height:120px;
+            margin:auto;
+            display:block;
+            object-fit:cover;
+            border-radius:50%;
+            background:#fff;
+            padding:6px;
+            border:4px solid #fff;
+            box-shadow: 0 0 0 4px #38bdf8, 0 0 30px rgba(56,189,248,.8), 0 15px 35px rgba(0,0,0,.45);
+        }
         .login-box .title{ text-align:center; color:#fff; font-size:24px; font-weight:bold; margin-top:18px; }
         .login-box .subtitle{ text-align:center; color:#7dd3fc; margin-top:8px; font-size:15px; }
         .login-box .system{ text-align:center; margin-top:8px; margin-bottom:25px; color:#facc15; font-size:18px; font-weight:bold; }
@@ -224,8 +215,9 @@
 
 <div id="loginPage" class="login-box">
     <img src="logo.png" class="login-logo" alt="Logo">
-    <br></br>
-    <h2 class="system">INVENTORY SYSTEM</h2>
+    <div class="title">AL HAYAH AL SALAH</div>
+    <div class="subtitle">ELECTRONICS DEVICES AND REPAIR</div>
+    <div class="system">INVENTORY SYSTEM</div>
     
     <input type="text" id="user" placeholder="👤 Username" autocomplete="username">
     
