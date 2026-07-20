@@ -198,19 +198,18 @@
         .search-actions{ display:flex; gap:8px; align-items: center; justify-content: flex-end; flex-shrink: 0; }
         
         /* PRINT HEADER SET UP */
-        .print-header{ display:none; margin-bottom:20px; border-bottom: 2px solid #000; padding-bottom: 15px; text-align: center; }
-        .print-header-flex{ display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; }
-        .print-logo { width: 65px; height: 65px; object-fit: cover; border-radius: 50% !important; flex-shrink: 0; }
+        .print-header{ display:none; margin-bottom:15px; border-bottom: 2px solid #000; padding-bottom: 10px; text-align: center; }
+        .print-header-flex{ display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 8px; }
+        .print-logo { width: 55px; height: 55px; object-fit: cover; border-radius: 50% !important; flex-shrink: 0; }
         .print-header-text { display: flex; flex-direction: column; text-align: left; }
-        .print-header h2{ color:#000; margin-bottom:2px; font-size:18px; font-weight: bold; }
-        .print-header p{ color:#333; font-size:10px; font-weight: bold; text-transform: uppercase; }
-        .print-report-title { text-align: left; font-size: 13px; font-weight: bold; margin: 10px 0 5px 0; text-transform: uppercase; color: #000; }
-        .print-date-generated { text-align: left; font-size: 11px; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .print-header h2{ color:#000; margin-bottom:2px; font-size:16px; font-weight: bold; }
+        .print-header p{ color:#333; font-size:9px; font-weight: bold; text-transform: uppercase; }
+        .print-report-title { text-align: left; font-size: 12px; font-weight: bold; margin: 8px 0 3px 0; text-transform: uppercase; color: #000; }
+        .print-date-generated { text-align: left; font-size: 10px; font-weight: bold; margin-bottom: 8px; color: #333; }
         
         /* PREPARED BY SIGNATURE FOOTER FOR PRINT */
-        .print-signature-section { display: none; margin-top: 40px; width: 100%; page-break-inside: avoid; }
-        .print-signature-box { float: right; width: 250px; text-align: left; font-size: 12px; color: #000; }
-        .print-signature-line { border-top: 1px solid #000; margin-top: 45px; padding-top: 5px; text-align: center; font-weight: bold; }
+        .print-signature-section { display: none; margin-top: 25px; width: 100%; page-break-inside: avoid; }
+        .print-signature-box { float: right; width: 250px; text-align: left; font-size: 13px; color: #000; }
 
         @media (max-width:768px) {
             .form-group { flex-direction: column; align-items: flex-start; gap: 5px; }
@@ -241,12 +240,32 @@
             .tab-content.active, .tab-content.active .card{
                 display:block !important; padding:0 !important; box-shadow:none !important; margin:0 !important; width:100% !important; background: transparent !important; border: none !important;
             }
-            .print-header { display: block !important; }
+            
+            /* REPEAT HEADER ON EVERY PAGE */
+            .print-header { 
+                display: block !important; 
+                break-before: page;
+                page-break-before: always;
+            }
+            .tab-content.active .card:nth-of-type(2) .print-header {
+                display: block !important;
+                break-before: auto !important;
+                page-break-before: auto !important;
+                break-inside: avoid;
+            }
+
+            @page {
+                size: A4 landscape;
+                margin: 0.5cm 0.8cm 0.5cm 0.8cm;
+                @top-center {
+                    content: "";
+                }
+            }
+
             .print-signature-section { display: block !important; }
             table{ border:1px solid #000 !important; font-size:11px; width:100%; table-layout:auto; background: white !important; }
-            th, td{ border:1px solid #000 !important; padding:8px 6px; white-space: normal !important; text-align:left; color: black !important; background: transparent !important; }
+            th, td{ border:1px solid #000 !important; padding:6px 5px; white-space: normal !important; text-align:left; color: black !important; background: transparent !important; }
             th{background:#e2e8f0 !important; color:black !important; font-weight:bold;}
-            @page{size: A4 landscape; margin: 0.8cm;}
         }
     </style>
 </head>
@@ -300,18 +319,6 @@
                 </div>
             </div>
             
-            <div class="print-header">
-                <div class="print-header-flex">
-                    <img src="logo.png" class="print-logo" alt="Company Logo">
-                    <div class="print-header-text">
-                        <h2>AL HAYAH AL SAHLAH</h2>
-                        <p>Electronics Devices and Repair</p>
-                    </div>
-                </div>
-                <div class="print-report-title">RETURNED WM REPORT</div>
-                <div class="print-date-generated" id="printDateRet">Date Generated: </div>
-            </div>
-            
             <div class="form-group">
                 <label>TRANS NO.</label>
                 <input type="text" id="retTrans" readonly>
@@ -350,19 +357,29 @@
             </div>
         </div>
         <div class="card">
+            <div class="print-header">
+                <div class="print-header-flex">
+                    <img src="logo.png" class="print-logo" alt="Company Logo">
+                    <div class="print-header-text">
+                        <h2>AL HAYAH AL SAHLAH</h2>
+                        <p>Electronics Devices and Repair</p>
+                    </div>
+                </div>
+                <div class="print-report-title">RETURNED WM REPORT</div>
+                <div class="print-date-generated" id="printDateRet">Date Generated: </div>
+            </div>
             <h4>📋 RETURNED WM HISTORY</h4>
             <div class="table-responsive">
                 <table id="retList">
-                    <thead><tr><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
+                    <thead><tr><th>No.</th><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="print-signature-section">
                 <div class="print-signature-box">
                     Prepared by:<br>
-                    <span id="sigNameRet" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
-                    <span id="sigPosRet" style="font-style: italic; color: #444;"></span>
-                    <div class="print-signature-line">Signature over Printed Name</div>
+                    <span id="sigNameRet" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                    <span id="sigPosRet" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
                 </div>
             </div>
         </div>
@@ -379,18 +396,6 @@
                     <button class="btn-sm" onclick="exportExcelResult('acc')">📊 Excel</button>
                     <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
                 </div>
-            </div>
-            
-            <div class="print-header">
-                <div class="print-header-flex">
-                    <img src="logo.png" class="print-logo" alt="Company Logo">
-                    <div class="print-header-text">
-                        <h2>AL HAYAH AL SAHLAH</h2>
-                        <p>Electronics Devices and Repair</p>
-                    </div>
-                </div>
-                <div class="print-report-title">ACCOMPLISHMENT REPORT</div>
-                <div class="print-date-generated" id="printDateAcc">Date Generated: </div>
             </div>
             
             <input type="hidden" id="accKey">
@@ -437,19 +442,29 @@
             </div>
         </div>
         <div class="card">
+            <div class="print-header">
+                <div class="print-header-flex">
+                    <img src="logo.png" class="print-logo" alt="Company Logo">
+                    <div class="print-header-text">
+                        <h2>AL HAYAH AL SAHLAH</h2>
+                        <p>Electronics Devices and Repair</p>
+                    </div>
+                </div>
+                <div class="print-report-title">ACCOMPLISHMENT REPORT</div>
+                <div class="print-date-generated" id="printDateAcc">Date Generated: </div>
+            </div>
             <h4>📋 ACCOMPLISHMENT HISTORY</h4>
             <div class="table-responsive">
                 <table id="accList">
-                    <thead><tr><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
+                    <thead><tr><th>No.</th><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="print-signature-section">
                 <div class="print-signature-box">
                     Prepared by:<br>
-                    <span id="sigNameAcc" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
-                    <span id="sigPosAcc" style="font-style: italic; color: #444;"></span>
-                    <div class="print-signature-line">Signature over Printed Name</div>
+                    <span id="sigNameAcc" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                    <span id="sigPosAcc" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
                 </div>
             </div>
         </div>
@@ -474,18 +489,6 @@
                         <button class="btn-sm" onclick="exportExcelResult('inv')">📊 Excel</button>
                         <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
                     </div>
-                </div>
-                
-                <div class="print-header">
-                    <div class="print-header-flex">
-                        <img src="logo.png" class="print-logo" alt="Company Logo">
-                        <div class="print-header-text">
-                            <h2>AL HAYAH AL SAHLAH</h2>
-                            <p>Electronics Devices and Repair</p>
-                        </div>
-                    </div>
-                    <div class="print-report-title">INVENTORY STATUS REPORT</div>
-                    <div class="print-date-generated" id="printDateInv">Date Generated: </div>
                 </div>
                 
                 <input type="hidden" id="matOrigName">
@@ -524,19 +527,29 @@
                 </div>
             </div>
             <div class="card">
+                <div class="print-header">
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">INVENTORY STATUS REPORT</div>
+                    <div class="print-date-generated" id="printDateInv">Date Generated: </div>
+                </div>
                 <h4>📦 INVENTORY STATUS</h4>
                 <div class="table-responsive">
                     <table id="matList">
-                        <thead><tr><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th><th>LAST UPDATED</th></tr></thead>
+                        <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th><th>LAST UPDATED</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 <div class="print-signature-section">
                     <div class="print-signature-box">
                         Prepared by:<br>
-                        <span id="sigNameInv" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
-                        <span id="sigPosInv" style="font-style: italic; color: #444;"></span>
-                        <div class="print-signature-line">Signature over Printed Name</div>
+                        <span id="sigNameInv" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                        <span id="sigPosInv" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
                     </div>
                 </div>
             </div>
@@ -552,18 +565,6 @@
                         <button class="btn-sm" onclick="exportExcelResult('dep')">📊 Excel</button>
                         <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
                     </div>
-                </div>
-                
-                <div class="print-header">
-                    <div class="print-header-flex">
-                        <img src="logo.png" class="print-logo" alt="Company Logo">
-                        <div class="print-header-text">
-                            <h2>AL HAYAH AL SAHLAH</h2>
-                            <p>Electronics Devices and Repair</p>
-                        </div>
-                    </div>
-                    <div class="print-report-title">DEPLOYMENT LOGS REPORT</div>
-                    <div class="print-date-generated" id="printDateDep">Date Generated: </div>
                 </div>
                 
                 <div class="form-row-2col">
@@ -626,19 +627,29 @@
                 </div>
             </div>
             <div class="card">
+                <div class="print-header">
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">DEPLOYMENT LOGS REPORT</div>
+                    <div class="print-date-generated" id="printDateDep">Date Generated: </div>
+                </div>
                 <h4>🚚 DEPLOYMENT LOGS</h4>
                 <div class="table-responsive">
                     <table id="depList">
-                        <thead><tr><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
+                        <thead><tr><th>No.</th><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 <div class="print-signature-section">
                     <div class="print-signature-box">
                         Prepared by:<br>
-                        <span id="sigNameDep" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
-                        <span id="sigPosDep" style="font-style: italic; color: #444;"></span>
-                        <div class="print-signature-line">Signature over Printed Name</div>
+                        <span id="sigNameDep" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                        <span id="sigPosDep" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
                     </div>
                 </div>
             </div>
@@ -669,16 +680,15 @@
                 <h4>📊 LIVE STOCK MONITORING</h4>
                 <div class="table-responsive">
                     <table id="monList">
-                        <thead><tr><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th></tr></thead>
+                        <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 <div class="print-signature-section">
                     <div class="print-signature-box">
                         Prepared by:<br>
-                        <span id="sigNameMon" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
-                        <span id="sigPosMon" style="font-style: italic; color: #444;"></span>
-                        <div class="print-signature-line">Signature over Printed Name</div>
+                        <span id="sigNameMon" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                        <span id="sigPosMon" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
                     </div>
                 </div>
             </div>
@@ -722,7 +732,7 @@
             <h4>👤 USER LIST</h4>
             <div class="table-responsive">
                 <table id="userList">
-                    <thead><tr><th>USERNAME</th><th>ACCOUNT NAME</th><th>POSITION</th><th>ROLE</th></tr></thead>
+                    <thead><tr><th>No.</th><th>USERNAME</th><th>ACCOUNT NAME</th><th>POSITION</th><th>ROLE</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -1218,8 +1228,8 @@ function loadRet(){
     retData = loadData('returned', []);
     let list = getFilteredRet();
     let tb = document.getElementById('retList').querySelector('tbody'); tb.innerHTML='';
-    if(!list.length) return tb.innerHTML='<tr><td colspan="6" class="empty">No Records Found</td></tr>';
-    list.forEach(x=>tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`);
+    if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Records Found</td></tr>';
+    list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${index + 1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`);
 }
 function fillRet(t){
     let x = retData.find(i=>i.transNo===t);
@@ -1270,8 +1280,8 @@ function loadAcc() {
     accData = loadData('accomplish', []);
     let list = getFilteredAcc();
     let tb = document.getElementById('accList').querySelector('tbody'); tb.innerHTML='';
-    if(!list.length) return tb.innerHTML='<tr><td colspan="5" class="empty">No Records Found</td></tr>';
-    list.forEach(x=>tb.innerHTML+=`<tr onclick="fillAcc('${x.key}')"><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`);
+    if(!list.length) return tb.innerHTML='<tr><td colspan="6" class="empty">No Records Found</td></tr>';
+    list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillAcc('${x.key}')"><td>${index + 1}</td><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`);
 }
 function fillAcc(key) {
     let x = accData.find(i => String(i.key) === String(key));
@@ -1331,8 +1341,8 @@ function addMat(){
 function loadInventory(){
     matData = loadData('inventory', INITIAL_INVENTORY);
     let list = getFilteredInv(); let tb = document.getElementById('matList').querySelector('tbody'); tb.innerHTML='';
-    if(!list.length) return tb.innerHTML='<tr><td colspan="5" class="empty">No Items Found</td></tr>';
-    list.forEach(x=>{ let st = getStockStatus(x.qty, x.unit); tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; });
+    if(!list.length) return tb.innerHTML='<tr><td colspan="6" class="empty">No Items Found</td></tr>';
+    list.forEach((x, index)=>{ let st = getStockStatus(x.qty, x.unit); tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${index + 1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; });
 }
 
 function fillMat(name) {
@@ -1500,21 +1510,13 @@ function addDep(){
 function loadDep(){
     depData = loadData('deployment', []);
     let list = getFilteredDep(); let tb = document.getElementById('depList').querySelector('tbody'); tb.innerHTML='';
-    if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Deployment Records</td></tr>';
+    if(!list.length) return tb.innerHTML='<tr><td colspan="8" class="empty">No Deployment Records</td></tr>';
     
-    let grouped = {};
+    let counter = 1;
     list.forEach(x => {
-        if(!grouped[x.transNo]) grouped[x.transNo] = [];
-        grouped[x.transNo].push(x);
-    });
-    
-    Object.keys(grouped).forEach(tNo => {
-        let items = grouped[tNo];
-        items.forEach((x, index) => {
-            let rowHtml = `<tr onclick="fillDep('${x.transNo}')">`;
-            rowHtml += `<td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`;
-            tb.innerHTML += rowHtml;
-        });
+        let rowHtml = `<tr onclick="fillDep('${x.transNo}')">`;
+        rowHtml += `<td>${counter++}</td><td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`;
+        tb.innerHTML += rowHtml;
     });
 }
 function fillDep(tNo) {
@@ -1593,13 +1595,13 @@ function loadMonitoring(){
     });
     
     if(!filtered.length) {
-        tb.innerHTML = '<tr><td colspan="4" class="empty">No Critical/Low Stock/Warning Items Registered</td></tr>';
+        tb.innerHTML = '<tr><td colspan="5" class="empty">No Critical/Low Stock/Warning Items Registered</td></tr>';
         return;
     }
     
-    filtered.forEach(x=>{ 
+    filtered.forEach((x, index)=>{ 
         let st = getStockStatus(x.qty, x.unit); 
-        tb.innerHTML+=`<tr><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td></tr>`; 
+        tb.innerHTML+=`<tr><td>${index + 1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td></tr>`; 
     });
 }
 
@@ -1620,7 +1622,8 @@ function exportMonitoringExcel() {
         return priority[stA] - priority[stB];
     });
     
-    let reportData = filtered.map(x => ({
+    let reportData = filtered.map((x, index) => ({
+        'No.': index + 1,
         'MATERIALS': x.name,
         'UNIT': x.unit,
         'QTY': x.qty,
@@ -1636,7 +1639,7 @@ function exportMonitoringExcel() {
 function loadUsers(){
     users = loadData('users', DEFAULT_USERS);
     let tb = document.getElementById('userList').querySelector('tbody'); tb.innerHTML='';
-    users.forEach(x=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${x.username}</td><td>${x.fullname || ''}</td><td>${x.position || ''}</td><td>${x.role.toUpperCase()}</td></tr>`);
+    users.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${index + 1}</td><td>${x.username}</td><td>${x.fullname || ''}</td><td>${x.position || ''}</td><td>${x.role.toUpperCase()}</td></tr>`);
 }
 function fillUser(uname) {
     let x = users.find(i => normStr(i.username) === normStr(uname));
@@ -1703,10 +1706,16 @@ function exportExcelResult(type){
     else if(type==='dep'){ data=getFilteredDep(); filename='DEPLOYMENT.xlsx'; }
     else return;
     
-    let ws = XLSX.utils.json_to_sheet(data);
-    const max_cols = Object.keys(data[0] || {}).map(key => {
+    let formattedData = data.map((item, index) => {
+        let copy = { 'No.': index + 1, ...item };
+        delete copy.key;
+        return copy;
+    });
+
+    let ws = XLSX.utils.json_to_sheet(formattedData);
+    const max_cols = Object.keys(formattedData[0] || {}).map(key => {
         let max_len = key.length;
-        data.forEach(row => {
+        formattedData.forEach(row => {
             let val = String(row[key] || '');
             if(val.length > max_len) max_len = val.length;
         });
@@ -1729,8 +1738,8 @@ function exportAllExcelData() {
     ];
     
     sheets.forEach(s => {
-        let cleanData = s.data.map(item => {
-            let copy = { ...item };
+        let cleanData = s.data.map((item, index) => {
+            let copy = { 'No.': index + 1, ...item };
             delete copy.key; 
             return copy;
         });
@@ -1750,10 +1759,10 @@ function exportAllPDFData() {
     let loggedName = currentUser ? (currentUser.fullname || currentUser.username) : '';
     let loggedPos = currentUser ? (currentUser.position || currentUser.role.toUpperCase()) : '';
 
-    let retRows = retData.map(x => `<tr><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`).join('');
-    let accRows = accData.map(x => `<tr><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
-    let matRows = matData.map(x => `<tr><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
-    let depRows = depData.map(x => `<tr><td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`).join('');
+    let retRows = retData.map((x, i) => `<tr><td>${i+1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`).join('');
+    let accRows = accData.map((x, i) => `<tr><td>${i+1}</td><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
+    let matRows = matData.map((x, i) => `<tr><td>${i+1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
+    let depRows = depData.map((x, i) => `<tr><td>${i+1}</td><td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`).join('');
 
     printWindow.document.write(`
         <html>
@@ -1762,20 +1771,19 @@ function exportAllPDFData() {
             <style>
                 body { font-family: Arial, sans-serif; color: black; padding: 20px; background: white; }
                 .header { margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 15px; text-align: center; }
-                .header img { width: 65px; height: 65px; object-fit: cover; border-radius: 50% !important; }
+                .header img { width: 55px; height: 55px; object-fit: cover; border-radius: 50% !important; }
                 .header-text { display: flex; flex-direction: column; text-align: left; }
-                .header h2 { margin: 0 0 2px 0; font-size: 18px; }
-                .header p { margin: 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-                .print-report-title { text-align: left; font-size: 13px; font-weight: bold; margin: 10px 0 5px 0; text-transform: uppercase; color: #000; }
-                .print-date-generated { text-align: left; font-size: 11px; font-weight: bold; margin-bottom: 10px; color: #333; }
-                .sec-title { background: #e2e8f0; padding: 6px 10px; font-size: 13px; font-weight: bold; border: 1px solid #000; border-bottom: none; margin-top: 25px; text-transform: uppercase; text-align: center; }
+                .header h2 { margin: 0 0 2px 0; font-size: 16px; }
+                .header p { margin: 0; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; }
+                .print-report-title { text-align: left; font-size: 12px; font-weight: bold; margin: 8px 0 3px 0; text-transform: uppercase; color: #000; }
+                .print-date-generated { text-align: left; font-size: 10px; font-weight: bold; margin-bottom: 8px; color: #333; }
+                .sec-title { background: #e2e8f0; padding: 6px 10px; font-size: 12px; font-weight: bold; border: 1px solid #000; border-bottom: none; margin-top: 25px; text-transform: uppercase; text-align: center; break-before: page; page-break-before: always; }
                 table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px; }
-                th, td { border: 1px solid #000; padding: 7px 5px; text-align: left; }
+                th, td { border: 1px solid #000; padding: 6px 5px; text-align: left; }
                 th { background: #f1f5f9; font-weight: bold; }
-                .print-signature-section { margin-top: 40px; width: 100%; page-break-inside: avoid; }
-                .print-signature-box { float: right; width: 250px; text-align: left; font-size: 12px; color: #000; }
-                .print-signature-line { border-top: 1px solid #000; margin-top: 45px; padding-top: 5px; text-align: center; font-weight: bold; }
-                @page { size: A4 landscape; margin: 0.8cm; }
+                .print-signature-section { margin-top: 25px; width: 100%; page-break-inside: avoid; }
+                .print-signature-box { float: right; width: 250px; text-align: left; font-size: 13px; color: #000; }
+                @page { size: A4 landscape; margin: 0.5cm 0.8cm 0.5cm 0.8cm; }
             </style>
         </head>
         <body>
@@ -1791,34 +1799,33 @@ function exportAllPDFData() {
 
             <div class="sec-title">RETURNED WM REPORT</div>
             <table>
-                <thead><tr><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
-                <tbody>${retRows || '<tr><td colspan="6" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+                <thead><tr><th>No.</th><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
+                <tbody>${retRows || '<tr><td colspan="7" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
             <div class="sec-title">ACCOMPLISHMENT REPORT</div>
             <table>
-                <thead><tr><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
-                <tbody>${accRows || '<tr><td colspan="5" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+                <thead><tr><th>No.</th><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
+                <tbody>${accRows || '<tr><td colspan="6" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
             <div class="sec-title">INVENTORY STATUS REPORT</div>
             <table>
-                <thead><tr><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>LAST UPDATED</th></tr></thead>
-                <tbody>${matRows || '<tr><td colspan="4" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+                <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>LAST UPDATED</th></tr></thead>
+                <tbody>${matRows || '<tr><td colspan="5" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
             <div class="sec-title">DEPLOYMENT LOGS REPORT</div>
             <table>
-                <thead><tr><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
-                <tbody>${depRows || '<tr><td colspan="7" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+                <thead><tr><th>No.</th><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
+                <tbody>${depRows || '<tr><td colspan="8" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
             <div class="print-signature-section">
                 <div class="print-signature-box">
                     Prepared by:<br>
-                    <span style="font-weight: bold; display: inline-block; margin-top: 5px;">${loggedName}</span><br>
-                    <span style="font-style: italic; color: #444;">${loggedPos}</span>
-                    <div class="print-signature-line">Signature over Printed Name</div>
+                    <span style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;">${loggedName}</span><br>
+                    <span style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;">${loggedPos}</span>
                 </div>
             </div>
 
