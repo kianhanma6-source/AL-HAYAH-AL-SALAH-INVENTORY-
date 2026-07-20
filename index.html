@@ -66,25 +66,38 @@
             position:relative;
             z-index:10;
             margin: auto;
+            text-align: center;
         }
-        .login-logo{
-            width:120px;
-            height:120px;
-            margin:auto;
-            display:block;
-            object-fit:cover;
-            border-radius:50%;
-            background:#fff;
-            padding:6px;
-            border:4px solid #fff;
-            box-shadow: 0 0 0 4px #38bdf8, 0 0 30px rgba(56,189,248,.8), 0 15px 35px rgba(0,0,0,.45);
+       
+        /* ALISIN ANG PUTING BILOG SA PAIKOT NG LOGO SA LOGIN PAGE LANG AT GAWING CLEAR */
+        .login-logo {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin: 0 auto 10px auto;
+            display: block;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
         }
+
+        /* WAREHOUSE INVENTORY SYSTEM TITLE SA LOGIN PAGE */
+        .login-system-title {
+            color: #facc15;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
         .login-box .title{ text-align:center; color:#fff; font-size:24px; font-weight:bold; margin-top:18px; }
         .login-box .subtitle{ text-align:center; color:#7dd3fc; margin-top:8px; font-size:15px; }
         .login-box .system{ text-align:center; margin-top:8px; margin-bottom:25px; color:#facc15; font-size:18px; font-weight:bold; }
         
         /* INPUTS & BUTTONS */
-        .login-box input[type="text"], .login-box input[type="password"]{ width:100%; margin:8px 0; padding:14px; border:none; border-radius:12px; background:#1f2937; color:#fff; font-size:15px; }
+        .login-box input[type="text"], .login-box input[type="password"]{ width:100%; margin:8px 0; padding:14px; border:none; border-radius:12px; background:#1f2937; color:#fff; font-size:15px; text-align: left; }
         .login-box input:focus{ outline:none; border:2px solid #38bdf8; box-shadow: none; }
         
         /* PASSWORD CONTAINER FOR HIDE/UNHIDE */
@@ -215,9 +228,7 @@
 
 <div id="loginPage" class="login-box">
     <img src="logo.png" class="login-logo" alt="Logo">
-    <div class="title">AL HAYAH AL SALAH</div>
-    <div class="subtitle">ELECTRONICS DEVICES AND REPAIR</div>
-    <div class="system">INVENTORY SYSTEM</div>
+    <div class="login-system-title">WAREHOUSE INVENTORY SYSTEM</div>
     
     <input type="text" id="user" placeholder="👤 Username" autocomplete="username">
     
@@ -439,6 +450,10 @@
                 <div class="form-group">
                     <label>QTY</label>
                     <input type="number" id="matQty" min="1" placeholder="Enter quantity">
+                </div>
+                <div class="form-group">
+                    <label>DATE & TIME</label>
+                    <input type="text" id="matDate" readonly>
                 </div>
                 <div class="btn-group">
                     <button class="btn-sm btn-success" onclick="addMat()">💾 SAVE</button>
@@ -738,7 +753,6 @@ function login(){
     
     currentUser = found;
     
-    // Save to localStorage if "Remember Me" is checked, else store temporarily or clear session properly
     if(remember) {
         localStorage.setItem(SESSION_KEY, JSON.stringify({username:u, password:p}));
         localStorage.setItem(REMEMBER_ME_KEY, 'true');
@@ -752,7 +766,6 @@ function login(){
     document.body.classList.remove('login-mode');
     document.getElementById('mainPage').classList.remove('hidden');
     
-    // LOAD ALL DATA IMMEDIATELY ON LOGIN
     loadAll();
 }
 
@@ -779,11 +792,14 @@ function openSubTab(id){
 function loadAll(){
     loadTransNo(); loadDepTransNo(); loadNames(); loadAreas(); loadActivities();
     loadRet(); loadAcc(); loadInventory(); loadDepMat(); loadDep(); loadMonitoring(); loadUsers();
+    
     const now = getDate();
     document.getElementById('retFormDate').value = now;
     document.getElementById('accDate').value = now;
+    document.getElementById('matDate').value = now;
     document.getElementById('depDate').value = now;
 }
+
 function loadTransNo(){
     let currentInput = document.getElementById('retTrans').value;
     if(!currentInput.startsWith('ALHAYA-')) {
@@ -796,6 +812,7 @@ function loadDepTransNo(){
         document.getElementById('depTrans').value = `TRANS-${String(depTransCounter).padStart(5,'0')}`;
     }
 }
+function loadActivities(){}
 
 function loadNames(){
     ['retName','accName','depName'].forEach(id=>{
@@ -824,7 +841,7 @@ function loadAreas(){
     });
 }
 function addArea(id){
-    let a = prompt('New Area:'); if(!n) return; // Note: Original script checked '!n' by mistake, keeping logic correct
+    let a = prompt('New Area:'); if(!a) return;
     if(areaList.includes(a.trim())) return alert('Already exists!');
     areaList.push(a.trim()); saveData('areas',areaList); loadAreas();
 }
@@ -864,12 +881,12 @@ function addRet(){
     saveData('returned',retData); loadRet(); clearRet(); loadTransNo();
 }
 function loadRet(){
+    retData = loadData('returned', []);
     let list = getFilteredRet();
     let tb = document.getElementById('retList').querySelector('tbody'); tb.innerHTML='';
     if(!list.length) return tb.innerHTML='<tr><td colspan="6" class="empty">No Records Found</td></tr>';
     list.forEach(x=>tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`);
 }
-/* REST OF ORIGINAL SCRIPT REMAINS UNCHANGED FOR STABILITY */
 function fillRet(t){
     let x = retData.find(i=>i.transNo===t);
     document.getElementById('retTrans').value=x.transNo; 
@@ -914,6 +931,7 @@ function addAcc(){
     saveData('accomplish', accData); loadAcc(); clearAcc();
 }
 function loadAcc() {
+    accData = loadData('accomplish', []);
     let list = getFilteredAcc();
     let tb = document.getElementById('accList').querySelector('tbody'); tb.innerHTML='';
     if(!list.length) return tb.innerHTML='<tr><td colspan="5" class="empty">No Records Found</td></tr>';
@@ -964,7 +982,6 @@ function addMat(){
     } else {
         let idx = matData.findIndex(x => normStr(x.name) === normStr(name));
         if(idx > -1){ 
-            alert(`⚠️ Notification: The material "${name}" already exists! The new quantity will be added to the old stock.`);
             matData[idx].qty = parseInt(matData[idx].qty) + qty; 
             matData[idx].date = getDate(); 
         }else{ 
@@ -976,6 +993,7 @@ function addMat(){
 }
 
 function loadInventory(){
+    matData = loadData('inventory', []);
     let list = getFilteredInv(); let tb = document.getElementById('matList').querySelector('tbody'); tb.innerHTML='';
     if(!list.length) return tb.innerHTML='<tr><td colspan="5" class="empty">No Items Found</td></tr>';
     list.forEach(x=>{ let st = getStockStatus(x.qty, x.unit); tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; });
@@ -987,6 +1005,7 @@ function fillMat(name) {
         document.getElementById('matOrigName').value = x.name;
         document.getElementById('matName').value = x.name;
         document.getElementById('matUnit').value = x.unit;
+        document.getElementById('matDate').value = x.date || getDate();
         
         document.getElementById('matName').disabled = true;
         document.getElementById('matUnit').disabled = true;
@@ -1000,6 +1019,7 @@ function clearMat() {
     document.getElementById('matOrigName').value=''; 
     document.getElementById('matName').value=''; 
     document.getElementById('matQty').value=''; 
+    document.getElementById('matDate').value = getDate();
     document.getElementById('matName').disabled = false;
     document.getElementById('matUnit').disabled = false;
 }
@@ -1098,8 +1118,10 @@ function addDep(){
     
     document.getElementById('depTrans').value = '';
     loadDep(); loadInventory(); loadMonitoring(); loadDepTransNo(); loadDepMat();
+    document.getElementById('depDate').value = getDate();
 }
 function loadDep(){
+    depData = loadData('deployment', []);
     let list = getFilteredDep(); let tb = document.getElementById('depList').querySelector('tbody'); tb.innerHTML='';
     if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Deployment Records</td></tr>';
     
@@ -1203,6 +1225,7 @@ function exportMonitoringExcel() {
 }
 
 function loadUsers(){
+    users = loadData('users', DEFAULT_USERS);
     let tb = document.getElementById('userList').querySelector('tbody'); tb.innerHTML='';
     users.forEach(x=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${x.username}</td><td>${x.role.toUpperCase()}</td></tr>`);
 }
@@ -1215,7 +1238,6 @@ function fillUser(uname) {
         document.getElementById('newRole').value = x.role;
     }
 }
-/* ADD USER & STABILITY LOGIC CONTROLS */
 function addUser(){
     if(currentUser.role === 'user') {
          return alert('❌ Security Privilege Restrained: User module context cannot register profiles.');
@@ -1277,7 +1299,6 @@ function exportExcelResult(type){
 
 function exportAllExcelData() {
     let wb = XLSX.utils.book_new();
-    
     let sheets = [
         { data: retData, name: 'Returned WM' },
         { data: accData, name: 'Accomplishment' },
@@ -1294,7 +1315,6 @@ function exportAllExcelData() {
         let ws = XLSX.utils.json_to_sheet(cleanData.length ? cleanData : [{ Status: 'No Records Found' }]);
         XLSX.utils.book_append_sheet(wb, ws, s.name);
     });
-    
     XLSX.writeFile(wb, 'ALL_SYSTEM_DATA_REPORT.xlsx');
 }
 
