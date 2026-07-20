@@ -500,6 +500,14 @@
                         <option value="Pack">Pack</option>
                         <option value="Box">Box</option>
                         <option value="Sack">Sack</option>
+                        <option value="Ctns">Ctns</option>
+                        <option value="Roll">Roll</option>
+                        <option value="Pallet">Pallet</option>
+                        <option value="Pkg">Pkg</option>
+                        <option value="Drum">Drum</option>
+                        <option value="PCS">PCS</option>
+                        <option value="PKGS">PKGS</option>
+                        <option value="Drums">Drums</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -594,6 +602,10 @@
                                 <select class="depUnitSel" style="max-width:90px;">
                                     <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
                                     <option value="Box">Box</option><option value="Sack">Sack</option>
+                                    <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                                    <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                                    <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                                    <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
                                 </select>
                                 <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;">
                                 <button class="btn-sm btn-success" onclick="addDepRow()">+</button>
@@ -770,19 +782,200 @@ const DEFAULT_AREAS = [
     'Al Qouz/warsan/khawaneej','Sharjah','Ajman/Humriyah','Delivery','Installation','Warehouse / Fixing Team','Abudhabi Team'
 ];
 
+const INITIAL_INVENTORY = [
+    {name: 'E Model-Powder Box Handle', unit: 'Pcs', qty: 580, date: getDate()},
+    {name: 'E Model-Powder Box', unit: 'Pcs', qty: 560, date: getDate()},
+    {name: 'E Model-Front Cover Plastic (UP)', unit: 'Pcs', qty: 220, date: getDate()},
+    {name: 'E Model-Front Cover Frame', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'E Model-Drum Rubber', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'E Model-Drain Pump Cover(outer)', unit: 'Pcs', qty: 250, date: getDate()},
+    {name: 'E Model-Drain Pump Cover(Inner)', unit: 'Pcs', qty: 500, date: getDate()},
+    {name: 'E Model-Drain Pipe', unit: 'Pcs', qty: 420, date: getDate()},
+    {name: 'E Model-Door Outer Frame', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'E Model-Door Lock', unit: 'Pcs', qty: 1800, date: getDate()},
+    {name: 'E Model-Door Inner Frame', unit: 'Pcs', qty: 30, date: getDate()},
+    {name: 'E Model-Door Holder', unit: 'Pcs', qty: 800, date: getDate()},
+    {name: 'E Model-Drain Pump Plastic', unit: 'Pcs', qty: 900, date: getDate()},
+    {name: 'E Model-Door Hinge/Hook', unit: 'Pcs', qty: 1500, date: getDate()},
+    {name: 'E Model-Door Back Hinge', unit: 'Pcs', qty: 500, date: getDate()},
+    {name: 'E Model-Belt', unit: 'Pcs', qty: 150, date: getDate()},
+    {name: 'E Model-Drum Wheel', unit: 'Pcs', qty: 185, date: getDate()},
+    {name: 'E Model-Glass', unit: 'Pcs', qty: 12, date: getDate()},
+    {name: 'Drain Filter', unit: 'Pcs', qty: 1570, date: getDate()},
+    {name: 'Mobile Phone Stand', unit: 'Ctns', qty: 1, date: getDate()},
+    {name: 'Vending Machine', unit: 'Pcs', qty: 9, date: getDate()},
+    {name: 'Big Coin Box', unit: 'Pcs', qty: 47, date: getDate()},
+    {name: 'Wapping Plastic', unit: 'Roll', qty: 5, date: getDate()},
+    {name: 'Heat Shrink Tube', unit: 'Roll', qty: 2, date: getDate()},
+    {name: 'Detergent Machine Money Box (Big Size)', unit: 'Pcs', qty: 19, date: getDate()},
+    {name: 'WM Stand with Rubber', unit: 'Pallet', qty: 1, date: getDate()},
+    {name: 'Small Coin Box', unit: 'Pcs', qty: 200, date: getDate()},
+    {name: 'Water Lable', unit: 'Pcs', qty: 1550, date: getDate()},
+    {name: 'Alarm', unit: 'Pcs', qty: 980, date: getDate()},
+    {name: 'Drum Holder Spring Plastic Clip', unit: 'Ctns', qty: 3, date: getDate()},
+    {name: 'Cabinet Cover Holeder', unit: 'Pcs', qty: 6720, date: getDate()},
+    {name: 'New Board', unit: 'Pcs', qty: 790, date: getDate()},
+    {name: 'Counter', unit: 'Pcs', qty: 670, date: getDate()},
+    {name: 'Counter Wire', unit: 'Pcs', qty: 1670, date: getDate()},
+    {name: 'Coin Box Lock', unit: 'Pcs', qty: 3135, date: getDate()},
+    {name: 'Money Box Lock', unit: 'Pcs', qty: 3135, date: getDate()},
+    {name: 'Carbon (Big Size) 513.539.5', unit: 'Pkg', qty: 6, date: getDate()},
+    {name: 'Carbon (Small Size) 513.536.5', unit: 'Pkg', qty: 30, date: getDate()},
+    {name: 'Fuse For Board', unit: 'Pcs', qty: 1800, date: getDate()},
+    {name: 'Front Door Position Pin', unit: 'Pcs', qty: 1000, date: getDate()},
+    {name: 'Drum Sharp', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'Drain Pump Motor', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'Stand Rubber (Square)', unit: 'Ctns', qty: 10, date: getDate()},
+    {name: 'Pad Lock', unit: 'Pcs', qty: 3200, date: getDate()},
+    {name: 'Detergent Machine (Old)', unit: 'Pcs', qty: 100, date: getDate()},
+    {name: 'New Coin Device', unit: 'Pcs', qty: 500, date: getDate()},
+    {name: 'Display', unit: 'Pcs', qty: 300, date: getDate()},
+    {name: 'Small Money Box', unit: 'Pcs', qty: 100, date: getDate()},
+    {name: 'Big Money Box', unit: 'Pcs', qty: 60, date: getDate()},
+    {name: 'Detergent Machine Coin Box (Small Size)', unit: 'Pcs', qty: 50, date: getDate()},
+    {name: 'Detergent Machine Board', unit: 'Pcs', qty: 340, date: getDate()},
+    {name: 'Coin Device Screw', unit: 'Pkg', qty: 1, date: getDate()},
+    {name: 'Eco Blog (mini pump) For Detergent Machine', unit: 'Pcs', qty: 220, date: getDate()},
+    {name: 'E Model-WM', unit: 'Pcs', qty: 314, date: getDate()},
+    {name: 'Detergent Powder Carton', unit: 'Ctns', qty: 201, date: getDate()},
+    {name: 'Detergent Powder Sack', unit: 'Sack', qty: 0, date: getDate()},
+    {name: 'Detergent Liquid', unit: 'Drum', qty: 8, date: getDate()},
+    {name: 'Board\'s Nut', unit: 'Pkg', qty: 2, date: getDate()},
+    {name: 'Board\'s Bolts', unit: 'Pkg', qty: 1, date: getDate()},
+    {name: 'Tool Box', unit: 'Pkg', qty: 50, date: getDate()},
+    {name: 'Sack', unit: 'Pcs', qty: 700, date: getDate()},
+    {name: 'Collection Bag', unit: 'Pkg', qty: 2, date: getDate()},
+    {name: 'Stand Rubber (Small)', unit: 'Sack', qty: 2, date: getDate()},
+    {name: 'GPS', unit: 'Pcs', qty: 10, date: getDate()},
+    {name: 'WM Cleaning Tube Tablet', unit: 'Pcs', qty: 12, date: getDate()},
+    {name: 'A Model-Door Handle Lock', unit: 'Pcs', qty: 2200, date: getDate()},
+    {name: 'A Model-Door Hinge', unit: 'Pcs', qty: 290, date: getDate()},
+    {name: 'A Model-Drain Pipe', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'A Model-Drum Rubber', unit: 'Pcs', qty: 70, date: getDate()},
+    {name: 'A Model-Front Cover Frame', unit: 'Pcs', qty: 1480, date: getDate()},
+    {name: 'A Model-Door Lock', unit: 'Pcs', qty: 1765, date: getDate()},
+    {name: 'Haier Model-Door Outer Frame(white)', unit: 'Pcs', qty: 55, date: getDate()},
+    {name: 'Haier Model-Door Outer Frame(Black)', unit: 'Pcs', qty: 34, date: getDate()},
+    {name: 'Haier-Longsealstrip', unit: 'Pcs', qty: 100, date: getDate()},
+    {name: 'Haier-Clasp Hand (Black)', unit: 'Pcs', qty: 90, date: getDate()},
+    {name: 'Haier-Clasp Hand (White)', unit: 'Pcs', qty: 70, date: getDate()},
+    {name: 'Haier Model-Door Inner Frame', unit: 'Pcs', qty: 50, date: getDate()},
+    {name: 'Haier Model-Door Glass', unit: 'Pcs', qty: 330, date: getDate()},
+    {name: 'Haier Model-Board', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'Haier Model-Motor', unit: 'Pcs', qty: 32, date: getDate()},
+    {name: 'Haier Model-Board Connector Wire', unit: 'Pcs', qty: 400, date: getDate()},
+    {name: 'Haier Model-Door Seal', unit: 'Pcs', qty: 170, date: getDate()},
+    {name: 'Haier Model-Transpormer', unit: 'Pcs', qty: 260, date: getDate()},
+    {name: 'Haier Model-Top Cover', unit: 'Pcs', qty: 150, date: getDate()},
+    {name: 'Haier Model-Display', unit: 'Pcs', qty: 200, date: getDate()},
+    {name: 'Haier Model-Door Hinge', unit: 'Pcs', qty: 120, date: getDate()},
+    {name: 'Stainless Model-Door Hinge', unit: 'Pcs', qty: 180, date: getDate()},
+    {name: 'Stainless Model-Door Handle', unit: 'Pcs', qty: 300, date: getDate()},
+    {name: 'Stainless Model-Drum Rubber', unit: 'Pcs', qty: 35, date: getDate()},
+    {name: 'Stainless Model-Door (White)', unit: 'Pcs', qty: 0, date: getDate()},
+    {name: 'Stainless Model-Door (Black)', unit: 'Pcs', qty: 295, date: getDate()},
+    {name: 'Stainless Model-Door (Spare Part)', unit: 'Pcs', qty: 60, date: getDate()},
+    {name: 'Stainless Powder Box', unit: 'Pcs', qty: 355, date: getDate()},
+    {name: 'Stainless Powder Box Handle (Black)', unit: 'Pcs', qty: 480, date: getDate()},
+    {name: 'Stainless Model-Door Glass', unit: 'Pcs', qty: 135, date: getDate()},
+    {name: 'Stainless Model-Renew Machine', unit: 'Pcs', qty: 950, date: getDate()},
+    {name: 'Stainless Model-Motor', unit: 'Pcs', qty: 120, date: getDate()},
+    {name: 'Stainless Model-Powder Box Handle (White)', unit: 'Pcs', qty: 120, date: getDate()},
+    {name: 'Easylife Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, date: getDate()},
+    {name: 'Easylife Sticker For E Model WM Down Side', unit: 'Pcs', qty: 1000, date: getDate()},
+    {name: 'Easylife Sticker For S Model WM (Big Size)', unit: 'Pcs', qty: 3700, date: getDate()},
+    {name: 'Almasa Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, date: getDate()},
+    {name: 'Almasa Sticker for S Model WM (Big Size)', unit: 'Pcs', qty: 1000, date: getDate()},
+    {name: 'S Model Sticker For E Model WM (Small Size)', unit: 'Pcs', qty: 1000, date: getDate()},
+    {name: 'S Model Sticker For S Model (Big Size)', unit: 'Pcs', qty: 1200, date: getDate()},
+    {name: 'Almasa Sticker For Detergent Machine', unit: 'Pcs', qty: 460, date: getDate()},
+    {name: 'Almasa Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 60, date: getDate()},
+    {name: 'Easylife Sticker For Detergent Machine', unit: 'Pcs', qty: 460, date: getDate()},
+    {name: 'Easylife Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 200, date: getDate()},
+    {name: 'Smile Gulf Sticker For Detergent Machine', unit: 'Pcs', qty: 100, date: getDate()},
+    {name: 'Wall Plug with Cap', unit: 'PCS', qty: 1100, date: getDate()},
+    {name: 'Triple Pole Surface Switch (Isolator)', unit: 'PCS', qty: 0, date: getDate()},
+    {name: 'Single Socket Box', unit: 'PCS', qty: 60, date: getDate()},
+    {name: 'Fuse Plug (blog switch)', unit: 'PCS', qty: 16, date: getDate()},
+    {name: 'Single Socket (hole circle)', unit: 'PCS', qty: 60, date: getDate()},
+    {name: '3 Way Junction Box', unit: 'PCS', qty: 30, date: getDate()},
+    {name: 'Electrical PVC Socket', unit: 'PCS', qty: 30, date: getDate()},
+    {name: 'Water Proof Single Socket', unit: 'PCS', qty: 75, date: getDate()},
+    {name: 'Circuit Breaker', unit: 'PCS', qty: 4, date: getDate()},
+    {name: 'Protection Device', unit: 'PCS', qty: 10, date: getDate()},
+    {name: 'Water Motor Pump', unit: 'PCS', qty: 5, date: getDate()},
+    {name: 'Pressure Controller', unit: 'PCS', qty: 8, date: getDate()},
+    {name: 'Cable Clip (22 mm)', unit: 'Ctns', qty: 1, date: getDate()},
+    {name: 'Cable Clip (10 mm)', unit: 'PCS', qty: 10000, date: getDate()},
+    {name: 'Cable Tie', unit: 'PKGS', qty: 15, date: getDate()},
+    {name: 'PU Foam', unit: 'PCS', qty: 2, date: getDate()},
+    {name: 'ZIC', unit: 'PCS', qty: 1, date: getDate()},
+    {name: 'Cable Wire', unit: 'PCS', qty: 2, date: getDate()},
+    {name: 'Electrical Tape', unit: 'PCS', qty: 60, date: getDate()},
+    {name: 'Double Socket Box', unit: 'PCS', qty: 150, date: getDate()},
+    {name: 'FW-40', unit: 'PCS', qty: 20, date: getDate()},
+    {name: 'Single Socket', unit: 'PCS', qty: 120, date: getDate()},
+    {name: 'Water Proof (double socket)', unit: 'PCS', qty: 55, date: getDate()},
+    {name: 'Double Socket', unit: 'PCS', qty: 20, date: getDate()},
+    {name: 'Water Pump Motor', unit: 'PCS', qty: 2, date: getDate()},
+    {name: 'Water Tap', unit: 'PCS', qty: 20, date: getDate()},
+    {name: 'Seal Tape', unit: 'PCS', qty: 360, date: getDate()},
+    {name: 'Liquid Detergent', unit: 'Drums', qty: 8, date: getDate()},
+    {name: 'White Spray Paint', unit: 'PCS', qty: 8, date: getDate()},
+    {name: 'Core Solder Wire', unit: 'PCS', qty: 5, date: getDate()},
+    {name: 'Capacitor', unit: 'PCS', qty: 178, date: getDate()},
+    {name: 'Waterproof Sheet', unit: 'PCS', qty: 30, date: getDate()},
+    {name: 'PVC Cement (Glue)', unit: 'PCS', qty: 11, date: getDate()},
+    {name: 'Smart IC Card Water Control Machine', unit: 'PCS', qty: 116, date: getDate()},
+    {name: 'Power Tool', unit: 'PCS', qty: 2, date: getDate()},
+    {name: 'PPR Tee (25mm)', unit: 'PCS', qty: 250, date: getDate()},
+    {name: 'PVC Socket (4")', unit: 'PCS', qty: 20, date: getDate()},
+    {name: 'PPR Female Elbow (25mm)', unit: 'PCS', qty: 50, date: getDate()},
+    {name: 'PPR Value (25mm)', unit: 'PCS', qty: 40, date: getDate()},
+    {name: 'PVC Socket (2")', unit: 'PCS', qty: 100, date: getDate()},
+    {name: 'PVC U (4")', unit: 'PCS', qty: 7, date: getDate()},
+    {name: 'PVC Tee (3")', unit: 'PCS', qty: 7, date: getDate()},
+    {name: 'PPR Reducer (32-25 mm)', unit: 'PCS', qty: 0, date: getDate()},
+    {name: 'PPR Reducer (25 mm)', unit: 'PCS', qty: 0, date: getDate()},
+    {name: 'PPR Tee (32mm)', unit: 'PCS', qty: 150, date: getDate()},
+    {name: 'PPR Female Socket (25mm)', unit: 'PCS', qty: 15, date: getDate()},
+    {name: 'PPR Female Tee (25mm)', unit: 'PCS', qty: 150, date: getDate()},
+    {name: 'PPR Male Socket (32mm)', unit: 'PCS', qty: 100, date: getDate()},
+    {name: 'PVC Socket (82mm)', unit: 'PCS', qty: 10, date: getDate()},
+    {name: 'PVC Elbow (3")', unit: 'PCS', qty: 8, date: getDate()},
+    {name: 'PVC Tee (2")', unit: 'PCS', qty: 75, date: getDate()},
+    {name: 'PPR Socket (25mm)', unit: 'PCS', qty: 75, date: getDate()},
+    {name: 'PPR Elbow (25mm)', unit: 'PCS', qty: 80, date: getDate()},
+    {name: 'PPR Union (25mm)', unit: 'PCS', qty: 73, date: getDate()},
+    {name: 'PVC U (1-1/2")', unit: 'PCS', qty: 10, date: getDate()},
+    {name: 'PVC Elbow (1-1/2")', unit: 'PCS', qty: 10, date: getDate()},
+    {name: 'PPR Elbow (32mm)', unit: 'PCS', qty: 55, date: getDate()},
+    {name: 'PVC Elbow (2")', unit: 'PCS', qty: 78, date: getDate()},
+    {name: 'U Clamp (2")', unit: 'PCS', qty: 30, date: getDate()},
+    {name: 'U Clamp (3/4")', unit: 'PCS', qty: 40, date: getDate()},
+    {name: 'Brass Female Tee', unit: 'PCS', qty: 80, date: getDate()},
+    {name: 'Brass Nipple', unit: 'PCS', qty: 80, date: getDate()},
+    {name: 'Brass Reducer', unit: 'PCS', qty: 10, date: getDate()},
+    {name: 'PVC Pipe (4")', unit: 'PCS', qty: 6, date: getDate()},
+    {name: 'PVC Pipe (3")', unit: 'PCS', qty: 15, date: getDate()},
+    {name: 'PVC Pipe (2")', unit: 'PCS', qty: 5, date: getDate()},
+    {name: 'PPR Pipe (25mm)', unit: 'PCS', qty: 50, date: getDate()},
+    {name: 'PVC Black Pipe (20mm)', unit: 'PCS', qty: 25, date: getDate()}
+];
+
 let users = loadData('users', DEFAULT_USERS);
 let nameList = loadData('names', DEFAULT_NAMES);
 let areaList = loadData('areas', DEFAULT_AREAS);
 let actList = loadData('activities', ['REPAIRED BOARD','SCRAP','ASSEMBLE MACHINE','RENEW MACHINE']);
 let retData = loadData('returned', []);
 let accData = loadData('accomplish', []);
-let matData = loadData('inventory', []);
+let matData = loadData('inventory', INITIAL_INVENTORY);
 let depData = loadData('deployment', []);
 
 function getStockStatus(qty, unit){
     qty = parseInt(qty) || 0;
     unit = String(unit||'').trim();
-    if(unit === 'Pcs'){
+    if(unit === 'Pcs' || unit === 'PCS'){
         if(qty <= 99) return {text:'CRITICAL', class:'critical'};
         if(qty <= 200) return {text:'ORDER NOW', class:'order-now'};
         if(qty <= 500) return {text:'WARNING', class:'warning'};
@@ -902,7 +1095,6 @@ function loadAll(){
         if(el) el.textContent = dateGenStr;
     });
 
-    // Populate current logged in user details for Report Signatures
     if(currentUser) {
         let nameVal = currentUser.fullname || currentUser.username;
         let posVal = currentUser.position || currentUser.role.toUpperCase();
@@ -1109,7 +1301,7 @@ function addMat(){
 }
 
 function loadInventory(){
-    matData = loadData('inventory', []);
+    matData = loadData('inventory', INITIAL_INVENTORY);
     let list = getFilteredInv(); let tb = document.getElementById('matList').querySelector('tbody'); tb.innerHTML='';
     if(!list.length) return tb.innerHTML='<tr><td colspan="5" class="empty">No Items Found</td></tr>';
     list.forEach(x=>{ let st = getStockStatus(x.qty, x.unit); tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; });
@@ -1168,7 +1360,7 @@ function addDepRow(){
     let row = document.createElement('div'); 
     row.className='combo-wrap'; 
     row.style.marginBottom='8px';
-    row.innerHTML = `<select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>`;
+    row.innerHTML = `<select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option><option value="Ctns">Ctns</option><option value="Roll">Roll</option><option value="Pallet">Pallet</option><option value="Pkg">Pkg</option><option value="Drum">Drum</option><option value="PCS">PCS</option><option value="PKGS">PKGS</option><option value="Drums">Drums</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>`;
     container.appendChild(row); 
     loadDepMat(row.querySelector('.depMatSel'));
 }
@@ -1230,7 +1422,7 @@ function addDep(){
     
     saveData('deployment', depData); saveData('inventory', matData);
     
-    document.getElementById('multiDepContainer').innerHTML = `<div class="combo-wrap" style="margin-bottom:8px;"><select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button></div>`;
+    document.getElementById('multiDepContainer').innerHTML = `<div class="combo-wrap" style="margin-bottom:8px;"><select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option><option value="Ctns">Ctns</option><option value="Roll">Roll</option><option value="Pallet">Pallet</option><option value="Pkg">Pkg</option><option value="Drum">Drum</option><option value="PCS">PCS</option><option value="PKGS">PKGS</option><option value="Drums">Drums</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button></div>`;
     
     document.getElementById('depTrans').value = '';
     loadDep(); loadInventory(); loadMonitoring(); loadDepTransNo(); loadDepMat();
@@ -1272,7 +1464,7 @@ function fillDep(tNo) {
         let row = document.createElement('div');
         row.className = 'combo-wrap';
         row.style.marginBottom = '8px';
-        row.innerHTML = `<select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;" value="${x.qty}"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>`;
+        row.innerHTML = `<select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option><option value="Ctns">Ctns</option><option value="Roll">Roll</option><option value="Pallet">Pallet</option><option value="Pkg">Pkg</option><option value="Drum">Drum</option><option value="PCS">PCS</option><option value="PKGS">PKGS</option><option value="Drums">Drums</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;" value="${x.qty}"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>`;
         container.appendChild(row);
         
         let matSel = row.querySelector('.depMatSel');
