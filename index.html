@@ -395,6 +395,10 @@
             
             <input type="hidden" id="accKey">
             <div class="form-group">
+                <label>DATE & TIME</label>
+                <input type="text" id="accDate" readonly>
+            </div>
+            <div class="form-group">
                 <label>NAME</label>
                 <div class="combo-wrap">
                     <select id="accName"></select>
@@ -426,10 +430,6 @@
             <div class="form-group">
                 <label>QTY</label>
                 <input type="number" id="accQty" min="1">
-            </div>
-            <div class="form-group">
-                <label>DATE & TIME</label>
-                <input type="text" id="accDate" readonly>
             </div>
             <div class="btn-group">
                 <button class="btn-sm btn-success" onclick="addAcc()">💾 SAVE</button>
@@ -597,19 +597,26 @@
                     <label>MULTIPLE ITEMS</label>
                     <div style="flex: 1; width: 100%;">
                         <div id="multiDepContainer">
-                            <div class="combo-wrap" style="margin-bottom:8px;">
-                                <select class="depMatSel"></select>
-                                <select class="depUnitSel" style="max-width:90px;">
-                                    <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
-                                    <option value="Box">Box</option><option value="Sack">Sack</option>
-                                    <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
-                                    <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
-                                    <option value="Drum">Drum</option><option value="PCS">PCS</option>
-                                    <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
-                                </select>
-                                <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;">
-                                <button class="btn-sm btn-success" onclick="addDepRow()">+</button>
-                                <button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;">
+                                <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                                    <select class="depMatSel" style="flex: 1;"></select>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                                    <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+                                    <select class="depUnitSel" style="max-width: 90px;">
+                                        <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                                        <option value="Box">Box</option><option value="Sack">Sack</option>
+                                        <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                                        <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                                        <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                                        <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+                                    </select>
+                                    <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
+                                    <div style="display: flex; gap: 4px; margin-left: auto;">
+                                        <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                                        <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -641,8 +648,9 @@
         <div id="monitoring" class="tab-content">
             <div class="card">
                 <div class="search-panel no-print">
-                    <div style="color: #38bdf8; font-size: 14px; font-weight: bold;">⚠️ CRITICAL CRITERIA ACTIVE</div>
+                    <input type="text" id="searchMonAll" placeholder="🔍 Search All..." oninput="loadMonitoring()" style="max-width: 250px;">
                     <div class="search-actions">
+                        <button class="btn-sm btn-success" onclick="resetMonFilter()">♻️ Reset</button>
                         <button class="btn-sm" onclick="exportMonitoringExcel()">📊 Excel</button>
                         <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
                     </div>
@@ -765,9 +773,9 @@ function getDate(){
 }
 
 const DEFAULT_USERS = [
-    {username:'NAD ITALLO', password:'Onin23', fullname:'Nad Itallo', position:'Lead Programmer', role:'programmer'},
-    {username:'Blazark', password:'Onin23', fullname:'Blazark Admin', position:'System Administrator', role:'admin'},
-    {username:'Admin', password:'admin123', fullname:'Default User', position:'Staff', role:'user'}
+    {username:'NAD ITALLO', password:'Onin23', fullname:'NINO ANGELO ITALLO', position:'Lead Programmer', role:'programmer'},
+    {username:'LUO', password:'LUO123', fullname:'LUO JIANBIN', position:'Manager', role:'admin'},
+    {username:'Wai', password:'admin123', fullname:'WAI PHYO KYAW', position:'Warehouse Logistics Incharge', role:'user'}
 ];
 const DEFAULT_NAMES = [
     'khan zeb','Rashid Bipuah','Wisdom','Md Rifat Hossain','Abul','afsar','John Kerandi','Alimamy',
@@ -1160,6 +1168,24 @@ function delArea(id){
     areaList = areaList.filter(x=>x!==a); saveData('areas',areaList); loadAreas();
 }
 
+function addAct(){
+    let a = prompt('New Activity:'); if(!a) return;
+    if(actList.includes(a.trim())) return alert('Already exists!');
+    actList.push(a.trim()); saveData('activities', actList); loadActSelect();
+}
+function delAct(){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let sel = document.getElementById('accAct'); let a = sel.value;
+    if(actList.length <= 1) return alert('Cannot delete all activities!');
+    if(!confirm(`Delete activity "${a}"?`)) return;
+    actList = actList.filter(x => x !== a); saveData('activities', actList); loadActSelect();
+}
+function loadActSelect(){
+    let sel = document.getElementById('accAct'); let prevVal = sel.value; sel.innerHTML = '';
+    actList.forEach(a => sel.innerHTML += `<option value="${a}">${a}</option>`);
+    if(prevVal) sel.value = prevVal;
+}
+
 function getFilteredRet(){
     let s = normStr(document.getElementById('searchRetAll').value);
     return retData.filter(x=> normStr(x.transNo+' '+x.wmNo+' '+x.keyNo+' '+x.name+' '+x.area+' '+x.date).includes(s))
@@ -1221,6 +1247,7 @@ function resetAccFilter(){document.getElementById('searchAccAll').value=''; load
 function addAcc(){
     let q = parseInt(document.getElementById('accQty').value); if(!q || q<=0) return alert('Enter valid quantity!');
     let key = document.getElementById('accKey').value;
+    let currentDate = document.getElementById('accDate').value || getDate();
     
     if(key) {
         let idx = accData.findIndex(x => String(x.key) === String(key));
@@ -1229,10 +1256,11 @@ function addAcc(){
             accData[idx].area = document.getElementById('accArea').value;
             accData[idx].activity = document.getElementById('accAct').value;
             accData[idx].qty = q;
+            accData[idx].date = currentDate;
             alert('✅ Record Updated!');
         }
     } else {
-        let d = { key: Date.now(), name: document.getElementById('accName').value, area: document.getElementById('accArea').value, activity: document.getElementById('accAct').value, qty: q, date: getDate() };
+        let d = { key: Date.now(), name: document.getElementById('accName').value, area: document.getElementById('accArea').value, activity: document.getElementById('accAct').value, qty: q, date: currentDate };
         accData.push(d); 
         alert('✅ Saved!');
     }
@@ -1358,15 +1386,34 @@ function loadDepMat(targetSelect = null){
 function addDepRow(){
     let container = document.getElementById('multiDepContainer'); 
     let row = document.createElement('div'); 
-    row.className='combo-wrap'; 
-    row.style.marginBottom='8px';
-    row.innerHTML = `<select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option><option value="Ctns">Ctns</option><option value="Roll">Roll</option><option value="Pallet">Pallet</option><option value="Pkg">Pkg</option><option value="Drum">Drum</option><option value="PCS">PCS</option><option value="PKGS">PKGS</option><option value="Drums">Drums</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>`;
+    row.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
+    row.innerHTML = `
+        <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <select class="depMatSel" style="flex: 1;"></select>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+            <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+            <select class="depUnitSel" style="max-width: 90px;">
+                <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                <option value="Box">Box</option><option value="Sack">Sack</option>
+                <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+            </select>
+            <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
+            <div style="display: flex; gap: 4px; margin-left: auto;">
+                <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+            </div>
+        </div>
+    `;
     container.appendChild(row); 
     loadDepMat(row.querySelector('.depMatSel'));
 }
 function removeDepRow(btn){
-    let rows = document.querySelectorAll('#multiDepContainer .combo-wrap');
-    if(rows.length > 1){ btn.parentElement.remove(); } else { alert('Cannot delete the last row!'); }
+    let rows = document.querySelectorAll('#multiDepContainer > div');
+    if(rows.length > 1){ btn.closest('div[style*="flex-direction: column"]').remove(); } else { alert('Cannot delete the last row!'); }
 }
 
 function getFilteredDep(){
@@ -1375,7 +1422,7 @@ function getFilteredDep(){
 }
 function resetDepFilter(){document.getElementById('searchDepAll').value=''; loadDep();}
 function addDep(){
-    let rows = document.querySelectorAll('#multiDepContainer .combo-wrap'); if(!rows.length) return alert('Add items!');
+    let rows = document.querySelectorAll('#multiDepContainer > div'); if(!rows.length) return alert('Add items!');
     let transNo = document.getElementById('depTrans').value; let name = document.getElementById('depName').value; let area = document.getElementById('depArea').value; let date = document.getElementById('depDate').value || getDate();
     
     let isExisting = depData.some(x => x.transNo === transNo);
@@ -1422,7 +1469,29 @@ function addDep(){
     
     saveData('deployment', depData); saveData('inventory', matData);
     
-    document.getElementById('multiDepContainer').innerHTML = `<div class="combo-wrap" style="margin-bottom:8px;"><select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option><option value="Ctns">Ctns</option><option value="Roll">Roll</option><option value="Pallet">Pallet</option><option value="Pkg">Pkg</option><option value="Drum">Drum</option><option value="PCS">PCS</option><option value="PKGS">PKGS</option><option value="Drums">Drums</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button></div>`;
+    document.getElementById('multiDepContainer').innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;">
+            <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                <select class="depMatSel" style="flex: 1;"></select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+                <select class="depUnitSel" style="max-width: 90px;">
+                    <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                    <option value="Box">Box</option><option value="Sack">Sack</option>
+                    <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                    <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                    <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                    <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+                </select>
+                <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
+                <div style="display: flex; gap: 4px; margin-left: auto;">
+                    <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                    <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+                </div>
+            </div>
+        </div>
+    `;
     
     document.getElementById('depTrans').value = '';
     loadDep(); loadInventory(); loadMonitoring(); loadDepTransNo(); loadDepMat();
@@ -1462,9 +1531,28 @@ function fillDep(tNo) {
     
     items.forEach(x => {
         let row = document.createElement('div');
-        row.className = 'combo-wrap';
-        row.style.marginBottom = '8px';
-        row.innerHTML = `<select class="depMatSel"></select><select class="depUnitSel" style="max-width:90px;"><option value="Pcs">Pcs</option><option value="Pack">Pack</option><option value="Box">Box</option><option value="Sack">Sack</option><option value="Ctns">Ctns</option><option value="Roll">Roll</option><option value="Pallet">Pallet</option><option value="Pkg">Pkg</option><option value="Drum">Drum</option><option value="PCS">PCS</option><option value="PKGS">PKGS</option><option value="Drums">Drums</option></select><input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width:80px;" value="${x.qty}"><button class="btn-sm btn-success" onclick="addDepRow()">+</button><button class="btn-sm btn-danger" onclick="removeDepRow(this)">-</button>`;
+        row.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
+        row.innerHTML = `
+            <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                <select class="depMatSel" style="flex: 1;"></select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+                <select class="depUnitSel" style="max-width: 90px;">
+                    <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                    <option value="Box">Box</option><option value="Sack">Sack</option>
+                    <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                    <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                    <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                    <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+                </select>
+                <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;" value="${x.qty}">
+                <div style="display: flex; gap: 4px; margin-left: auto;">
+                    <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                    <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+                </div>
+            </div>
+        `;
         container.appendChild(row);
         
         let matSel = row.querySelector('.depMatSel');
@@ -1484,9 +1572,17 @@ function mergeDBBtnTrigger() {
 function loadMonitoring(){
     let tb = document.getElementById('monList').querySelector('tbody'); tb.innerHTML='';
     
+    let searchVal = normStr(document.getElementById('searchMonAll').value);
+    
     let filtered = matData.filter(x => {
         let st = getStockStatus(x.qty, x.unit);
-        return st.text === 'CRITICAL' || st.text === 'ORDER NOW' || st.text === 'WARNING';
+        let isAlert = (st.text === 'CRITICAL' || st.text === 'ORDER NOW' || st.text === 'WARNING');
+        if(!isAlert) return false;
+        
+        if(searchVal) {
+            return normStr(x.name + ' ' + x.unit + ' ' + x.qty + ' ' + st.text).includes(searchVal);
+        }
+        return true;
     });
     
     filtered.sort((a, b) => {
@@ -1505,6 +1601,11 @@ function loadMonitoring(){
         let st = getStockStatus(x.qty, x.unit); 
         tb.innerHTML+=`<tr><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td></tr>`; 
     });
+}
+
+function resetMonFilter() {
+    document.getElementById('searchMonAll').value = '';
+    loadMonitoring();
 }
 
 function exportMonitoringExcel() {
