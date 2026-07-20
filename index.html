@@ -10,9 +10,11 @@
     <style>
         *{box-sizing:border-box; font-family:Arial, sans-serif; margin:0; padding:0;}
         
-        /* DEFAULT BODY / MAIN PAGE DESIGN */
+        /* DEFAULT BODY / MAIN PAGE DESIGN WITH GRADIENT ANIMATION */
         html, body{
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            background-size: 200% 200%;
+            animation: gradientBG 15s ease infinite;
             width:100%;
             height:auto !important;
             min-height:100vh;
@@ -21,6 +23,13 @@
             padding-bottom:50px;
             color: #f8fafc;
         }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body{
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
@@ -69,103 +78,53 @@
             text-align: center;
         }
        
-        /* BILOG NA LOGO NA MAY 3D EFFECT ANIMATION */
         .login-logo {
-            width: 90px;
-            height: 90px;
+            width: 130px;
+            height: 130px;
             object-fit: cover;
             border-radius: 50% !important;
-            border: 2px solid rgba(255, 215, 0, 0.7);
+            border: 3px solid rgba(56, 189, 248, 0.8);
             box-shadow: 
-                0 5px 0 #b45309,
-                0 10px 20px rgba(0, 0, 0, 0.6),
-                inset 0 2px 4px rgba(255, 255, 255, 0.4),
-                0 0 15px rgba(255, 215, 0, 0.3);
-            animation: float3d 3s ease-in-out infinite;
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.4);
             display: block;
             margin: 0 auto 20px auto;
-            background: transparent;
-            transform-style: preserve-3d;
+            background: #1e293b;
         }
 
-        @keyframes float3d {
-            0%, 100% {
-                transform: translateY(0) rotateX(0deg) rotateY(0deg);
-                box-shadow: 0 5px 0 #b45309, 0 10px 20px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 0 15px rgba(255, 215, 0, 0.3);
-            }
-            50% {
-                transform: translateY(-8px) rotateX(4deg) rotateY(-4deg);
-                box-shadow: 0 12px 0 #b45309, 0 20px 30px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 0 25px rgba(255, 215, 0, 0.6);
-            }
-        }
-
-        .login-logo:hover {
-            animation-play-state: paused;
-            transform: translateY(-4px) rotateX(6deg) rotateY(-6deg);
-            box-shadow: 
-                0 10px 0 #b45309,
-                0 18px 25px rgba(0, 0, 0, 0.7),
-                inset 0 2px 4px rgba(255, 255, 255, 0.5),
-                0 0 25px rgba(255, 215, 0, 0.6);
-        }
-
-        /* 3D STYLE ANIMATION PARA SA SYSTEM TITLE TEXT */
         .login-system-title {
             text-align: center;
             margin-top: 15px;
             margin-bottom: 25px;
-            color: #facc15;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            letter-spacing: 1px;
-            animation: textFloat3d 3s ease-in-out infinite;
-            transform-style: preserve-3d;
-            text-shadow: 
-                0 1px 0 #ca8a04,
-                0 2px 0 #a16207,
-                0 3px 0 #854d0e,
-                0 4px 0 #713f12,
-                0 5px 10px rgba(0, 0, 0, 0.6),
-                0 0 15px rgba(250, 204, 21, 0.4);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            background: linear-gradient(270deg, #38bdf8, #a855f7, #ec4899, #eab308, #22c55e);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientTextAnim 6s ease infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
         }
 
-        @keyframes textFloat3d {
-            0%, 100% {
-                transform: translateY(0) rotateX(0deg);
-                text-shadow: 
-                    0 1px 0 #ca8a04,
-                    0 2px 0 #a16207,
-                    0 3px 0 #854d0e,
-                    0 4px 0 #713f12,
-                    0 5px 10px rgba(0, 0, 0, 0.6),
-                    0 0 15px rgba(250, 204, 21, 0.4);
-            }
-            50% {
-                transform: translateY(-5px) rotateX(5deg);
-                text-shadow: 
-                    0 1px 0 #ca8a04,
-                    0 2px 0 #a16207,
-                    0 3px 0 #854d0e,
-                    0 4px 0 #854d0e,
-                    0 5px 0 #713f12,
-                    0 10px 20px rgba(0, 0, 0, 0.8),
-                    0 0 25px rgba(250, 204, 21, 0.7);
-            }
+        @keyframes gradientTextAnim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .login-box .title{ text-align:center; color:#fff; font-size:24px; font-weight:bold; margin-top:18px; }
         .login-box .subtitle{ text-align:center; color:#7dd3fc; margin-top:8px; font-size:15px; }
         
-        /* INPUTS & BUTTONS */
         .login-box input[type="text"], .login-box input[type="password"]{ width:100%; margin:8px 0; padding:14px; border:none; border-radius:12px; background:#1f2937; color:#fff; font-size:15px; text-align: left; }
         .login-box input:focus{ outline:none; border:2px solid #38bdf8; box-shadow: none; }
         
-        /* PASSWORD CONTAINER FOR HIDE/UNHIDE */
         .password-container { position: relative; width: 100%; }
         .password-container input { padding-right: 45px !important; }
         .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; font-size: 16px; user-select: none; }
         
-        /* REMEMBER ME STYLE */
         .remember-container { display: flex; align-items: center; margin: 12px 0 5px 0; color: #e2e8f0; font-size: 14px; cursor: pointer; }
         .remember-container input { width: auto; margin-right: 8px; cursor: pointer; accent-color: #38bdf8; }
 
@@ -182,7 +141,6 @@
         .login-footer{ position:fixed; bottom:12px; z-index: 10; left: 0; }
         .tab-footer{ margin-top: 30px; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); }
 
-        /* DASHBOARD FORM DISENYO */
         .form-group{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 15px; }
         .form-row-2col { display: flex; gap: 15px; width: 100%; }
         .form-row-2col .form-group { flex: 1; margin-bottom: 14px; }
@@ -226,7 +184,6 @@
         .btn-group-vertical { display: flex; flex-direction: column; width: 100%; gap: 12px; margin-top: 15px; }
         .btn-group-vertical button { width: 100%; padding: 14px; font-size: 14px; text-align: center; }
 
-        /* FONT COLOR ONLY MODIFICATION FOR STATUS WARNINGS */
         .critical{ background:transparent !important; color:#ef4444 !important; font-weight:bold; }
         .order-now{ background:transparent !important; color:#f59e0b !important; font-weight:bold; }
         .warning{ background:transparent !important; color:#10b981 !important; font-weight:bold; }
@@ -240,11 +197,20 @@
         .search-panel input { background: #1e293b; color: #fff; border: 1px solid #334155; }
         .search-actions{ display:flex; gap:8px; align-items: center; justify-content: flex-end; flex-shrink: 0; }
         
-        .print-header{ display:none; text-align:center; margin-bottom:20px; border-bottom: 2px solid #0f172a; padding-bottom: 15px; }
-        .print-logo { width: 90px; height: 90px; object-fit: cover; margin: 0 auto 10px auto; display: block; border-radius: 50% !important; }
-        .print-header h2{ color:#0f172a; margin-bottom:3px; font-size:22px; font-weight: bold; }
-        .print-header p{ color:#334155; font-size:12px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
-        .print-header h4{ background: #0f172a; color: white; display: inline-block; padding: 5px 15px; font-size:13px; font-weight:bold; border-radius: 5px; margin-top: 5px; }
+        /* PRINT HEADER SET UP */
+        .print-header{ display:none; margin-bottom:20px; border-bottom: 2px solid #000; padding-bottom: 15px; text-align: center; }
+        .print-header-flex{ display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        .print-logo { width: 65px; height: 65px; object-fit: cover; border-radius: 50% !important; flex-shrink: 0; }
+        .print-header-text { display: flex; flex-direction: column; text-align: left; }
+        .print-header h2{ color:#000; margin-bottom:2px; font-size:18px; font-weight: bold; }
+        .print-header p{ color:#333; font-size:10px; font-weight: bold; text-transform: uppercase; }
+        .print-report-title { text-align: left; font-size: 13px; font-weight: bold; margin: 10px 0 5px 0; text-transform: uppercase; color: #000; }
+        .print-date-generated { text-align: left; font-size: 11px; font-weight: bold; margin-bottom: 10px; color: #333; }
+        
+        /* PREPARED BY SIGNATURE FOOTER FOR PRINT */
+        .print-signature-section { display: none; margin-top: 40px; width: 100%; page-break-inside: avoid; }
+        .print-signature-box { float: right; width: 250px; text-align: left; font-size: 12px; color: #000; }
+        .print-signature-line { border-top: 1px solid #000; margin-top: 45px; padding-top: 5px; text-align: center; font-weight: bold; }
 
         @media (max-width:768px) {
             .form-group { flex-direction: column; align-items: flex-start; gap: 5px; }
@@ -254,7 +220,6 @@
             .search-panel input { width: 100%; }
         }
 
-        /* FIXED PRINT PREVIEW CSS OVERFLOW EFFECT */
         @media print {
             html, body {
                 background: white !important;
@@ -276,7 +241,8 @@
             .tab-content.active, .tab-content.active .card{
                 display:block !important; padding:0 !important; box-shadow:none !important; margin:0 !important; width:100% !important; background: transparent !important; border: none !important;
             }
-            .print-header{display:block !important;}
+            .print-header { display: block !important; }
+            .print-signature-section { display: block !important; }
             table{ border:1px solid #000 !important; font-size:11px; width:100%; table-layout:auto; background: white !important; }
             th, td{ border:1px solid #000 !important; padding:8px 6px; white-space: normal !important; text-align:left; color: black !important; background: transparent !important; }
             th{background:#e2e8f0 !important; color:black !important; font-weight:bold;}
@@ -292,13 +258,11 @@
     
     <input type="text" id="user" placeholder="👤 Username" autocomplete="username">
     
-    <!-- PASSWORD WITH HIDE/UNHIDE TOGGLE -->
     <div class="password-container">
         <input type="password" id="pass" placeholder="🔒 Password" autocomplete="current-password">
         <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
     </div>
 
-    <!-- REMEMBER ME CHECKBOX -->
     <label class="remember-container">
         <input type="checkbox" id="rememberMe"> Remember Me
     </label>
@@ -337,10 +301,15 @@
             </div>
             
             <div class="print-header">
-                <img src="logo.png" class="print-logo" alt="Company Logo">
-                <h2>AL HAYAH AL SAHLAH</h2>
-                <p>Electronics Devices and Repair</p>
-                <h4>RETURNED WM REPORT</h4>
+                <div class="print-header-flex">
+                    <img src="logo.png" class="print-logo" alt="Company Logo">
+                    <div class="print-header-text">
+                        <h2>AL HAYAH AL SAHLAH</h2>
+                        <p>Electronics Devices and Repair</p>
+                    </div>
+                </div>
+                <div class="print-report-title">RETURNED WM REPORT</div>
+                <div class="print-date-generated" id="printDateRet">Date Generated: </div>
             </div>
             
             <div class="form-group">
@@ -388,6 +357,14 @@
                     <tbody></tbody>
                 </table>
             </div>
+            <div class="print-signature-section">
+                <div class="print-signature-box">
+                    Prepared by:<br>
+                    <span id="sigNameRet" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
+                    <span id="sigPosRet" style="font-style: italic; color: #444;"></span>
+                    <div class="print-signature-line">Signature over Printed Name</div>
+                </div>
+            </div>
         </div>
         <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
     </div>
@@ -405,10 +382,15 @@
             </div>
             
             <div class="print-header">
-                <img src="logo.png" class="print-logo" alt="Company Logo">
-                <h2>AL HAYAH AL SAHLAH</h2>
-                <p>Electronics Devices and Repair</p>
-                <h4>ACCOMPLISHMENT REPORT</h4>
+                <div class="print-header-flex">
+                    <img src="logo.png" class="print-logo" alt="Company Logo">
+                    <div class="print-header-text">
+                        <h2>AL HAYAH AL SAHLAH</h2>
+                        <p>Electronics Devices and Repair</p>
+                    </div>
+                </div>
+                <div class="print-report-title">ACCOMPLISHMENT REPORT</div>
+                <div class="print-date-generated" id="printDateAcc">Date Generated: </div>
             </div>
             
             <input type="hidden" id="accKey">
@@ -462,6 +444,14 @@
                     <tbody></tbody>
                 </table>
             </div>
+            <div class="print-signature-section">
+                <div class="print-signature-box">
+                    Prepared by:<br>
+                    <span id="sigNameAcc" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
+                    <span id="sigPosAcc" style="font-style: italic; color: #444;"></span>
+                    <div class="print-signature-line">Signature over Printed Name</div>
+                </div>
+            </div>
         </div>
         <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
     </div>
@@ -487,10 +477,15 @@
                 </div>
                 
                 <div class="print-header">
-                    <img src="logo.png" class="print-logo" alt="Company Logo">
-                    <h2>AL HAYAH AL SAHLAH</h2>
-                    <p>Electronics Devices and Repair</p>
-                    <h4>INVENTORY STATUS REPORT</h4>
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">INVENTORY STATUS REPORT</div>
+                    <div class="print-date-generated" id="printDateInv">Date Generated: </div>
                 </div>
                 
                 <input type="hidden" id="matOrigName">
@@ -528,6 +523,14 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                <div class="print-signature-section">
+                    <div class="print-signature-box">
+                        Prepared by:<br>
+                        <span id="sigNameInv" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
+                        <span id="sigPosInv" style="font-style: italic; color: #444;"></span>
+                        <div class="print-signature-line">Signature over Printed Name</div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -544,10 +547,15 @@
                 </div>
                 
                 <div class="print-header">
-                    <img src="logo.png" class="print-logo" alt="Company Logo">
-                    <h2>AL HAYAH AL SAHLAH</h2>
-                    <p>Electronics Devices and Repair</p>
-                    <h4>DEPLOYMENT LOGS REPORT</h4>
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">DEPLOYMENT LOGS REPORT</div>
+                    <div class="print-date-generated" id="printDateDep">Date Generated: </div>
                 </div>
                 
                 <div class="form-row-2col">
@@ -606,6 +614,14 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                <div class="print-signature-section">
+                    <div class="print-signature-box">
+                        Prepared by:<br>
+                        <span id="sigNameDep" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
+                        <span id="sigPosDep" style="font-style: italic; color: #444;"></span>
+                        <div class="print-signature-line">Signature over Printed Name</div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -620,10 +636,15 @@
                     </div>
                 </div>
                 <div class="print-header">
-                    <img src="logo.png" class="print-logo" alt="Company Logo">
-                    <h2>AL HAYAH AL SAHLAH</h2>
-                    <p>Electronics Devices and Repair</p>
-                    <h4>LIVE CRITICAL STOCK MONITORING REPORT</h4>
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">LIVE CRITICAL STOCK MONITORING REPORT</div>
+                    <div class="print-date-generated" id="printDateMon">Date Generated: </div>
                 </div>
                 <h4>📊 LIVE STOCK MONITORING</h4>
                 <div class="table-responsive">
@@ -631,6 +652,14 @@
                         <thead><tr><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th></tr></thead>
                         <tbody></tbody>
                     </table>
+                </div>
+                <div class="print-signature-section">
+                    <div class="print-signature-box">
+                        Prepared by:<br>
+                        <span id="sigNameMon" style="font-weight: bold; display: inline-block; margin-top: 5px;"></span><br>
+                        <span id="sigPosMon" style="font-style: italic; color: #444;"></span>
+                        <div class="print-signature-line">Signature over Printed Name</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -650,6 +679,14 @@
                 <input type="password" id="newPass">
             </div>
             <div class="form-group">
+                <label>ACCOUNT NAME</label>
+                <input type="text" id="newFullName" placeholder="e.g. Juan Dela Cruz">
+            </div>
+            <div class="form-group">
+                <label>POSITION</label>
+                <input type="text" id="newPosition" placeholder="e.g. Warehouse Staff">
+            </div>
+            <div class="form-group">
                 <label>ROLE</label>
                 <select id="newRole">
                     <option value="user">USER</option>
@@ -665,7 +702,7 @@
             <h4>👤 USER LIST</h4>
             <div class="table-responsive">
                 <table id="userList">
-                    <thead><tr><th>USERNAME</th><th>ROLE</th></tr></thead>
+                    <thead><tr><th>USERNAME</th><th>ACCOUNT NAME</th><th>POSITION</th><th>ROLE</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -716,9 +753,9 @@ function getDate(){
 }
 
 const DEFAULT_USERS = [
-    {username:'NAD ITALLO', password:'Onin23', role:'programmer'},
-    {username:'Blazark', password:'Onin23', role:'admin'},
-    {username:'Admin', password:'admin123', role:'user'}
+    {username:'NAD ITALLO', password:'Onin23', fullname:'Nad Itallo', position:'Lead Programmer', role:'programmer'},
+    {username:'Blazark', password:'Onin23', fullname:'Blazark Admin', position:'System Administrator', role:'admin'},
+    {username:'Admin', password:'admin123', fullname:'Default User', position:'Staff', role:'user'}
 ];
 const DEFAULT_NAMES = [
     'khan zeb','Rashid Bipuah','Wisdom','Md Rifat Hossain','Abul','afsar','John Kerandi','Alimamy',
@@ -771,7 +808,6 @@ function normStr(s){return String(s||'').trim().toLowerCase();}
 function loadData(key, def){ try{ let d = localStorage.getItem(key); return d ? JSON.parse(d) : def; }catch(e){return def;} }
 function saveData(key, data){ try{localStorage.setItem(key, JSON.stringify(data));}catch(e){alert('❌ Full Storage!');} }
 
-// TOGGLE HIDE/UNHIDE PASSWORD
 function togglePasswordVisibility() {
     const passInput = document.getElementById('pass');
     const toggleIcon = document.querySelector('.toggle-password');
@@ -858,6 +894,26 @@ function loadAll(){
     document.getElementById('accDate').value = now;
     document.getElementById('matDate').value = now;
     document.getElementById('depDate').value = now;
+
+    const dateGenStr = 'Date Generated: ' + now;
+    const printDateEls = ['printDateRet', 'printDateAcc', 'printDateInv', 'printDateDep', 'printDateMon'];
+    printDateEls.forEach(id => {
+        let el = document.getElementById(id);
+        if(el) el.textContent = dateGenStr;
+    });
+
+    // Populate current logged in user details for Report Signatures
+    if(currentUser) {
+        let nameVal = currentUser.fullname || currentUser.username;
+        let posVal = currentUser.position || currentUser.role.toUpperCase();
+        
+        ['Ret', 'Acc', 'Inv', 'Dep', 'Mon'].forEach(suffix => {
+            let nameEl = document.getElementById('sigName' + suffix);
+            let posEl = document.getElementById('sigPos' + suffix);
+            if(nameEl) nameEl.textContent = nameVal;
+            if(posEl) posEl.textContent = posVal;
+        });
+    }
 }
 
 function loadTransNo(){
@@ -1287,7 +1343,7 @@ function exportMonitoringExcel() {
 function loadUsers(){
     users = loadData('users', DEFAULT_USERS);
     let tb = document.getElementById('userList').querySelector('tbody'); tb.innerHTML='';
-    users.forEach(x=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${x.username}</td><td>${x.role.toUpperCase()}</td></tr>`);
+    users.forEach(x=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${x.username}</td><td>${x.fullname || ''}</td><td>${x.position || ''}</td><td>${x.role.toUpperCase()}</td></tr>`);
 }
 function fillUser(uname) {
     let x = users.find(i => normStr(i.username) === normStr(uname));
@@ -1295,6 +1351,8 @@ function fillUser(uname) {
         document.getElementById('userMode').value = 'edit';
         document.getElementById('newUser').value = x.username;
         document.getElementById('newPass').value = x.password;
+        document.getElementById('newFullName').value = x.fullname || '';
+        document.getElementById('newPosition').value = x.position || '';
         document.getElementById('newRole').value = x.role;
     }
 }
@@ -1302,7 +1360,12 @@ function addUser(){
     if(currentUser.role === 'user') {
          return alert('❌ Security Privilege Restrained: User module context cannot register profiles.');
     }
-    let u = document.getElementById('newUser').value.trim(); let p = document.getElementById('newPass').value; let r = document.getElementById('newRole').value;
+    let u = document.getElementById('newUser').value.trim(); 
+    let p = document.getElementById('newPass').value; 
+    let fullname = document.getElementById('newFullName').value.trim();
+    let position = document.getElementById('newPosition').value.trim();
+    let r = document.getElementById('newRole').value;
+    
     if(!u || !p) return alert('Fill fields!');
     
     if(u.toLowerCase() === 'nad itallo') {
@@ -1315,10 +1378,10 @@ function addUser(){
     let idx = users.findIndex(x=>x.username.toLowerCase() === u.toLowerCase());
     if(idx > -1){ 
         if(users[idx].username === 'NAD ITALLO') return alert('❌ Error: NAD ITALLO is system locked.');
-        users[idx] = {username:u, password:p, role:r}; 
+        users[idx] = {username:u, password:p, fullname, position, role:r}; 
         alert('✅ User Profile Updated!');
     }else{ 
-        users.push({username:u, password:p, role:r}); 
+        users.push({username:u, password:p, fullname, position, role:r}); 
         alert('✅ User Profile Saved!');
     }
     saveData('users',users); loadUsers(); clearUser();
@@ -1331,7 +1394,13 @@ function delUser(){
     if(!confirm(`Delete user "${u}"?`)) return;
     users = users.filter(x=>x.username.toLowerCase() !== u.toLowerCase()); saveData('users',users); loadUsers(); clearUser();
 }
-function clearUser() { document.getElementById('userMode').value = 'new'; document.getElementById('newUser').value = ''; document.getElementById('newPass').value = ''; }
+function clearUser() { 
+    document.getElementById('userMode').value = 'new'; 
+    document.getElementById('newUser').value = ''; 
+    document.getElementById('newPass').value = ''; 
+    document.getElementById('newFullName').value = '';
+    document.getElementById('newPosition').value = '';
+}
 
 function exportExcelResult(type){
     let data, filename;
@@ -1384,6 +1453,10 @@ function exportAllPDFData() {
     let printWindow = window.open('', '_blank');
     if(!printWindow) return alert('Pop-up blocked! Please allow pop-ups for this site.');
     
+    let nowStr = 'Date Generated: ' + getDate();
+    let loggedName = currentUser ? (currentUser.fullname || currentUser.username) : '';
+    let loggedPos = currentUser ? (currentUser.position || currentUser.role.toUpperCase()) : '';
+
     let retRows = retData.map(x => `<tr><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`).join('');
     let accRows = accData.map(x => `<tr><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
     let matRows = matData.map(x => `<tr><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
@@ -1395,47 +1468,66 @@ function exportAllPDFData() {
             <title>CONSOLIDATED ALL DATA REPORT</title>
             <style>
                 body { font-family: Arial, sans-serif; color: black; padding: 20px; background: white; }
-                .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-                .header h2 { margin: 0 0 5px 0; font-size: 24px; }
-                .header p { margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-                .header h4 { background: #000; color: #fff; display: inline-block; padding: 5px 15px; font-size: 12px; margin-top: 8px; border-radius: 3px; }
-                .sec-title { background: #e2e8f0; padding: 6px 10px; font-size: 13px; font-weight: bold; border: 1px solid #000; border-bottom: none; margin-top: 25px; text-transform: uppercase; }
+                .header { margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 15px; text-align: center; }
+                .header img { width: 65px; height: 65px; object-fit: cover; border-radius: 50% !important; }
+                .header-text { display: flex; flex-direction: column; text-align: left; }
+                .header h2 { margin: 0 0 2px 0; font-size: 18px; }
+                .header p { margin: 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+                .print-report-title { text-align: left; font-size: 13px; font-weight: bold; margin: 10px 0 5px 0; text-transform: uppercase; color: #000; }
+                .print-date-generated { text-align: left; font-size: 11px; font-weight: bold; margin-bottom: 10px; color: #333; }
+                .sec-title { background: #e2e8f0; padding: 6px 10px; font-size: 13px; font-weight: bold; border: 1px solid #000; border-bottom: none; margin-top: 25px; text-transform: uppercase; text-align: center; }
                 table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px; }
                 th, td { border: 1px solid #000; padding: 7px 5px; text-align: left; }
                 th { background: #f1f5f9; font-weight: bold; }
+                .print-signature-section { margin-top: 40px; width: 100%; page-break-inside: avoid; }
+                .print-signature-box { float: right; width: 250px; text-align: left; font-size: 12px; color: #000; }
+                .print-signature-line { border-top: 1px solid #000; margin-top: 45px; padding-top: 5px; text-align: center; font-weight: bold; }
                 @page { size: A4 landscape; margin: 0.8cm; }
             </style>
         </head>
         <body>
             <div class="header">
-                <h2>AL HAYAH AL SAHLAH</h2>
-                <p>Electronics Devices and Repair</p>
-                <h4>CONSOLIDATED SYSTEM MASTER REPORT</h4>
+                <img src="logo.png" alt="Company Logo">
+                <div class="header-text">
+                    <h2>AL HAYAH AL SAHLAH</h2>
+                    <p>Electronics Devices and Repair</p>
+                </div>
             </div>
+            <div class="print-report-title">CONSOLIDATED SYSTEM MASTER REPORT</div>
+            <div class="print-date-generated">${nowStr}</div>
 
-            <div class="sec-title">1. RETURNED WM HISTORY</div>
+            <div class="sec-title">RETURNED WM REPORT</div>
             <table>
                 <thead><tr><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
                 <tbody>${retRows || '<tr><td colspan="6" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
-            <div class="sec-title">2. ACCOMPLISHMENT HISTORY</div>
+            <div class="sec-title">ACCOMPLISHMENT REPORT</div>
             <table>
                 <thead><tr><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
                 <tbody>${accRows || '<tr><td colspan="5" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
-            <div class="sec-title">3. INVENTORY STATUS</div>
+            <div class="sec-title">INVENTORY STATUS REPORT</div>
             <table>
                 <thead><tr><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>LAST UPDATED</th></tr></thead>
                 <tbody>${matRows || '<tr><td colspan="4" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
 
-            <div class="sec-title">4. DEPLOYMENT LOGS</div>
+            <div class="sec-title">DEPLOYMENT LOGS REPORT</div>
             <table>
                 <thead><tr><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
                 <tbody>${depRows || '<tr><td colspan="7" style="text-align:center;">No Records Found</td></tr>'}</tbody>
             </table>
+
+            <div class="print-signature-section">
+                <div class="print-signature-box">
+                    Prepared by:<br>
+                    <span style="font-weight: bold; display: inline-block; margin-top: 5px;">${loggedName}</span><br>
+                    <span style="font-style: italic; color: #444;">${loggedPos}</span>
+                    <div class="print-signature-line">Signature over Printed Name</div>
+                </div>
+            </div>
 
             <script>
                 window.onload = function() {
