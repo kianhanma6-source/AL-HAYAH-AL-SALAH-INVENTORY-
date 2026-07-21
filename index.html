@@ -6,6 +6,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>AL HAYAH AL SAHLAH - WM SYSTEM</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <style>
         *{box-sizing:border-box; font-family:Arial, sans-serif; margin:0; padding:0;}
@@ -779,6 +783,18 @@
 </div>
 
 <script>
+// ==============================================
+// SUPABASE CONNECTION
+// ==============================================
+const SUPABASE_URL = "https://ukcedjaroenwupefohuv.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrY2VkamFyb2Vud3VwZWZvaHV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MTYxNzcsImV4cCI6MjEwMDE5MjE3N30.FX9K9vxQixTjoeYG7vcx-sc9zj4Q3bmsY78WJ3zq9Bs";
+const supabase = supabaseClient.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Ipagpatuloy ang iyong mga dating code dito
+
+// ... at iba pa
+
+
 const DB_TRANS = 'transNo';
 const DB_DEP_TRANS = 'depTransNo';
 const SESSION_KEY = 'alhaya_session';
