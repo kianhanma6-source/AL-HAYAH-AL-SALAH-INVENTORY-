@@ -496,6 +496,20 @@
                     <label>MATERIAL NAME</label>
                     <input type="text" id="matName" placeholder="Type name or select below">
                 </div>
+                
+                <!-- UPLOAD PHOTO 5X5 AUTO FIT & AUTO 70KB -->
+                <div class="form-group">
+                    <label>PHOTO (5x5, max 70KB)</label>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                        <input type="file" id="matPhotoInput" accept="image/*" onchange="handleMaterialPhoto(event)" style="padding:8px;">
+                        <input type="hidden" id="matPhotoBase64">
+                        <div style="width: 100px; height: 100px; border: 2px dashed #334155; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0f172a;">
+                            <img id="matPhotoPreview" src="" alt="No Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <span id="matPhotoPlaceholder" style="font-size: 11px; color: #64748b; text-align: center;">5x5 Photo</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>UNIT</label>
                     <select id="matUnit">
@@ -541,7 +555,7 @@
                 <h4>📦 INVENTORY STATUS</h4>
                 <div class="table-responsive">
                     <table id="matList">
-                        <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th><th>LAST UPDATED</th></tr></thead>
+                        <thead><tr><th>No.</th><th>PHOTO</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th><th>LAST UPDATED</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -801,184 +815,184 @@ const DEFAULT_AREAS = [
 ];
 
 const INITIAL_INVENTORY = [
-    {name: 'E Model-Powder Box Handle', unit: 'Pcs', qty: 580, date: getDate()},
-    {name: 'E Model-Powder Box', unit: 'Pcs', qty: 560, date: getDate()},
-    {name: 'E Model-Front Cover Plastic (UP)', unit: 'Pcs', qty: 220, date: getDate()},
-    {name: 'E Model-Front Cover Frame', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'E Model-Drum Rubber', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'E Model-Drain Pump Cover(outer)', unit: 'Pcs', qty: 250, date: getDate()},
-    {name: 'E Model-Drain Pump Cover(Inner)', unit: 'Pcs', qty: 500, date: getDate()},
-    {name: 'E Model-Drain Pipe', unit: 'Pcs', qty: 420, date: getDate()},
-    {name: 'E Model-Door Outer Frame', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'E Model-Door Lock', unit: 'Pcs', qty: 1800, date: getDate()},
-    {name: 'E Model-Door Inner Frame', unit: 'Pcs', qty: 30, date: getDate()},
-    {name: 'E Model-Door Holder', unit: 'Pcs', qty: 800, date: getDate()},
-    {name: 'E Model-Drain Pump Plastic', unit: 'Pcs', qty: 900, date: getDate()},
-    {name: 'E Model-Door Hinge/Hook', unit: 'Pcs', qty: 1500, date: getDate()},
-    {name: 'E Model-Door Back Hinge', unit: 'Pcs', qty: 500, date: getDate()},
-    {name: 'E Model-Belt', unit: 'Pcs', qty: 150, date: getDate()},
-    {name: 'E Model-Drum Wheel', unit: 'Pcs', qty: 185, date: getDate()},
-    {name: 'E Model-Glass', unit: 'Pcs', qty: 12, date: getDate()},
-    {name: 'Drain Filter', unit: 'Pcs', qty: 1570, date: getDate()},
-    {name: 'Mobile Phone Stand', unit: 'Ctns', qty: 1, date: getDate()},
-    {name: 'Vending Machine', unit: 'Pcs', qty: 9, date: getDate()},
-    {name: 'Big Coin Box', unit: 'Pcs', qty: 47, date: getDate()},
-    {name: 'Wapping Plastic', unit: 'Roll', qty: 5, date: getDate()},
-    {name: 'Heat Shrink Tube', unit: 'Roll', qty: 2, date: getDate()},
-    {name: 'Detergent Machine Money Box (Big Size)', unit: 'Pcs', qty: 19, date: getDate()},
-    {name: 'WM Stand with Rubber', unit: 'Pallet', qty: 1, date: getDate()},
-    {name: 'Small Coin Box', unit: 'Pcs', qty: 200, date: getDate()},
-    {name: 'Water Lable', unit: 'Pcs', qty: 1550, date: getDate()},
-    {name: 'Alarm', unit: 'Pcs', qty: 980, date: getDate()},
-    {name: 'Drum Holder Spring Plastic Clip', unit: 'Ctns', qty: 3, date: getDate()},
-    {name: 'Cabinet Cover Holeder', unit: 'Pcs', qty: 6720, date: getDate()},
-    {name: 'New Board', unit: 'Pcs', qty: 790, date: getDate()},
-    {name: 'Counter', unit: 'Pcs', qty: 670, date: getDate()},
-    {name: 'Counter Wire', unit: 'Pcs', qty: 1670, date: getDate()},
-    {name: 'Coin Box Lock', unit: 'Pcs', qty: 3135, date: getDate()},
-    {name: 'Money Box Lock', unit: 'Pcs', qty: 3135, date: getDate()},
-    {name: 'Carbon (Big Size) 513.539.5', unit: 'Pkg', qty: 6, date: getDate()},
-    {name: 'Carbon (Small Size) 513.536.5', unit: 'Pkg', qty: 30, date: getDate()},
-    {name: 'Fuse For Board', unit: 'Pcs', qty: 1800, date: getDate()},
-    {name: 'Front Door Position Pin', unit: 'Pcs', qty: 1000, date: getDate()},
-    {name: 'Drum Sharp', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'Drain Pump Motor', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'Stand Rubber (Square)', unit: 'Ctns', qty: 10, date: getDate()},
-    {name: 'Pad Lock', unit: 'Pcs', qty: 3200, date: getDate()},
-    {name: 'Detergent Machine (Old)', unit: 'Pcs', qty: 100, date: getDate()},
-    {name: 'New Coin Device', unit: 'Pcs', qty: 500, date: getDate()},
-    {name: 'Display', unit: 'Pcs', qty: 300, date: getDate()},
-    {name: 'Small Money Box', unit: 'Pcs', qty: 100, date: getDate()},
-    {name: 'Big Money Box', unit: 'Pcs', qty: 60, date: getDate()},
-    {name: 'Detergent Machine Coin Box (Small Size)', unit: 'Pcs', qty: 50, date: getDate()},
-    {name: 'Detergent Machine Board', unit: 'Pcs', qty: 340, date: getDate()},
-    {name: 'Coin Device Screw', unit: 'Pkg', qty: 1, date: getDate()},
-    {name: 'Eco Blog (mini pump) For Detergent Machine', unit: 'Pcs', qty: 220, date: getDate()},
-    {name: 'E Model-WM', unit: 'Pcs', qty: 314, date: getDate()},
-    {name: 'Detergent Powder Carton', unit: 'Ctns', qty: 201, date: getDate()},
-    {name: 'Detergent Powder Sack', unit: 'Sack', qty: 0, date: getDate()},
-    {name: 'Detergent Liquid', unit: 'Drum', qty: 8, date: getDate()},
-    {name: 'Board\'s Nut', unit: 'Pkg', qty: 2, date: getDate()},
-    {name: 'Board\'s Bolts', unit: 'Pkg', qty: 1, date: getDate()},
-    {name: 'Tool Box', unit: 'Pkg', qty: 50, date: getDate()},
-    {name: 'Sack', unit: 'Pcs', qty: 700, date: getDate()},
-    {name: 'Collection Bag', unit: 'Pkg', qty: 2, date: getDate()},
-    {name: 'Stand Rubber (Small)', unit: 'Sack', qty: 2, date: getDate()},
-    {name: 'GPS', unit: 'Pcs', qty: 10, date: getDate()},
-    {name: 'WM Cleaning Tube Tablet', unit: 'Pcs', qty: 12, date: getDate()},
-    {name: 'A Model-Door Handle Lock', unit: 'Pcs', qty: 2200, date: getDate()},
-    {name: 'A Model-Door Hinge', unit: 'Pcs', qty: 290, date: getDate()},
-    {name: 'A Model-Drain Pipe', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'A Model-Drum Rubber', unit: 'Pcs', qty: 70, date: getDate()},
-    {name: 'A Model-Front Cover Frame', unit: 'Pcs', qty: 1480, date: getDate()},
-    {name: 'A Model-Door Lock', unit: 'Pcs', qty: 1765, date: getDate()},
-    {name: 'Haier Model-Door Outer Frame(white)', unit: 'Pcs', qty: 55, date: getDate()},
-    {name: 'Haier Model-Door Outer Frame(Black)', unit: 'Pcs', qty: 34, date: getDate()},
-    {name: 'Haier-Longsealstrip', unit: 'Pcs', qty: 100, date: getDate()},
-    {name: 'Haier-Clasp Hand (Black)', unit: 'Pcs', qty: 90, date: getDate()},
-    {name: 'Haier-Clasp Hand (White)', unit: 'Pcs', qty: 70, date: getDate()},
-    {name: 'Haier Model-Door Inner Frame', unit: 'Pcs', qty: 50, date: getDate()},
-    {name: 'Haier Model-Door Glass', unit: 'Pcs', qty: 330, date: getDate()},
-    {name: 'Haier Model-Board', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'Haier Model-Motor', unit: 'Pcs', qty: 32, date: getDate()},
-    {name: 'Haier Model-Board Connector Wire', unit: 'Pcs', qty: 400, date: getDate()},
-    {name: 'Haier Model-Door Seal', unit: 'Pcs', qty: 170, date: getDate()},
-    {name: 'Haier Model-Transpormer', unit: 'Pcs', qty: 260, date: getDate()},
-    {name: 'Haier Model-Top Cover', unit: 'Pcs', qty: 150, date: getDate()},
-    {name: 'Haier Model-Display', unit: 'Pcs', qty: 200, date: getDate()},
-    {name: 'Haier Model-Door Hinge', unit: 'Pcs', qty: 120, date: getDate()},
-    {name: 'Stainless Model-Door Hinge', unit: 'Pcs', qty: 180, date: getDate()},
-    {name: 'Stainless Model-Door Handle', unit: 'Pcs', qty: 300, date: getDate()},
-    {name: 'Stainless Model-Drum Rubber', unit: 'Pcs', qty: 35, date: getDate()},
-    {name: 'Stainless Model-Door (White)', unit: 'Pcs', qty: 0, date: getDate()},
-    {name: 'Stainless Model-Door (Black)', unit: 'Pcs', qty: 295, date: getDate()},
-    {name: 'Stainless Model-Door (Spare Part)', unit: 'Pcs', qty: 60, date: getDate()},
-    {name: 'Stainless Powder Box', unit: 'Pcs', qty: 355, date: getDate()},
-    {name: 'Stainless Powder Box Handle (Black)', unit: 'Pcs', qty: 480, date: getDate()},
-    {name: 'Stainless Model-Door Glass', unit: 'Pcs', qty: 135, date: getDate()},
-    {name: 'Stainless Model-Renew Machine', unit: 'Pcs', qty: 950, date: getDate()},
-    {name: 'Stainless Model-Motor', unit: 'Pcs', qty: 120, date: getDate()},
-    {name: 'Stainless Model-Powder Box Handle (White)', unit: 'Pcs', qty: 120, date: getDate()},
-    {name: 'Easylife Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, date: getDate()},
-    {name: 'Easylife Sticker For E Model WM Down Side', unit: 'Pcs', qty: 1000, date: getDate()},
-    {name: 'Easylife Sticker For S Model WM (Big Size)', unit: 'Pcs', qty: 3700, date: getDate()},
-    {name: 'Almasa Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, date: getDate()},
-    {name: 'Almasa Sticker for S Model WM (Big Size)', unit: 'Pcs', qty: 1000, date: getDate()},
-    {name: 'S Model Sticker For E Model WM (Small Size)', unit: 'Pcs', qty: 1000, date: getDate()},
-    {name: 'S Model Sticker For S Model (Big Size)', unit: 'Pcs', qty: 1200, date: getDate()},
-    {name: 'Almasa Sticker For Detergent Machine', unit: 'Pcs', qty: 460, date: getDate()},
-    {name: 'Almasa Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 60, date: getDate()},
-    {name: 'Easylife Sticker For Detergent Machine', unit: 'Pcs', qty: 460, date: getDate()},
-    {name: 'Easylife Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 200, date: getDate()},
-    {name: 'Smile Gulf Sticker For Detergent Machine', unit: 'Pcs', qty: 100, date: getDate()},
-    {name: 'Wall Plug with Cap', unit: 'PCS', qty: 1100, date: getDate()},
-    {name: 'Triple Pole Surface Switch (Isolator)', unit: 'PCS', qty: 0, date: getDate()},
-    {name: 'Single Socket Box', unit: 'PCS', qty: 60, date: getDate()},
-    {name: 'Fuse Plug (blog switch)', unit: 'PCS', qty: 16, date: getDate()},
-    {name: 'Single Socket (hole circle)', unit: 'PCS', qty: 60, date: getDate()},
-    {name: '3 Way Junction Box', unit: 'PCS', qty: 30, date: getDate()},
-    {name: 'Electrical PVC Socket', unit: 'PCS', qty: 30, date: getDate()},
-    {name: 'Water Proof Single Socket', unit: 'PCS', qty: 75, date: getDate()},
-    {name: 'Circuit Breaker', unit: 'PCS', qty: 4, date: getDate()},
-    {name: 'Protection Device', unit: 'PCS', qty: 10, date: getDate()},
-    {name: 'Water Motor Pump', unit: 'PCS', qty: 5, date: getDate()},
-    {name: 'Pressure Controller', unit: 'PCS', qty: 8, date: getDate()},
-    {name: 'Cable Clip (22 mm)', unit: 'Ctns', qty: 1, date: getDate()},
-    {name: 'Cable Clip (10 mm)', unit: 'PCS', qty: 10000, date: getDate()},
-    {name: 'Cable Tie', unit: 'PKGS', qty: 15, date: getDate()},
-    {name: 'PU Foam', unit: 'PCS', qty: 2, date: getDate()},
-    {name: 'ZIC', unit: 'PCS', qty: 1, date: getDate()},
-    {name: 'Cable Wire', unit: 'PCS', qty: 2, date: getDate()},
-    {name: 'Electrical Tape', unit: 'PCS', qty: 60, date: getDate()},
-    {name: 'Double Socket Box', unit: 'PCS', qty: 150, date: getDate()},
-    {name: 'FW-40', unit: 'PCS', qty: 20, date: getDate()},
-    {name: 'Single Socket', unit: 'PCS', qty: 120, date: getDate()},
-    {name: 'Water Proof (double socket)', unit: 'PCS', qty: 55, date: getDate()},
-    {name: 'Double Socket', unit: 'PCS', qty: 20, date: getDate()},
-    {name: 'Water Pump Motor', unit: 'PCS', qty: 2, date: getDate()},
-    {name: 'Water Tap', unit: 'PCS', qty: 20, date: getDate()},
-    {name: 'Seal Tape', unit: 'PCS', qty: 360, date: getDate()},
-    {name: 'Liquid Detergent', unit: 'Drums', qty: 8, date: getDate()},
-    {name: 'White Spray Paint', unit: 'PCS', qty: 8, date: getDate()},
-    {name: 'Core Solder Wire', unit: 'PCS', qty: 5, date: getDate()},
-    {name: 'Capacitor', unit: 'PCS', qty: 178, date: getDate()},
-    {name: 'Waterproof Sheet', unit: 'PCS', qty: 30, date: getDate()},
-    {name: 'PVC Cement (Glue)', unit: 'PCS', qty: 11, date: getDate()},
-    {name: 'Smart IC Card Water Control Machine', unit: 'PCS', qty: 116, date: getDate()},
-    {name: 'Power Tool', unit: 'PCS', qty: 2, date: getDate()},
-    {name: 'PPR Tee (25mm)', unit: 'PCS', qty: 250, date: getDate()},
-    {name: 'PVC Socket (4")', unit: 'PCS', qty: 20, date: getDate()},
-    {name: 'PPR Female Elbow (25mm)', unit: 'PCS', qty: 50, date: getDate()},
-    {name: 'PPR Value (25mm)', unit: 'PCS', qty: 40, date: getDate()},
-    {name: 'PVC Socket (2")', unit: 'PCS', qty: 100, date: getDate()},
-    {name: 'PVC U (4")', unit: 'PCS', qty: 7, date: getDate()},
-    {name: 'PVC Tee (3")', unit: 'PCS', qty: 7, date: getDate()},
-    {name: 'PPR Reducer (32-25 mm)', unit: 'PCS', qty: 0, date: getDate()},
-    {name: 'PPR Reducer (25 mm)', unit: 'PCS', qty: 0, date: getDate()},
-    {name: 'PPR Tee (32mm)', unit: 'PCS', qty: 150, date: getDate()},
-    {name: 'PPR Female Socket (25mm)', unit: 'PCS', qty: 15, date: getDate()},
-    {name: 'PPR Female Tee (25mm)', unit: 'PCS', qty: 150, date: getDate()},
-    {name: 'PPR Male Socket (32mm)', unit: 'PCS', qty: 100, date: getDate()},
-    {name: 'PVC Socket (82mm)', unit: 'PCS', qty: 10, date: getDate()},
-    {name: 'PVC Elbow (3")', unit: 'PCS', qty: 8, date: getDate()},
-    {name: 'PVC Tee (2")', unit: 'PCS', qty: 75, date: getDate()},
-    {name: 'PPR Socket (25mm)', unit: 'PCS', qty: 75, date: getDate()},
-    {name: 'PPR Elbow (25mm)', unit: 'PCS', qty: 80, date: getDate()},
-    {name: 'PPR Union (25mm)', unit: 'PCS', qty: 73, date: getDate()},
-    {name: 'PVC U (1-1/2")', unit: 'PCS', qty: 10, date: getDate()},
-    {name: 'PVC Elbow (1-1/2")', unit: 'PCS', qty: 10, date: getDate()},
-    {name: 'PPR Elbow (32mm)', unit: 'PCS', qty: 55, date: getDate()},
-    {name: 'PVC Elbow (2")', unit: 'PCS', qty: 78, date: getDate()},
-    {name: 'U Clamp (2")', unit: 'PCS', qty: 30, date: getDate()},
-    {name: 'U Clamp (3/4")', unit: 'PCS', qty: 40, date: getDate()},
-    {name: 'Brass Female Tee', unit: 'PCS', qty: 80, date: getDate()},
-    {name: 'Brass Nipple', unit: 'PCS', qty: 80, date: getDate()},
-    {name: 'Brass Reducer', unit: 'PCS', qty: 10, date: getDate()},
-    {name: 'PVC Pipe (4")', unit: 'PCS', qty: 6, date: getDate()},
-    {name: 'PVC Pipe (3")', unit: 'PCS', qty: 15, date: getDate()},
-    {name: 'PVC Pipe (2")', unit: 'PCS', qty: 5, date: getDate()},
-    {name: 'PPR Pipe (25mm)', unit: 'PCS', qty: 50, date: getDate()},
-    {name: 'PVC Black Pipe (20mm)', unit: 'PCS', qty: 25, date: getDate()}
+    {name: 'E Model-Powder Box Handle', unit: 'Pcs', qty: 580, photo: '', date: getDate()},
+    {name: 'E Model-Powder Box', unit: 'Pcs', qty: 560, photo: '', date: getDate()},
+    {name: 'E Model-Front Cover Plastic (UP)', unit: 'Pcs', qty: 220, photo: '', date: getDate()},
+    {name: 'E Model-Front Cover Frame', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'E Model-Drum Rubber', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pump Cover(outer)', unit: 'Pcs', qty: 250, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pump Cover(Inner)', unit: 'Pcs', qty: 500, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pipe', unit: 'Pcs', qty: 420, photo: '', date: getDate()},
+    {name: 'E Model-Door Outer Frame', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'E Model-Door Lock', unit: 'Pcs', qty: 1800, photo: '', date: getDate()},
+    {name: 'E Model-Door Inner Frame', unit: 'Pcs', qty: 30, photo: '', date: getDate()},
+    {name: 'E Model-Door Holder', unit: 'Pcs', qty: 800, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pump Plastic', unit: 'Pcs', qty: 900, photo: '', date: getDate()},
+    {name: 'E Model-Door Hinge/Hook', unit: 'Pcs', qty: 1500, photo: '', date: getDate()},
+    {name: 'E Model-Door Back Hinge', unit: 'Pcs', qty: 500, photo: '', date: getDate()},
+    {name: 'E Model-Belt', unit: 'Pcs', qty: 150, photo: '', date: getDate()},
+    {name: 'E Model-Drum Wheel', unit: 'Pcs', qty: 185, photo: '', date: getDate()},
+    {name: 'E Model-Glass', unit: 'Pcs', qty: 12, photo: '', date: getDate()},
+    {name: 'Drain Filter', unit: 'Pcs', qty: 1570, photo: '', date: getDate()},
+    {name: 'Mobile Phone Stand', unit: 'Ctns', qty: 1, photo: '', date: getDate()},
+    {name: 'Vending Machine', unit: 'Pcs', qty: 9, photo: '', date: getDate()},
+    {name: 'Big Coin Box', unit: 'Pcs', qty: 47, photo: '', date: getDate()},
+    {name: 'Wapping Plastic', unit: 'Roll', qty: 5, photo: '', date: getDate()},
+    {name: 'Heat Shrink Tube', unit: 'Roll', qty: 2, photo: '', date: getDate()},
+    {name: 'Detergent Machine Money Box (Big Size)', unit: 'Pcs', qty: 19, photo: '', date: getDate()},
+    {name: 'WM Stand with Rubber', unit: 'Pallet', qty: 1, photo: '', date: getDate()},
+    {name: 'Small Coin Box', unit: 'Pcs', qty: 200, photo: '', date: getDate()},
+    {name: 'Water Lable', unit: 'Pcs', qty: 1550, photo: '', date: getDate()},
+    {name: 'Alarm', unit: 'Pcs', qty: 980, photo: '', date: getDate()},
+    {name: 'Drum Holder Spring Plastic Clip', unit: 'Ctns', qty: 3, photo: '', date: getDate()},
+    {name: 'Cabinet Cover Holeder', unit: 'Pcs', qty: 6720, photo: '', date: getDate()},
+    {name: 'New Board', unit: 'Pcs', qty: 790, photo: '', date: getDate()},
+    {name: 'Counter', unit: 'Pcs', qty: 670, photo: '', date: getDate()},
+    {name: 'Counter Wire', unit: 'Pcs', qty: 1670, photo: '', date: getDate()},
+    {name: 'Coin Box Lock', unit: 'Pcs', qty: 3135, photo: '', date: getDate()},
+    {name: 'Money Box Lock', unit: 'Pcs', qty: 3135, photo: '', date: getDate()},
+    {name: 'Carbon (Big Size) 513.539.5', unit: 'Pkg', qty: 6, photo: '', date: getDate()},
+    {name: 'Carbon (Small Size) 513.536.5', unit: 'Pkg', qty: 30, photo: '', date: getDate()},
+    {name: 'Fuse For Board', unit: 'Pcs', qty: 1800, photo: '', date: getDate()},
+    {name: 'Front Door Position Pin', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'Drum Sharp', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Drain Pump Motor', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Stand Rubber (Square)', unit: 'Ctns', qty: 10, photo: '', date: getDate()},
+    {name: 'Pad Lock', unit: 'Pcs', qty: 3200, photo: '', date: getDate()},
+    {name: 'Detergent Machine (Old)', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'New Coin Device', unit: 'Pcs', qty: 500, photo: '', date: getDate()},
+    {name: 'Display', unit: 'Pcs', qty: 300, photo: '', date: getDate()},
+    {name: 'Small Money Box', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'Big Money Box', unit: 'Pcs', qty: 60, photo: '', date: getDate()},
+    {name: 'Detergent Machine Coin Box (Small Size)', unit: 'Pcs', qty: 50, photo: '', date: getDate()},
+    {name: 'Detergent Machine Board', unit: 'Pcs', qty: 340, photo: '', date: getDate()},
+    {name: 'Coin Device Screw', unit: 'Pkg', qty: 1, photo: '', date: getDate()},
+    {name: 'Eco Blog (mini pump) For Detergent Machine', unit: 'Pcs', qty: 220, photo: '', date: getDate()},
+    {name: 'E Model-WM', unit: 'Pcs', qty: 314, photo: '', date: getDate()},
+    {name: 'Detergent Powder Carton', unit: 'Ctns', qty: 201, photo: '', date: getDate()},
+    {name: 'Detergent Powder Sack', unit: 'Sack', qty: 0, photo: '', date: getDate()},
+    {name: 'Detergent Liquid', unit: 'Drum', qty: 8, photo: '', date: getDate()},
+    {name: 'Board\'s Nut', unit: 'Pkg', qty: 2, photo: '', date: getDate()},
+    {name: 'Board\'s Bolts', unit: 'Pkg', qty: 1, photo: '', date: getDate()},
+    {name: 'Tool Box', unit: 'Pkg', qty: 50, photo: '', date: getDate()},
+    {name: 'Sack', unit: 'Pcs', qty: 700, photo: '', date: getDate()},
+    {name: 'Collection Bag', unit: 'Pkg', qty: 2, photo: '', date: getDate()},
+    {name: 'Stand Rubber (Small)', unit: 'Sack', qty: 2, photo: '', date: getDate()},
+    {name: 'GPS', unit: 'Pcs', qty: 10, photo: '', date: getDate()},
+    {name: 'WM Cleaning Tube Tablet', unit: 'Pcs', qty: 12, photo: '', date: getDate()},
+    {name: 'A Model-Door Handle Lock', unit: 'Pcs', qty: 2200, photo: '', date: getDate()},
+    {name: 'A Model-Door Hinge', unit: 'Pcs', qty: 290, photo: '', date: getDate()},
+    {name: 'A Model-Drain Pipe', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'A Model-Drum Rubber', unit: 'Pcs', qty: 70, photo: '', date: getDate()},
+    {name: 'A Model-Front Cover Frame', unit: 'Pcs', qty: 1480, photo: '', date: getDate()},
+    {name: 'A Model-Door Lock', unit: 'Pcs', qty: 1765, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Outer Frame(white)', unit: 'Pcs', qty: 55, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Outer Frame(Black)', unit: 'Pcs', qty: 34, photo: '', date: getDate()},
+    {name: 'Haier-Longsealstrip', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'Haier-Clasp Hand (Black)', unit: 'Pcs', qty: 90, photo: '', date: getDate()},
+    {name: 'Haier-Clasp Hand (White)', unit: 'Pcs', qty: 70, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Inner Frame', unit: 'Pcs', qty: 50, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Glass', unit: 'Pcs', qty: 330, photo: '', date: getDate()},
+    {name: 'Haier Model-Board', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Haier Model-Motor', unit: 'Pcs', qty: 32, photo: '', date: getDate()},
+    {name: 'Haier Model-Board Connector Wire', unit: 'Pcs', qty: 400, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Seal', unit: 'Pcs', qty: 170, photo: '', date: getDate()},
+    {name: 'Haier Model-Transpormer', unit: 'Pcs', qty: 260, photo: '', date: getDate()},
+    {name: 'Haier Model-Top Cover', unit: 'Pcs', qty: 150, photo: '', date: getDate()},
+    {name: 'Haier Model-Display', unit: 'Pcs', qty: 200, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Hinge', unit: 'Pcs', qty: 120, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door Hinge', unit: 'Pcs', qty: 180, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door Handle', unit: 'Pcs', qty: 300, photo: '', date: getDate()},
+    {name: 'Stainless Model-Drum Rubber', unit: 'Pcs', qty: 35, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door (White)', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door (Black)', unit: 'Pcs', qty: 295, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door (Spare Part)', unit: 'Pcs', qty: 60, photo: '', date: getDate()},
+    {name: 'Stainless Powder Box', unit: 'Pcs', qty: 355, photo: '', date: getDate()},
+    {name: 'Stainless Powder Box Handle (Black)', unit: 'Pcs', qty: 480, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door Glass', unit: 'Pcs', qty: 135, photo: '', date: getDate()},
+    {name: 'Stainless Model-Renew Machine', unit: 'Pcs', qty: 950, photo: '', date: getDate()},
+    {name: 'Stainless Model-Motor', unit: 'Pcs', qty: 120, photo: '', date: getDate()},
+    {name: 'Stainless Model-Powder Box Handle (White)', unit: 'Pcs', qty: 120, photo: '', date: getDate()},
+    {name: 'Easylife Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For E Model WM Down Side', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For S Model WM (Big Size)', unit: 'Pcs', qty: 3700, photo: '', date: getDate()},
+    {name: 'Almasa Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, photo: '', date: getDate()},
+    {name: 'Almasa Sticker for S Model WM (Big Size)', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'S Model Sticker For E Model WM (Small Size)', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'S Model Sticker For S Model (Big Size)', unit: 'Pcs', qty: 1200, photo: '', date: getDate()},
+    {name: 'Almasa Sticker For Detergent Machine', unit: 'Pcs', qty: 460, photo: '', date: getDate()},
+    {name: 'Almasa Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 60, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For Detergent Machine', unit: 'Pcs', qty: 460, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 200, photo: '', date: getDate()},
+    {name: 'Smile Gulf Sticker For Detergent Machine', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'Wall Plug with Cap', unit: 'PCS', qty: 1100, photo: '', date: getDate()},
+    {name: 'Triple Pole Surface Switch (Isolator)', unit: 'PCS', qty: 0, photo: '', date: getDate()},
+    {name: 'Single Socket Box', unit: 'PCS', qty: 60, photo: '', date: getDate()},
+    {name: 'Fuse Plug (blog switch)', unit: 'PCS', qty: 16, photo: '', date: getDate()},
+    {name: 'Single Socket (hole circle)', unit: 'PCS', qty: 60, photo: '', date: getDate()},
+    {name: '3 Way Junction Box', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'Electrical PVC Socket', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'Water Proof Single Socket', unit: 'PCS', qty: 75, photo: '', date: getDate()},
+    {name: 'Circuit Breaker', unit: 'PCS', qty: 4, photo: '', date: getDate()},
+    {name: 'Protection Device', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'Water Motor Pump', unit: 'PCS', qty: 5, photo: '', date: getDate()},
+    {name: 'Pressure Controller', unit: 'PCS', qty: 8, photo: '', date: getDate()},
+    {name: 'Cable Clip (22 mm)', unit: 'Ctns', qty: 1, photo: '', date: getDate()},
+    {name: 'Cable Clip (10 mm)', unit: 'PCS', qty: 10000, photo: '', date: getDate()},
+    {name: 'Cable Tie', unit: 'PKGS', qty: 15, photo: '', date: getDate()},
+    {name: 'PU Foam', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'ZIC', unit: 'PCS', qty: 1, photo: '', date: getDate()},
+    {name: 'Cable Wire', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'Electrical Tape', unit: 'PCS', qty: 60, photo: '', date: getDate()},
+    {name: 'Double Socket Box', unit: 'PCS', qty: 150, photo: '', date: getDate()},
+    {name: 'FW-40', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'Single Socket', unit: 'PCS', qty: 120, photo: '', date: getDate()},
+    {name: 'Water Proof (double socket)', unit: 'PCS', qty: 55, photo: '', date: getDate()},
+    {name: 'Double Socket', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'Water Pump Motor', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'Water Tap', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'Seal Tape', unit: 'PCS', qty: 360, photo: '', date: getDate()},
+    {name: 'Liquid Detergent', unit: 'Drums', qty: 8, photo: '', date: getDate()},
+    {name: 'White Spray Paint', unit: 'PCS', qty: 8, photo: '', date: getDate()},
+    {name: 'Core Solder Wire', unit: 'PCS', qty: 5, photo: '', date: getDate()},
+    {name: 'Capacitor', unit: 'PCS', qty: 178, photo: '', date: getDate()},
+    {name: 'Waterproof Sheet', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'PVC Cement (Glue)', unit: 'PCS', qty: 11, photo: '', date: getDate()},
+    {name: 'Smart IC Card Water Control Machine', unit: 'PCS', qty: 116, photo: '', date: getDate()},
+    {name: 'Power Tool', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'PPR Tee (25mm)', unit: 'PCS', qty: 250, photo: '', date: getDate()},
+    {name: 'PVC Socket (4")', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'PPR Female Elbow (25mm)', unit: 'PCS', qty: 50, photo: '', date: getDate()},
+    {name: 'PPR Value (25mm)', unit: 'PCS', qty: 40, photo: '', date: getDate()},
+    {name: 'PVC Socket (2")', unit: 'PCS', qty: 100, photo: '', date: getDate()},
+    {name: 'PVC U (4")', unit: 'PCS', qty: 7, photo: '', date: getDate()},
+    {name: 'PVC Tee (3")', unit: 'PCS', qty: 7, photo: '', date: getDate()},
+    {name: 'PPR Reducer (32-25 mm)', unit: 'PCS', qty: 0, photo: '', date: getDate()},
+    {name: 'PPR Reducer (25 mm)', unit: 'PCS', qty: 0, photo: '', date: getDate()},
+    {name: 'PPR Tee (32mm)', unit: 'PCS', qty: 150, photo: '', date: getDate()},
+    {name: 'PPR Female Socket (25mm)', unit: 'PCS', qty: 15, photo: '', date: getDate()},
+    {name: 'PPR Female Tee (25mm)', unit: 'PCS', qty: 150, photo: '', date: getDate()},
+    {name: 'PPR Male Socket (32mm)', unit: 'PCS', qty: 100, photo: '', date: getDate()},
+    {name: 'PVC Socket (82mm)', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PVC Elbow (3")', unit: 'PCS', qty: 8, photo: '', date: getDate()},
+    {name: 'PVC Tee (2")', unit: 'PCS', qty: 75, photo: '', date: getDate()},
+    {name: 'PPR Socket (25mm)', unit: 'PCS', qty: 75, photo: '', date: getDate()},
+    {name: 'PPR Elbow (25mm)', unit: 'PCS', qty: 80, photo: '', date: getDate()},
+    {name: 'PPR Union (25mm)', unit: 'PCS', qty: 73, photo: '', date: getDate()},
+    {name: 'PVC U (1-1/2")', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PVC Elbow (1-1/2")', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PPR Elbow (32mm)', unit: 'PCS', qty: 55, photo: '', date: getDate()},
+    {name: 'PVC Elbow (2")', unit: 'PCS', qty: 78, photo: '', date: getDate()},
+    {name: 'U Clamp (2")', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'U Clamp (3/4")', unit: 'PCS', qty: 40, photo: '', date: getDate()},
+    {name: 'Brass Female Tee', unit: 'PCS', qty: 80, photo: '', date: getDate()},
+    {name: 'Brass Nipple', unit: 'PCS', qty: 80, photo: '', date: getDate()},
+    {name: 'Brass Reducer', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PVC Pipe (4")', unit: 'PCS', qty: 6, photo: '', date: getDate()},
+    {name: 'PVC Pipe (3")', unit: 'PCS', qty: 15, photo: '', date: getDate()},
+    {name: 'PVC Pipe (2")', unit: 'PCS', qty: 5, photo: '', date: getDate()},
+    {name: 'PPR Pipe (25mm)', unit: 'PCS', qty: 50, photo: '', date: getDate()},
+    {name: 'PVC Black Pipe (20mm)', unit: 'PCS', qty: 25, photo: '', date: getDate()}
 ];
 
 let users = loadData('users', DEFAULT_USERS);
@@ -1302,6 +1316,54 @@ function delAcc(){
 }
 function clearAcc(){ document.getElementById('accQty').value=''; document.getElementById('accKey').value=''; document.getElementById('accDate').value=getDate(); }
 
+/* HANDLE MATERIAL PHOTO (5x5 Auto Fit & Auto Compression to ~70KB) */
+function handleMaterialPhoto(event) {
+    let file = event.target.files[0];
+    if(!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let img = new Image();
+        img.src = e.target.result;
+        img.onload = function() {
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
+
+            // 5x5 Square aspect ratio processing
+            let size = 500; // high enough resolution for crisp 5x5 display
+            canvas.width = size;
+            canvas.height = size;
+
+            let w = img.width;
+            let h = img.height;
+            let minDim = Math.min(w, h);
+            let sx = (w - minDim) / 2;
+            let sy = (h - minDim) / 2;
+
+            ctx.clearRect(0, 0, size, size);
+            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+            // Compress iteratively to target ~70KB (approx 0.7 quality or lower if needed)
+            let quality = 0.8;
+            let dataUrl = canvas.toDataURL('image/jpeg', quality);
+            
+            // Check approximate size in KB (Base64 string length * 0.75 / 1024)
+            while ((dataUrl.length * 3 / 4) > 70 * 1024 && quality > 0.1) {
+                quality -= 0.1;
+                dataUrl = canvas.toDataURL('image/jpeg', quality);
+            }
+
+            document.getElementById('matPhotoBase64').value = dataUrl;
+            let preview = document.getElementById('matPhotoPreview');
+            let placeholder = document.getElementById('matPhotoPlaceholder');
+            preview.src = dataUrl;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+    }
+    reader.readAsDataURL(file);
+}
+
 function getFilteredInv(){
     let s = normStr(document.getElementById('searchInvAll').value);
     return matData.filter(x=> normStr(x.name+' '+x.unit+' '+x.qty+' '+x.date).includes(s))
@@ -1313,6 +1375,7 @@ function addMat(){
     let name = document.getElementById('matName').value.trim(); 
     let unit = document.getElementById('matUnit').value; 
     let qty = parseInt(document.getElementById('matQty').value);
+    let photo = document.getElementById('matPhotoBase64').value;
     
     if(!name || isNaN(qty) || qty <= 0) return alert('Fill fields correctly!');
     
@@ -1323,6 +1386,7 @@ function addMat(){
         if(idx > -1) {
             matData[idx].qty = parseInt(matData[idx].qty) + qty; 
             matData[idx].date = getDate();
+            if(photo) matData[idx].photo = photo;
             alert(`✅ Material Updated! New Qty added. Total: ${matData[idx].qty}`);
         }
     } else {
@@ -1330,8 +1394,9 @@ function addMat(){
         if(idx > -1){ 
             matData[idx].qty = parseInt(matData[idx].qty) + qty; 
             matData[idx].date = getDate(); 
+            if(photo) matData[idx].photo = photo;
         }else{ 
-            matData.push({name:name, unit:unit, qty:qty, date:getDate()}); 
+            matData.push({name:name, unit:unit, qty:qty, photo:photo, date:getDate()}); 
             alert('✅ Material Saved!');
         }
     }
@@ -1341,8 +1406,12 @@ function addMat(){
 function loadInventory(){
     matData = loadData('inventory', INITIAL_INVENTORY);
     let list = getFilteredInv(); let tb = document.getElementById('matList').querySelector('tbody'); tb.innerHTML='';
-    if(!list.length) return tb.innerHTML='<tr><td colspan="6" class="empty">No Items Found</td></tr>';
-    list.forEach((x, index)=>{ let st = getStockStatus(x.qty, x.unit); tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${index + 1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; });
+    if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Items Found</td></tr>';
+    list.forEach((x, index)=>{ 
+        let st = getStockStatus(x.qty, x.unit); 
+        let photoHtml = x.photo ? `<img src="${x.photo}" style="width:35px; height:35px; object-fit:cover; border-radius:4px; border:1px solid #334155;">` : `<span style="color:#64748b; font-size:10px;">No Photo</span>`;
+        tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${index + 1}</td><td style="text-align:center;">${photoHtml}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; 
+    });
 }
 
 function fillMat(name) {
@@ -1352,6 +1421,19 @@ function fillMat(name) {
         document.getElementById('matName').value = x.name;
         document.getElementById('matUnit').value = x.unit;
         document.getElementById('matDate').value = x.date || getDate();
+        
+        let preview = document.getElementById('matPhotoPreview');
+        let placeholder = document.getElementById('matPhotoPlaceholder');
+        if(x.photo) {
+            document.getElementById('matPhotoBase64').value = x.photo;
+            preview.src = x.photo;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        } else {
+            document.getElementById('matPhotoBase64').value = '';
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+        }
         
         document.getElementById('matName').disabled = true;
         document.getElementById('matUnit').disabled = true;
@@ -1365,6 +1447,12 @@ function clearMat() {
     document.getElementById('matOrigName').value=''; 
     document.getElementById('matName').value=''; 
     document.getElementById('matQty').value=''; 
+    document.getElementById('matPhotoBase64').value='';
+    document.getElementById('matPhotoInput').value='';
+    let preview = document.getElementById('matPhotoPreview');
+    let placeholder = document.getElementById('matPhotoPlaceholder');
+    preview.style.display = 'none';
+    placeholder.style.display = 'block';
     document.getElementById('matDate').value = getDate();
     document.getElementById('matName').disabled = false;
     document.getElementById('matUnit').disabled = false;
@@ -1709,6 +1797,7 @@ function exportExcelResult(type){
     let formattedData = data.map((item, index) => {
         let copy = { 'No.': index + 1, ...item };
         delete copy.key;
+        delete copy.photo;
         return copy;
     });
 
@@ -1741,6 +1830,7 @@ function exportAllExcelData() {
         let cleanData = s.data.map((item, index) => {
             let copy = { 'No.': index + 1, ...item };
             delete copy.key; 
+            delete copy.photo;
             return copy;
         });
         let ws = XLSX.utils.json_to_sheet(cleanData.length ? cleanData : [{ Status: 'No Records Found' }]);
@@ -1778,9 +1868,9 @@ function exportAllPDFData() {
                 .print-report-title { text-align: left; font-size: 12px; font-weight: bold; margin: 8px 0 3px 0; text-transform: uppercase; color: #000; }
                 .print-date-generated { text-align: left; font-size: 10px; font-weight: bold; margin-bottom: 8px; color: #333; }
                 .sec-title { background: #e2e8f0; padding: 6px 10px; font-size: 12px; font-weight: bold; border: 1px solid #000; border-bottom: none; margin-top: 25px; text-transform: uppercase; text-align: center; break-before: page; page-break-before: always; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px; }
-                th, td { border: 1px solid #000; padding: 6px 5px; text-align: left; }
-                th { background: #f1f5f9; font-weight: bold; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10px; background: white !important; }
+                th, td { border: 1px solid #000 !important; padding: 4px 4px !important; text-align: left; color: black !important; background: transparent !important; white-space: normal !important; }
+                th { background: #e2e8f0 !important; color: black !important; font-weight: bold; }
                 .print-signature-section { margin-top: 25px; width: 100%; page-break-inside: avoid; }
                 .print-signature-box { float: right; width: 250px; text-align: left; font-size: 13px; color: #000; }
                 @page { size: A4 landscape; margin: 0.5cm 0.8cm 0.5cm 0.8cm; }
@@ -1878,7 +1968,7 @@ function importExcel(e){
             let n = String(row['MATERIALS']||row['name']||'').trim(); let q = parseInt(row['QTY']||row['qty']||0);
             if(!n || !q) return;
             let ex = matData.find(x=>normStr(x.name)===normStr(n));
-            if(ex){ ex.qty += q; }else{ matData.push({name:n, unit:'Pcs', qty:q, date:getDate()}); }
+            if(ex){ ex.qty += q; }else{ matData.push({name:n, unit:'Pcs', qty:q, photo:'', date:getDate()}); }
         });
         saveData('inventory',matData); loadInventory(); loadMonitoring(); alert('Import Done!');
     }; r.readAsBinaryString(f);
