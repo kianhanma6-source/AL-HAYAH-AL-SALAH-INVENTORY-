@@ -2,47 +2,1986 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST LOGIN</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>AL HAYAH AL SAHLAH - WM SYSTEM</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <style>
-        body{font-family:Arial; text-align:center; padding-top:50px; background:#0f172a; color:white;}
-        button{padding:15px 30px; font-size:18px; background:#16a34a; color:white; border:none; border-radius:8px; cursor:pointer;}
-        button:hover{background:#15803d;}
+        *{box-sizing:border-box; font-family:Arial, sans-serif; margin:0; padding:0;}
+        
+        /* DEFAULT BODY / MAIN PAGE DESIGN WITH GRADIENT ANIMATION */
+        html, body{
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            background-size: 200% 200%;
+            animation: gradientBG 15s ease infinite;
+            width:100%;
+            height:auto !important;
+            min-height:100vh;
+            overflow-x:hidden;
+            overflow-y:auto !important;
+            padding-bottom:50px;
+            color: #f8fafc;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body{
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* LOGIN MODE STYLING */
+        body.login-mode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                radial-gradient(circle at top left,#38bdf8 0%,transparent 35%),
+                radial-gradient(circle at bottom right,#7c3aed 0%,transparent 35%),
+                linear-gradient(135deg,#020617,#0f172a,#1e293b,#111827);
+            overflow: hidden !important;
+            padding: 0;
+        }
+        body.login-mode::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background: radial-gradient(circle,#38bdf855 2px,transparent 2px);
+            background-size:80px 80px;
+            animation:movebg 25s linear infinite;
+            z-index: 1;
+        }
+        @keyframes movebg{
+            from{transform:translateY(0);}
+            to{transform:translateY(-80px);}
+        }
+
+        /* GLASSMORPHISM LOGIN BOX */
+        .login-box{
+            width:380px;
+            max-width:95%;
+            padding:35px;
+            border-radius:25px;
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(15px);
+            -webkit-backdrop-filter:blur(15px);
+            border:1px solid rgba(255,255,255,.25);
+            box-shadow: 0 25px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.30);
+            position:relative;
+            z-index:10;
+            margin: auto;
+            text-align: center;
+        }
+       
+        .login-logo {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 50% !important;
+            border: 3px solid rgba(56, 189, 248, 0.8);
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+            display: block;
+            margin: 0 auto 20px auto;
+            background: #1e293b;
+        }
+
+        .login-system-title {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            background: linear-gradient(270deg, #38bdf8, #a855f7, #ec4899, #eab308, #22c55e);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientTextAnim 6s ease infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        }
+
+        @keyframes gradientTextAnim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-box .title{ text-align:center; color:#fff; font-size:24px; font-weight:bold; margin-top:18px; }
+        .login-box .subtitle{ text-align:center; color:#7dd3fc; margin-top:8px; font-size:15px; }
+        
+        .login-box input[type="text"], .login-box input[type="password"]{ width:100%; margin:8px 0; padding:14px; border:none; border-radius:12px; background:#1f2937; color:#fff; font-size:15px; text-align: left; }
+        .login-box input:focus{ outline:none; border:2px solid #38bdf8; box-shadow: none; }
+        
+        .password-container { position: relative; width: 100%; }
+        .password-container input { padding-right: 45px !important; }
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; font-size: 16px; user-select: none; }
+        
+        .remember-container { display: flex; align-items: center; margin: 12px 0 5px 0; color: #e2e8f0; font-size: 14px; cursor: pointer; }
+        .remember-container input { width: auto; margin-right: 8px; cursor: pointer; accent-color: #38bdf8; }
+
+        .login-box button{
+            width:100%; margin-top:15px; padding:14px; border:none; border-radius:15px; font-size:16px; font-weight:bold; color:#fff; cursor:pointer;
+            background: linear-gradient(#22c55e,#15803d);
+            box-shadow: 0 8px 0 #166534, 0 18px 28px rgba(0,0,0,.45);
+            transition:.2s;
+        }
+        .login-box button:hover{ transform:translateY(-2px); background: linear-gradient(#22c55e,#15803d); }
+        .login-box button:active{ transform:translateY(6px); box-shadow:0 2px 0 #166534; }
+        
+        .login-footer, .tab-footer{ width:100%; text-align:center; color:#94a3b8; font-size:11px; letter-spacing:1px; text-transform: uppercase; }
+        .login-footer{ position:fixed; bottom:12px; z-index: 10; left: 0; }
+        .tab-footer{ margin-top: 30px; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        .form-group{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 15px; }
+        .form-row-2col { display: flex; gap: 15px; width: 100%; }
+        .form-row-2col .form-group { flex: 1; margin-bottom: 14px; }
+        label{ font-weight:bold; font-size:13px; color:#94a3b8; white-space: nowrap; width: 130px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px;}
+        .form-row-2col label { width: auto; min-width: 80px; }
+        
+        #mainPage input, #mainPage select{ flex: 1; padding:12px; border:1px solid #334155; border-radius:10px; font-size:14px; width: 100%; background: #1e293b; color: #f8fafc; }
+        #mainPage input:focus, #mainPage select:focus{ outline:none; border-color:#38bdf8; box-shadow:0 0 0 2px rgba(56,189,248,0.2); }
+        #mainPage input:read-only, #mainPage input:disabled, #mainPage select:disabled{ background:#0f172a; cursor:not-allowed; color:#64748b; border-color:#1e293b; }
+        
+        #mainPage button{ background:#38bdf8; color:#0f172a; border:none; cursor:pointer; font-weight:bold; border-radius:10px; padding: 11px 16px; transition:all 0.2s; width: auto; margin-top: 0; box-shadow: none; }
+        #mainPage button:hover{ background:#0ea5e9; color: white; }
+        #mainPage button:active{ transform:scale(0.98); box-shadow: none; }
+        #mainPage .btn-danger{ background:#ef4444; color: white; } #mainPage .btn-danger:hover{ background:#dc2626; }
+        #mainPage .btn-success{ background:#22c55e; color: white; } #mainPage .btn-success:hover{ background:#16a34a; }
+        #mainPage .btn-sm{ padding:9px 12px; font-size:13px; white-space: nowrap; width: auto; }
+
+        .top-bar{ background:#0f172a; color:white; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; gap:10px; position:sticky; top:0; z-index:99; border-bottom: 1px solid #1e293b; }
+        .top-bar h3{ font-size:18px; font-weight: bold; letter-spacing: 1px; color:#38bdf8; }
+        
+        .tab-menu{ display:flex; background:#0f172a; overflow-x:auto; white-space:nowrap; position:sticky; top:58px; z-index:98; padding: 8px 12px; gap: 8px; border-bottom: 1px solid #1e293b; }
+        .tab-btn{ padding:10px 20px; background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid #334155; font-weight:bold; width:auto; font-size:13px; cursor:pointer; border-radius: 8px; transition: all 0.3s ease; }
+        .tab-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .tab-btn.active{ background:#38bdf8; color:#0f172a; border-color: #38bdf8; box-shadow: 0 0 12px rgba(56,189,248,0.4); }
+        
+        .tab-content{ display:none; padding:15px 12px; padding-bottom:30px; width:100%; }
+        .tab-content.active{ display:block; }
+
+        .card{ background:#1e293b; padding:20px; border-radius:15px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,0.25); border: 1px solid #334155; width:100%; color: #f8fafc; }
+        .card h4 { margin-bottom: 12px; color: #38bdf8; font-size: 15px; letter-spacing: 0.5px; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 12px; border-radius: 10px; border: 1px solid #334155; }
+        table{ width:100%; border-collapse:collapse; font-size:13px; table-layout: auto; background: #0f172a; }
+        th, td{ border:1px solid #334155; padding:12px 10px; text-align:left; vertical-align:middle; white-space:nowrap; cursor: pointer; }
+        th{ background:#1e293b; font-size:12px; font-weight:bold; position: sticky; top: 0; color: #94a3b8; text-transform: uppercase; }
+        td { color: #e2e8f0; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        .empty{ text-align:center; color:#64748b; padding:25px !important; }
+        
+        .btn-group{ display:flex; justify-content: flex-end; gap:8px; margin-top:15px; width:100%; align-items:center; flex-wrap: nowrap; }
+        .btn-group-vertical { display: flex; flex-direction: column; width: 100%; gap: 12px; margin-top: 15px; }
+        .btn-group-vertical button { width: 100%; padding: 14px; font-size: 14px; text-align: center; }
+
+        .critical{ background:transparent !important; color:#ef4444 !important; font-weight:bold; }
+        .order-now{ background:transparent !important; color:#f59e0b !important; font-weight:bold; }
+        .warning{ background:transparent !important; color:#10b981 !important; font-weight:bold; }
+        .normal{ background:transparent !important; color:inherit; font-weight:normal; }
+        
+        .combo-wrap{ display:flex; gap:6px; align-items:center; flex: 1; width: 100%; }
+        .combo-wrap select{ flex:1; }
+        .hidden{ display:none !important; }
+        
+        .search-panel{ background:#0f172a; padding:14px; border-radius:12px; margin-bottom:16px; border:1px solid #334155; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .search-panel input { background: #1e293b; color: #fff; border: 1px solid #334155; }
+        .search-actions{ display:flex; gap:8px; align-items: center; justify-content: flex-end; flex-shrink: 0; }
+        
+        /* PRINT HEADER SET UP */
+        .print-header{ display:none; margin-bottom:15px; border-bottom: 2px solid #000; padding-bottom: 10px; text-align: center; }
+        .print-header-flex{ display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 8px; }
+        .print-logo { width: 55px; height: 55px; object-fit: cover; border-radius: 50% !important; flex-shrink: 0; }
+        .print-header-text { display: flex; flex-direction: column; text-align: left; }
+        .print-header h2{ color:#000; margin-bottom:2px; font-size:16px; font-weight: bold; }
+        .print-header p{ color:#333; font-size:9px; font-weight: bold; text-transform: uppercase; }
+        .print-report-title { text-align: left; font-size: 12px; font-weight: bold; margin: 8px 0 3px 0; text-transform: uppercase; color: #000; }
+        .print-date-generated { text-align: left; font-size: 10px; font-weight: bold; margin-bottom: 8px; color: #333; }
+        
+        /* PREPARED BY SIGNATURE FOOTER FOR PRINT */
+        .print-signature-section { display: none; margin-top: 25px; width: 100%; page-break-inside: avoid; }
+        .print-signature-box { float: right; width: 250px; text-align: left; font-size: 13px; color: #000; }
+
+        @media (max-width:768px) {
+            .form-group { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .form-row-2col { flex-direction: column; gap: 0; }
+            label { width: 100%; }
+            .btn-group, .search-panel { flex-wrap: wrap; justify-content: flex-end; }
+            .search-panel input { width: 100%; }
+        }
+
+        @media print {
+            html, body {
+                background: white !important;
+                background-color: white !important;
+                color: black !important;
+                height: auto !important;
+                min-height: 0 !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            body::before { display: none !important; }
+            *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+            .top-bar, .tab-menu, .search-panel, .btn-group, button, label, input, select, 
+            .login-box, .login-footer, .tab-footer, #logistic .tab-menu, .form-group, .card:first-child, .no-print, .import-export-group, h4{
+                display:none !important;
+            }
+            .tab-content { display: none !important; }
+            .tab-content.active, .tab-content.active .card{
+                display:block !important; padding:0 !important; box-shadow:none !important; margin:0 !important; width:100% !important; background: transparent !important; border: none !important;
+            }
+            
+            /* REPEAT HEADER ON EVERY PAGE */
+            .print-header { 
+                display: block !important; 
+                break-before: page;
+                page-break-before: always;
+            }
+            .tab-content.active .card:nth-of-type(2) .print-header {
+                display: block !important;
+                break-before: auto !important;
+                page-break-before: auto !important;
+                break-inside: avoid;
+            }
+
+            @page {
+                size: A4 landscape;
+                margin: 0.5cm 0.8cm 0.5cm 0.8cm;
+                @top-center {
+                    content: "";
+                }
+            }
+
+            .print-signature-section { display: block !important; }
+            table{ border:1px solid #000 !important; font-size:11px; width:100%; table-layout:auto; background: white !important; }
+            th, td{ border:1px solid #000 !important; padding:6px 5px; white-space: normal !important; text-align:left; color: black !important; background: transparent !important; }
+            th{background:#e2e8f0 !important; color:black !important; font-weight:bold;}
+        }
     </style>
 </head>
-<body>
+<body class="login-mode" onload="checkSession()">
 
-<h1>TEST LOGIN WITH GITHUB</h1>
-<button onclick="loginGit()">LOGIN WITH GITHUB</button>
+<div id="loginPage" class="login-box">
+    <img src="logo.png" class="login-logo" alt="Logo">
+    <div class="login-system-title">WAREHOUSE INVENTORY SYSTEM</div>
+    
+    <input type="text" id="user" placeholder="👤 Username" autocomplete="username">
+    
+    <div class="password-container">
+        <input type="password" id="pass" placeholder="🔒 Password" autocomplete="current-password">
+        <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+    </div>
+
+    <label class="remember-container">
+        <input type="checkbox" id="rememberMe"> Remember Me
+    </label>
+    
+    <button onclick="login()">LOGIN</button>
+</div>
+<div id="loginFooter" class="login-footer">
+    NAD ITALLO PROGRAMMER v1.0
+</div>
+
+<!-- MAIN DASHBOARD PAGE -->
+<div id="mainPage" class="hidden">
+    <div class="top-bar">
+        <h3>AL HAYAH AL SAHLAH</h3>
+        <button class="btn-sm btn-danger" onclick="logout()">LOGOUT</button>
+    </div>
+
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="openTab('returned')">RETURNED WM</button>
+        <button class="tab-btn" onclick="openTab('accomplish')">ACCOMPLISHMENT</button>
+        <button class="tab-btn" onclick="openTab('logistic')">LOGISTIC</button>
+        <button class="tab-btn" onclick="openTab('users')">USERS</button>
+        <button class="tab-btn" onclick="openTab('settings')">SETTINGS</button>
+    </div>
+
+    <!-- RETURNED WM -->
+    <div id="returned" class="tab-content active">
+        <div class="card">
+            <div class="search-panel">
+                <input type="text" id="searchRetAll" placeholder="🔍 Search All..." oninput="loadRet()">
+                <div class="search-actions">
+                    <button class="btn-sm btn-success" onclick="resetRetFilter()">♻️ Reset</button>
+                    <button class="btn-sm" onclick="exportExcelResult('ret')">📊 Excel</button>
+                    <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>TRANS NO.</label>
+                <input type="text" id="retTrans" readonly>
+            </div>
+            <div class="form-group">
+                <label>RETURN DATE</label>
+                <input type="text" id="retFormDate" readonly>
+            </div>
+            <div class="form-group">
+                <label>NAME</label>
+                <div class="combo-wrap">
+                    <select id="retName"></select>
+                    <button class="btn-sm" onclick="addName('retName')">+</button>
+                    <button class="btn-sm btn-danger" onclick="delName('retName')">-</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>AREA</label>
+                <div class="combo-wrap">
+                    <select id="retArea"></select>
+                    <button class="btn-sm" onclick="addArea('retArea')">+</button>
+                    <button class="btn-sm btn-danger" onclick="delArea('retArea')">-</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>WM NO.</label>
+                <input type="text" id="retWm">
+            </div>
+            <div class="form-group">
+                <label>KEY NO.</label>
+                <input type="text" id="retKey">
+            </div>
+            <div class="btn-group">
+                <button class="btn-sm btn-success" onclick="addRet()">💾 SAVE </button>
+                <button class="btn-sm btn-danger" onclick="delRet()">🗑️DELETE</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="print-header">
+                <div class="print-header-flex">
+                    <img src="logo.png" class="print-logo" alt="Company Logo">
+                    <div class="print-header-text">
+                        <h2>AL HAYAH AL SAHLAH</h2>
+                        <p>Electronics Devices and Repair</p>
+                    </div>
+                </div>
+                <div class="print-report-title">RETURNED WM REPORT</div>
+                <div class="print-date-generated" id="printDateRet">Date Generated: </div>
+            </div>
+            <h4>📋 RETURNED WM HISTORY</h4>
+            <div class="table-responsive">
+                <table id="retList">
+                    <thead><tr><th>No.</th><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="print-signature-section">
+                <div class="print-signature-box">
+                    Prepared by:<br>
+                    <span id="sigNameRet" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                    <span id="sigPosRet" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
+                </div>
+            </div>
+        </div>
+        <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
+    </div>
+
+    <!-- ACCOMPLISHMENT -->
+    <div id="accomplish" class="tab-content">
+        <div class="card">
+            <div class="search-panel">
+                <input type="text" id="searchAccAll" placeholder="🔍 Search All..." oninput="loadAcc()">
+                <div class="search-actions">
+                    <button class="btn-sm btn-success" onclick="resetAccFilter()">♻️ Reset</button>
+                    <button class="btn-sm" onclick="exportExcelResult('acc')">📊 Excel</button>
+                    <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
+                </div>
+            </div>
+            
+            <input type="hidden" id="accKey">
+            <div class="form-group">
+                <label>DATE & TIME</label>
+                <input type="text" id="accDate" readonly>
+            </div>
+            <div class="form-group">
+                <label>NAME</label>
+                <div class="combo-wrap">
+                    <select id="accName"></select>
+                    <button class="btn-sm" onclick="addName('accName')">+</button>
+                    <button class="btn-sm btn-danger" onclick="delName('accName')">-</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>AREA</label>
+                <div class="combo-wrap">
+                    <select id="accArea"></select>
+                    <button class="btn-sm" onclick="addArea('accArea')">+</button>
+                    <button class="btn-sm btn-danger" onclick="delArea('accArea')">-</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>ACTIVITY</label>
+                <div class="combo-wrap">
+                    <select id="accAct">
+                        <option value="REPAIRED BOARD">REPAIRED BOARD</option>
+                        <option value="SCRAP">SCRAP</option>
+                        <option value="ASSEMBLE MACHINE">ASSEMBLE MACHINE</option>
+                        <option value="RENEW MACHINE">RENEW MACHINE</option>
+                    </select>
+                    <button class="btn-sm" onclick="addAct()">+</button>
+                    <button class="btn-sm btn-danger" onclick="delAct()">-</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>QTY</label>
+                <input type="number" id="accQty" min="1">
+            </div>
+            <div class="btn-group">
+                <button class="btn-sm btn-success" onclick="addAcc()">💾 SAVE</button>
+                <button class="btn-sm btn-danger" onclick="delAcc()">🗑️ DELETE</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="print-header">
+                <div class="print-header-flex">
+                    <img src="logo.png" class="print-logo" alt="Company Logo">
+                    <div class="print-header-text">
+                        <h2>AL HAYAH AL SAHLAH</h2>
+                        <p>Electronics Devices and Repair</p>
+                    </div>
+                </div>
+                <div class="print-report-title">ACCOMPLISHMENT REPORT</div>
+                <div class="print-date-generated" id="printDateAcc">Date Generated: </div>
+            </div>
+            <h4>📋 ACCOMPLISHMENT HISTORY</h4>
+            <div class="table-responsive">
+                <table id="accList">
+                    <thead><tr><th>No.</th><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="print-signature-section">
+                <div class="print-signature-box">
+                    Prepared by:<br>
+                    <span id="sigNameAcc" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                    <span id="sigPosAcc" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
+                </div>
+            </div>
+        </div>
+        <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
+    </div>
+
+    <!-- LOGISTIC -->
+    <div id="logistic" class="tab-content">
+        <div class="tab-menu" style="background:#0f172a; position:sticky; top:58px; z-index:97; border-bottom: 1px solid #334155;">
+            <button class="tab-btn active" onclick="openSubTab('inventory')">INVENTORY</button>
+            <button class="tab-btn" onclick="openSubTab('deployment')">DEPLOYMENT</button>
+            <button class="tab-btn" onclick="openSubTab('monitoring')">MONITORING</button>
+        </div>
+        
+        <!-- INVENTORY -->
+        <div id="inventory" class="tab-content active">
+            <div class="card">
+                <div class="search-panel">
+                    <input type="text" id="searchInvAll" placeholder="🔍 Search All..." oninput="loadInventory()">
+                    <div class="search-actions">
+                        <button class="btn-sm btn-success" onclick="resetInvFilter()">♻️ Reset</button>
+                        <button class="btn-sm" onclick="exportExcelResult('inv')">📊 Excel</button>
+                        <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="matOrigName">
+                <div class="form-group">
+                    <label>MATERIAL NAME</label>
+                    <input type="text" id="matName" placeholder="Type name or select below">
+                </div>
+                
+                <!-- UPLOAD PHOTO 5X5 AUTO FIT & AUTO 70KB -->
+                <div class="form-group">
+                    <label>PHOTO (5x5, max 70KB)</label>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                        <input type="file" id="matPhotoInput" accept="image/*" onchange="handleMaterialPhoto(event)" style="padding:8px;">
+                        <input type="hidden" id="matPhotoBase64">
+                        <div style="width: 100px; height: 100px; border: 2px dashed #334155; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0f172a;">
+                            <img id="matPhotoPreview" src="" alt="No Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <span id="matPhotoPlaceholder" style="font-size: 11px; color: #64748b; text-align: center;">5x5 Photo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>UNIT</label>
+                    <select id="matUnit">
+                        <option value="Pcs">Pcs</option>
+                        <option value="Pack">Pack</option>
+                        <option value="Box">Box</option>
+                        <option value="Sack">Sack</option>
+                        <option value="Ctns">Ctns</option>
+                        <option value="Roll">Roll</option>
+                        <option value="Pallet">Pallet</option>
+                        <option value="Pkg">Pkg</option>
+                        <option value="Drum">Drum</option>
+                        <option value="PCS">PCS</option>
+                        <option value="PKGS">PKGS</option>
+                        <option value="Drums">Drums</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>QTY</label>
+                    <input type="number" id="matQty" min="1" placeholder="Enter quantity">
+                </div>
+                <div class="form-group">
+                    <label>DATE & TIME</label>
+                    <input type="text" id="matDate" readonly>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-sm btn-success" onclick="addMat()">💾 SAVE</button>
+                    <button class="btn-sm btn-danger" onclick="delMat()">🗑️ DELETE</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="print-header">
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">INVENTORY STATUS REPORT</div>
+                    <div class="print-date-generated" id="printDateInv">Date Generated: </div>
+                </div>
+                <h4>📦 INVENTORY STATUS</h4>
+                <div class="table-responsive">
+                    <table id="matList">
+                        <thead><tr><th>No.</th><th>PHOTO</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th><th>LAST UPDATED</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="print-signature-section">
+                    <div class="print-signature-box">
+                        Prepared by:<br>
+                        <span id="sigNameInv" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                        <span id="sigPosInv" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DEPLOYMENT -->
+        <div id="deployment" class="tab-content">
+            <div class="card">
+                <div class="search-panel">
+                    <input type="text" id="searchDepAll" placeholder="🔍 Search All..." oninput="loadDep()">
+                    <div class="search-actions">
+                        <button class="btn-sm btn-success" onclick="resetDepFilter()">♻️ Reset</button>
+                        <button class="btn-sm" onclick="exportExcelResult('dep')">📊 Excel</button>
+                        <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
+                    </div>
+                </div>
+                
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>TRANS NO.</label>
+                        <input type="text" id="depTrans" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>DATE & TIME</label>
+                        <input type="text" id="depDate" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>NAME</label>
+                    <div class="combo-wrap">
+                        <select id="depName"></select>
+                        <button class="btn-sm" onclick="addName('depName')">+</button>
+                        <button class="btn-sm btn-danger" onclick="delName('depName')">-</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>AREA</label>
+                    <div class="combo-wrap">
+                        <select id="depArea"></select>
+                        <button class="btn-sm" onclick="addArea('depArea')">+</button>
+                        <button class="btn-sm btn-danger" onclick="delArea('depArea')">-</button>
+                    </div>
+                </div>
+                <div class="form-group" style="align-items: flex-start;">
+                    <label>MULTIPLE ITEMS</label>
+                    <div style="flex: 1; width: 100%;">
+                        <div id="multiDepContainer">
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;">
+                                <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                                    <select class="depMatSel" style="flex: 1;"></select>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                                    <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+                                    <select class="depUnitSel" style="max-width: 90px;">
+                                        <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                                        <option value="Box">Box</option><option value="Sack">Sack</option>
+                                        <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                                        <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                                        <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                                        <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+                                    </select>
+                                    <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
+                                    <div style="display: flex; gap: 4px; margin-left: auto;">
+                                        <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                                        <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-sm btn-success" onclick="addDep()">💾 RELEASED / SAVE</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="print-header">
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">DEPLOYMENT LOGS REPORT</div>
+                    <div class="print-date-generated" id="printDateDep">Date Generated: </div>
+                </div>
+                <h4>🚚 DEPLOYMENT LOGS</h4>
+                <div class="table-responsive">
+                    <table id="depList">
+                        <thead><tr><th>No.</th><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="print-signature-section">
+                    <div class="print-signature-box">
+                        Prepared by:<br>
+                        <span id="sigNameDep" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                        <span id="sigPosDep" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MONITORING -->
+        <div id="monitoring" class="tab-content">
+            <div class="card">
+                <div class="search-panel no-print">
+                    <input type="text" id="searchMonAll" placeholder="🔍 Search All..." oninput="loadMonitoring()" style="max-width: 250px;">
+                    <div class="search-actions">
+                        <button class="btn-sm btn-success" onclick="resetMonFilter()">♻️ Reset</button>
+                        <button class="btn-sm" onclick="exportMonitoringExcel()">📊 Excel</button>
+                        <button class="btn-sm" onclick="saveAsPDFResult()">📑 PDF</button>
+                    </div>
+                </div>
+                <div class="print-header">
+                    <div class="print-header-flex">
+                        <img src="logo.png" class="print-logo" alt="Company Logo">
+                        <div class="print-header-text">
+                            <h2>AL HAYAH AL SAHLAH</h2>
+                            <p>Electronics Devices and Repair</p>
+                        </div>
+                    </div>
+                    <div class="print-report-title">LIVE CRITICAL STOCK MONITORING REPORT</div>
+                    <div class="print-date-generated" id="printDateMon">Date Generated: </div>
+                </div>
+                <h4>📊 LIVE STOCK MONITORING</h4>
+                <div class="table-responsive">
+                    <table id="monList">
+                        <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="print-signature-section">
+                    <div class="print-signature-box">
+                        Prepared by:<br>
+                        <span id="sigNameMon" style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;"></span><br>
+                        <span id="sigPosMon" style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
+    </div>
+
+    <!-- USERS -->
+    <div id="users" class="tab-content">
+        <div class="card">
+            <input type="hidden" id="userMode" value="new">
+            <div class="form-group">
+                <label>USERNAME</label>
+                <input type="text" id="newUser">
+            </div>
+            <div class="form-group">
+                <label>PASSWORD</label>
+                <input type="password" id="newPass">
+            </div>
+            <div class="form-group">
+                <label>ACCOUNT NAME</label>
+                <input type="text" id="newFullName" placeholder="e.g. Juan Dela Cruz">
+            </div>
+            <div class="form-group">
+                <label>POSITION</label>
+                <input type="text" id="newPosition" placeholder="e.g. Warehouse Staff">
+            </div>
+            <div class="form-group">
+                <label>ROLE</label>
+                <select id="newRole">
+                    <option value="user">USER</option>
+                    <option value="admin">ADMIN</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button class="btn-sm btn-success" onclick="addUser()">💾 SAVE</button>
+                <button class="btn-sm btn-danger" onclick="delUser()">🗑️DELETE</button>
+            </div>
+        </div>
+        <div class="card">
+            <h4>👤 USER LIST</h4>
+            <div class="table-responsive">
+                <table id="userList">
+                    <thead><tr><th>No.</th><th>USERNAME</th><th>ACCOUNT NAME</th><th>POSITION</th><th>ROLE</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings" class="tab-content">
+        <div class="card">
+            <h4>🛠️ SYSTEM SETTINGS & DATA CONTROL</h4>
+            <div class="btn-group-vertical">
+                <button class="btn-sm" onclick="backupDB()">💾 BACKUP</button>
+                <button class="btn-sm" onclick="document.getElementById('resFile').click()">📂 RESTORE</button>
+                <input type="file" id="resFile" accept=".json" class="hidden" onchange="restoreDB(event)">
+                <button class="btn-sm" onclick="mergeDBBtnTrigger()">🔄 MERGE</button>
+                <input type="file" id="mergeFile" accept=".json" class="hidden" onchange="mergeDB(event)">
+                
+                <button class="btn-sm btn-success" onclick="document.getElementById('excelFile').click()">📥 IMPORT EXCEL</button>
+                <input type="file" id="excelFile" accept=".xlsx,.xls" class="hidden" onchange="importExcel(event)">
+                <button class="btn-sm" onclick="exportAllExcelData()">📊 EXCEL</button>
+                <button class="btn-sm" onclick="exportAllPDFData()">📑 PDF</button>
+                
+                <button class="btn-sm btn-danger" onclick="clearAllDB()">🗑️ CLEAR </button>
+            </div>
+        </div>
+        <div class="card hidden" id="allPrintPreviewContainer"></div>
+        <div class="tab-footer">NAD ITALLO PROGRAMMER v1.0</div>
+    </div>
+</div>
 
 <script>
-// === TAMANG DETALYE MO ===
-const supabase = supabase.createClient(
-    "https://ukcedjaroenwupefohuv.supabase.co",
-    "sb_publishable_XDE34ggUBcxNmQNirhfHyQ_1ItJZJgD"
-);
+const DB_TRANS = 'transNo';
+const DB_DEP_TRANS = 'depTransNo';
+const SESSION_KEY = 'alhaya_session';
+const REMEMBER_ME_KEY = 'alhaya_remember';
+let currentUser = null;
+let transCounter = parseInt(localStorage.getItem(DB_TRANS)) || 1;
+let depTransCounter = parseInt(localStorage.getItem(DB_DEP_TRANS)) || 1;
 
-async function loginGit(){
-    const {error} = await supabase.auth.signInWithOAuth({
-        provider: "github",
-        options:{
-            redirectTo: "https://kianhanma6-source.github.io/AL-HAYAH-AL-SALAH-INVENTORY-/"
-        }
+function getDate(){
+    const d = new Date();
+    return d.toLocaleString('en-GB', {
+        day:'2-digit', month:'2-digit', year:'numeric',
+        hour:'2-digit', minute:'2-digit', second:'2-digit',
+        hour12: false
     });
-    if(error) alert("ERROR: " + error.message);
 }
 
-// Check kung naka-login na
-(async ()=>{
-    const {data:{user}} = await supabase.auth.getUser();
-    if(user){
-        alert("✅ TAGUMPAY! Naka-login ka na: " + user.user_metadata.name);
-        // Kapag gumana na, dito mo ilalagay kung saan pupunta
-        // window.location.href = "pangunahing pahina.html";
-    }
-})();
-</script>
+const DEFAULT_USERS = [
+    {username:'NAD ITALLO', password:'Onin23', fullname:'NINO ANGELO ITALLO', position:'Lead Programmer', role:'programmer'},
+    {username:'LUO', password:'LUO123', fullname:'LUO JIANBIN', position:'Manager', role:'admin'},
+    {username:'Wai', password:'admin123', fullname:'WAI PHYO KYAW', position:'Warehouse Logistics Incharge', role:'user'}
+];
+const DEFAULT_NAMES = [
+    'khan zeb','Rashid Bipuah','Wisdom','Md Rifat Hossain','Abul','afsar','John Kerandi','Alimamy',
+    'ASUMAH MORO','Tariq Khan Atlas Khan','Sadam','Lakben Jefuck','Berber','ILOH Sammel Nnamd','Adil',
+    'Friday','Muhammad Adrees','Hamraz Khzn Nawaz','Muhammad Mujtaba','VINCENT NYAMBOKI MORARA','Juthe thing',
+    'Mohammad Rawais','nasir YAHAYA MOHAMMED','Shoaib Rehman','Mr.Redeemer Kpetsu Klutse','Godfrey Momanyi Isanda',
+    'Leohardo Sisoh','NINO','Edel Frias Dela Cruz','Wai Phyo Kyaw','Mark','ERNESTO JR','Wilmer','Elson Frias Dela Cruz',
+    'KENDRA BAHADUR','Murtaza','Mr.Charles Asiamah','Liton sharif','Abid','Amjad Ali Alam Khan','Rashed','REYNALDO R'
+];
+const DEFAULT_AREAS = [
+    'Sonapur','Al qouz1/Dubai','RAK/UAQ/Fujairah','Sajaa','Jebel Ali','DWC/DIP','DIC1/Golden sky/Jebel Ali',
+    'Al Qouz/warsan/khawaneej','Sharjah','Ajman/Humriyah','Delivery','Installation','Warehouse / Fixing Team','Abudhabi Team'
+];
 
+const INITIAL_INVENTORY = [
+    {name: 'E Model-Powder Box Handle', unit: 'Pcs', qty: 580, photo: '', date: getDate()},
+    {name: 'E Model-Powder Box', unit: 'Pcs', qty: 560, photo: '', date: getDate()},
+    {name: 'E Model-Front Cover Plastic (UP)', unit: 'Pcs', qty: 220, photo: '', date: getDate()},
+    {name: 'E Model-Front Cover Frame', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'E Model-Drum Rubber', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pump Cover(outer)', unit: 'Pcs', qty: 250, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pump Cover(Inner)', unit: 'Pcs', qty: 500, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pipe', unit: 'Pcs', qty: 420, photo: '', date: getDate()},
+    {name: 'E Model-Door Outer Frame', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'E Model-Door Lock', unit: 'Pcs', qty: 1800, photo: '', date: getDate()},
+    {name: 'E Model-Door Inner Frame', unit: 'Pcs', qty: 30, photo: '', date: getDate()},
+    {name: 'E Model-Door Holder', unit: 'Pcs', qty: 800, photo: '', date: getDate()},
+    {name: 'E Model-Drain Pump Plastic', unit: 'Pcs', qty: 900, photo: '', date: getDate()},
+    {name: 'E Model-Door Hinge/Hook', unit: 'Pcs', qty: 1500, photo: '', date: getDate()},
+    {name: 'E Model-Door Back Hinge', unit: 'Pcs', qty: 500, photo: '', date: getDate()},
+    {name: 'E Model-Belt', unit: 'Pcs', qty: 150, photo: '', date: getDate()},
+    {name: 'E Model-Drum Wheel', unit: 'Pcs', qty: 185, photo: '', date: getDate()},
+    {name: 'E Model-Glass', unit: 'Pcs', qty: 12, photo: '', date: getDate()},
+    {name: 'Drain Filter', unit: 'Pcs', qty: 1570, photo: '', date: getDate()},
+    {name: 'Mobile Phone Stand', unit: 'Ctns', qty: 1, photo: '', date: getDate()},
+    {name: 'Vending Machine', unit: 'Pcs', qty: 9, photo: '', date: getDate()},
+    {name: 'Big Coin Box', unit: 'Pcs', qty: 47, photo: '', date: getDate()},
+    {name: 'Wapping Plastic', unit: 'Roll', qty: 5, photo: '', date: getDate()},
+    {name: 'Heat Shrink Tube', unit: 'Roll', qty: 2, photo: '', date: getDate()},
+    {name: 'Detergent Machine Money Box (Big Size)', unit: 'Pcs', qty: 19, photo: '', date: getDate()},
+    {name: 'WM Stand with Rubber', unit: 'Pallet', qty: 1, photo: '', date: getDate()},
+    {name: 'Small Coin Box', unit: 'Pcs', qty: 200, photo: '', date: getDate()},
+    {name: 'Water Lable', unit: 'Pcs', qty: 1550, photo: '', date: getDate()},
+    {name: 'Alarm', unit: 'Pcs', qty: 980, photo: '', date: getDate()},
+    {name: 'Drum Holder Spring Plastic Clip', unit: 'Ctns', qty: 3, photo: '', date: getDate()},
+    {name: 'Cabinet Cover Holeder', unit: 'Pcs', qty: 6720, photo: '', date: getDate()},
+    {name: 'New Board', unit: 'Pcs', qty: 790, photo: '', date: getDate()},
+    {name: 'Counter', unit: 'Pcs', qty: 670, photo: '', date: getDate()},
+    {name: 'Counter Wire', unit: 'Pcs', qty: 1670, photo: '', date: getDate()},
+    {name: 'Coin Box Lock', unit: 'Pcs', qty: 3135, photo: '', date: getDate()},
+    {name: 'Money Box Lock', unit: 'Pcs', qty: 3135, photo: '', date: getDate()},
+    {name: 'Carbon (Big Size) 513.539.5', unit: 'Pkg', qty: 6, photo: '', date: getDate()},
+    {name: 'Carbon (Small Size) 513.536.5', unit: 'Pkg', qty: 30, photo: '', date: getDate()},
+    {name: 'Fuse For Board', unit: 'Pcs', qty: 1800, photo: '', date: getDate()},
+    {name: 'Front Door Position Pin', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'Drum Sharp', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Drain Pump Motor', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Stand Rubber (Square)', unit: 'Ctns', qty: 10, photo: '', date: getDate()},
+    {name: 'Pad Lock', unit: 'Pcs', qty: 3200, photo: '', date: getDate()},
+    {name: 'Detergent Machine (Old)', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'New Coin Device', unit: 'Pcs', qty: 500, photo: '', date: getDate()},
+    {name: 'Display', unit: 'Pcs', qty: 300, photo: '', date: getDate()},
+    {name: 'Small Money Box', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'Big Money Box', unit: 'Pcs', qty: 60, photo: '', date: getDate()},
+    {name: 'Detergent Machine Coin Box (Small Size)', unit: 'Pcs', qty: 50, photo: '', date: getDate()},
+    {name: 'Detergent Machine Board', unit: 'Pcs', qty: 340, photo: '', date: getDate()},
+    {name: 'Coin Device Screw', unit: 'Pkg', qty: 1, photo: '', date: getDate()},
+    {name: 'Eco Blog (mini pump) For Detergent Machine', unit: 'Pcs', qty: 220, photo: '', date: getDate()},
+    {name: 'E Model-WM', unit: 'Pcs', qty: 314, photo: '', date: getDate()},
+    {name: 'Detergent Powder Carton', unit: 'Ctns', qty: 201, photo: '', date: getDate()},
+    {name: 'Detergent Powder Sack', unit: 'Sack', qty: 0, photo: '', date: getDate()},
+    {name: 'Detergent Liquid', unit: 'Drum', qty: 8, photo: '', date: getDate()},
+    {name: 'Board\'s Nut', unit: 'Pkg', qty: 2, photo: '', date: getDate()},
+    {name: 'Board\'s Bolts', unit: 'Pkg', qty: 1, photo: '', date: getDate()},
+    {name: 'Tool Box', unit: 'Pkg', qty: 50, photo: '', date: getDate()},
+    {name: 'Sack', unit: 'Pcs', qty: 700, photo: '', date: getDate()},
+    {name: 'Collection Bag', unit: 'Pkg', qty: 2, photo: '', date: getDate()},
+    {name: 'Stand Rubber (Small)', unit: 'Sack', qty: 2, photo: '', date: getDate()},
+    {name: 'GPS', unit: 'Pcs', qty: 10, photo: '', date: getDate()},
+    {name: 'WM Cleaning Tube Tablet', unit: 'Pcs', qty: 12, photo: '', date: getDate()},
+    {name: 'A Model-Door Handle Lock', unit: 'Pcs', qty: 2200, photo: '', date: getDate()},
+    {name: 'A Model-Door Hinge', unit: 'Pcs', qty: 290, photo: '', date: getDate()},
+    {name: 'A Model-Drain Pipe', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'A Model-Drum Rubber', unit: 'Pcs', qty: 70, photo: '', date: getDate()},
+    {name: 'A Model-Front Cover Frame', unit: 'Pcs', qty: 1480, photo: '', date: getDate()},
+    {name: 'A Model-Door Lock', unit: 'Pcs', qty: 1765, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Outer Frame(white)', unit: 'Pcs', qty: 55, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Outer Frame(Black)', unit: 'Pcs', qty: 34, photo: '', date: getDate()},
+    {name: 'Haier-Longsealstrip', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'Haier-Clasp Hand (Black)', unit: 'Pcs', qty: 90, photo: '', date: getDate()},
+    {name: 'Haier-Clasp Hand (White)', unit: 'Pcs', qty: 70, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Inner Frame', unit: 'Pcs', qty: 50, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Glass', unit: 'Pcs', qty: 330, photo: '', date: getDate()},
+    {name: 'Haier Model-Board', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Haier Model-Motor', unit: 'Pcs', qty: 32, photo: '', date: getDate()},
+    {name: 'Haier Model-Board Connector Wire', unit: 'Pcs', qty: 400, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Seal', unit: 'Pcs', qty: 170, photo: '', date: getDate()},
+    {name: 'Haier Model-Transpormer', unit: 'Pcs', qty: 260, photo: '', date: getDate()},
+    {name: 'Haier Model-Top Cover', unit: 'Pcs', qty: 150, photo: '', date: getDate()},
+    {name: 'Haier Model-Display', unit: 'Pcs', qty: 200, photo: '', date: getDate()},
+    {name: 'Haier Model-Door Hinge', unit: 'Pcs', qty: 120, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door Hinge', unit: 'Pcs', qty: 180, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door Handle', unit: 'Pcs', qty: 300, photo: '', date: getDate()},
+    {name: 'Stainless Model-Drum Rubber', unit: 'Pcs', qty: 35, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door (White)', unit: 'Pcs', qty: 0, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door (Black)', unit: 'Pcs', qty: 295, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door (Spare Part)', unit: 'Pcs', qty: 60, photo: '', date: getDate()},
+    {name: 'Stainless Powder Box', unit: 'Pcs', qty: 355, photo: '', date: getDate()},
+    {name: 'Stainless Powder Box Handle (Black)', unit: 'Pcs', qty: 480, photo: '', date: getDate()},
+    {name: 'Stainless Model-Door Glass', unit: 'Pcs', qty: 135, photo: '', date: getDate()},
+    {name: 'Stainless Model-Renew Machine', unit: 'Pcs', qty: 950, photo: '', date: getDate()},
+    {name: 'Stainless Model-Motor', unit: 'Pcs', qty: 120, photo: '', date: getDate()},
+    {name: 'Stainless Model-Powder Box Handle (White)', unit: 'Pcs', qty: 120, photo: '', date: getDate()},
+    {name: 'Easylife Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For E Model WM Down Side', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For S Model WM (Big Size)', unit: 'Pcs', qty: 3700, photo: '', date: getDate()},
+    {name: 'Almasa Sticker for E Model WM (Small Size)', unit: 'Pcs', qty: 2000, photo: '', date: getDate()},
+    {name: 'Almasa Sticker for S Model WM (Big Size)', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'S Model Sticker For E Model WM (Small Size)', unit: 'Pcs', qty: 1000, photo: '', date: getDate()},
+    {name: 'S Model Sticker For S Model (Big Size)', unit: 'Pcs', qty: 1200, photo: '', date: getDate()},
+    {name: 'Almasa Sticker For Detergent Machine', unit: 'Pcs', qty: 460, photo: '', date: getDate()},
+    {name: 'Almasa Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 60, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For Detergent Machine', unit: 'Pcs', qty: 460, photo: '', date: getDate()},
+    {name: 'Easylife Sticker For Detergent Machine (2)', unit: 'Pcs', qty: 200, photo: '', date: getDate()},
+    {name: 'Smile Gulf Sticker For Detergent Machine', unit: 'Pcs', qty: 100, photo: '', date: getDate()},
+    {name: 'Wall Plug with Cap', unit: 'PCS', qty: 1100, photo: '', date: getDate()},
+    {name: 'Triple Pole Surface Switch (Isolator)', unit: 'PCS', qty: 0, photo: '', date: getDate()},
+    {name: 'Single Socket Box', unit: 'PCS', qty: 60, photo: '', date: getDate()},
+    {name: 'Fuse Plug (blog switch)', unit: 'PCS', qty: 16, photo: '', date: getDate()},
+    {name: 'Single Socket (hole circle)', unit: 'PCS', qty: 60, photo: '', date: getDate()},
+    {name: '3 Way Junction Box', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'Electrical PVC Socket', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'Water Proof Single Socket', unit: 'PCS', qty: 75, photo: '', date: getDate()},
+    {name: 'Circuit Breaker', unit: 'PCS', qty: 4, photo: '', date: getDate()},
+    {name: 'Protection Device', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'Water Motor Pump', unit: 'PCS', qty: 5, photo: '', date: getDate()},
+    {name: 'Pressure Controller', unit: 'PCS', qty: 8, photo: '', date: getDate()},
+    {name: 'Cable Clip (22 mm)', unit: 'Ctns', qty: 1, photo: '', date: getDate()},
+    {name: 'Cable Clip (10 mm)', unit: 'PCS', qty: 10000, photo: '', date: getDate()},
+    {name: 'Cable Tie', unit: 'PKGS', qty: 15, photo: '', date: getDate()},
+    {name: 'PU Foam', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'ZIC', unit: 'PCS', qty: 1, photo: '', date: getDate()},
+    {name: 'Cable Wire', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'Electrical Tape', unit: 'PCS', qty: 60, photo: '', date: getDate()},
+    {name: 'Double Socket Box', unit: 'PCS', qty: 150, photo: '', date: getDate()},
+    {name: 'FW-40', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'Single Socket', unit: 'PCS', qty: 120, photo: '', date: getDate()},
+    {name: 'Water Proof (double socket)', unit: 'PCS', qty: 55, photo: '', date: getDate()},
+    {name: 'Double Socket', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'Water Pump Motor', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'Water Tap', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'Seal Tape', unit: 'PCS', qty: 360, photo: '', date: getDate()},
+    {name: 'Liquid Detergent', unit: 'Drums', qty: 8, photo: '', date: getDate()},
+    {name: 'White Spray Paint', unit: 'PCS', qty: 8, photo: '', date: getDate()},
+    {name: 'Core Solder Wire', unit: 'PCS', qty: 5, photo: '', date: getDate()},
+    {name: 'Capacitor', unit: 'PCS', qty: 178, photo: '', date: getDate()},
+    {name: 'Waterproof Sheet', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'PVC Cement (Glue)', unit: 'PCS', qty: 11, photo: '', date: getDate()},
+    {name: 'Smart IC Card Water Control Machine', unit: 'PCS', qty: 116, photo: '', date: getDate()},
+    {name: 'Power Tool', unit: 'PCS', qty: 2, photo: '', date: getDate()},
+    {name: 'PPR Tee (25mm)', unit: 'PCS', qty: 250, photo: '', date: getDate()},
+    {name: 'PVC Socket (4")', unit: 'PCS', qty: 20, photo: '', date: getDate()},
+    {name: 'PPR Female Elbow (25mm)', unit: 'PCS', qty: 50, photo: '', date: getDate()},
+    {name: 'PPR Value (25mm)', unit: 'PCS', qty: 40, photo: '', date: getDate()},
+    {name: 'PVC Socket (2")', unit: 'PCS', qty: 100, photo: '', date: getDate()},
+    {name: 'PVC U (4")', unit: 'PCS', qty: 7, photo: '', date: getDate()},
+    {name: 'PVC Tee (3")', unit: 'PCS', qty: 7, photo: '', date: getDate()},
+    {name: 'PPR Reducer (32-25 mm)', unit: 'PCS', qty: 0, photo: '', date: getDate()},
+    {name: 'PPR Reducer (25 mm)', unit: 'PCS', qty: 0, photo: '', date: getDate()},
+    {name: 'PPR Tee (32mm)', unit: 'PCS', qty: 150, photo: '', date: getDate()},
+    {name: 'PPR Female Socket (25mm)', unit: 'PCS', qty: 15, photo: '', date: getDate()},
+    {name: 'PPR Female Tee (25mm)', unit: 'PCS', qty: 150, photo: '', date: getDate()},
+    {name: 'PPR Male Socket (32mm)', unit: 'PCS', qty: 100, photo: '', date: getDate()},
+    {name: 'PVC Socket (82mm)', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PVC Elbow (3")', unit: 'PCS', qty: 8, photo: '', date: getDate()},
+    {name: 'PVC Tee (2")', unit: 'PCS', qty: 75, photo: '', date: getDate()},
+    {name: 'PPR Socket (25mm)', unit: 'PCS', qty: 75, photo: '', date: getDate()},
+    {name: 'PPR Elbow (25mm)', unit: 'PCS', qty: 80, photo: '', date: getDate()},
+    {name: 'PPR Union (25mm)', unit: 'PCS', qty: 73, photo: '', date: getDate()},
+    {name: 'PVC U (1-1/2")', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PVC Elbow (1-1/2")', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PPR Elbow (32mm)', unit: 'PCS', qty: 55, photo: '', date: getDate()},
+    {name: 'PVC Elbow (2")', unit: 'PCS', qty: 78, photo: '', date: getDate()},
+    {name: 'U Clamp (2")', unit: 'PCS', qty: 30, photo: '', date: getDate()},
+    {name: 'U Clamp (3/4")', unit: 'PCS', qty: 40, photo: '', date: getDate()},
+    {name: 'Brass Female Tee', unit: 'PCS', qty: 80, photo: '', date: getDate()},
+    {name: 'Brass Nipple', unit: 'PCS', qty: 80, photo: '', date: getDate()},
+    {name: 'Brass Reducer', unit: 'PCS', qty: 10, photo: '', date: getDate()},
+    {name: 'PVC Pipe (4")', unit: 'PCS', qty: 6, photo: '', date: getDate()},
+    {name: 'PVC Pipe (3")', unit: 'PCS', qty: 15, photo: '', date: getDate()},
+    {name: 'PVC Pipe (2")', unit: 'PCS', qty: 5, photo: '', date: getDate()},
+    {name: 'PPR Pipe (25mm)', unit: 'PCS', qty: 50, photo: '', date: getDate()},
+    {name: 'PVC Black Pipe (20mm)', unit: 'PCS', qty: 25, photo: '', date: getDate()}
+];
+
+let users = loadData('users', DEFAULT_USERS);
+let nameList = loadData('names', DEFAULT_NAMES);
+let areaList = loadData('areas', DEFAULT_AREAS);
+let actList = loadData('activities', ['REPAIRED BOARD','SCRAP','ASSEMBLE MACHINE','RENEW MACHINE']);
+let retData = loadData('returned', []);
+let accData = loadData('accomplish', []);
+let matData = loadData('inventory', INITIAL_INVENTORY);
+let depData = loadData('deployment', []);
+
+function getStockStatus(qty, unit){
+    qty = parseInt(qty) || 0;
+    unit = String(unit||'').trim();
+    if(unit === 'Pcs' || unit === 'PCS'){
+        if(qty <= 99) return {text:'CRITICAL', class:'critical'};
+        if(qty <= 200) return {text:'ORDER NOW', class:'order-now'};
+        if(qty <= 500) return {text:'WARNING', class:'warning'};
+        return {text:'NORMAL', class:'normal'};
+    }else{
+        if(qty <= 20) return {text:'CRITICAL', class:'critical'};
+        if(qty <= 50) return {text:'ORDER NOW', class:'order-now'};
+        if(qty <= 100) return {text:'WARNING', class:'warning'};
+        return {text:'NORMAL', class:'normal'};
+    }
+}
+
+function parseDateStr(s){
+    try{
+        if(!s) return new Date(0);
+        let parts = s.split(', ');
+        let dParts = parts[0].split('/');
+        let tParts = parts[1] ? parts[1].split(':') : [0,0,0];
+        return new Date(dParts[2], dParts[1] - 1, dParts[0], tParts[0]||0, tParts[1]||0, tParts[2]||0);
+    }catch(e){return new Date(0);}
+}
+function normStr(s){return String(s||'').trim().toLowerCase();}
+function loadData(key, def){ try{ let d = localStorage.getItem(key); return d ? JSON.parse(d) : def; }catch(e){return def;} }
+function saveData(key, data){ try{localStorage.setItem(key, JSON.stringify(data));}catch(e){alert('❌ Full Storage!');} }
+
+function togglePasswordVisibility() {
+    const passInput = document.getElementById('pass');
+    const toggleIcon = document.querySelector('.toggle-password');
+    if (passInput.type === 'password') {
+        passInput.type = 'text';
+        toggleIcon.textContent = '🙈';
+    } else {
+        passInput.type = 'password';
+        toggleIcon.textContent = '👁️';
+    }
+}
+
+function checkSession(){
+    let saved = localStorage.getItem(SESSION_KEY);
+    if(saved){
+        try{
+            let user = JSON.parse(saved);
+            let found = users.find(x=>x.username === user.username && x.password === user.password);
+            if(found){ 
+                currentUser = found; 
+                document.getElementById('loginPage').classList.add('hidden'); 
+                document.getElementById('loginFooter').classList.add('hidden');
+                document.body.classList.remove('login-mode');
+                document.getElementById('mainPage').classList.remove('hidden'); 
+                loadAll(); 
+                return; 
+            }
+        }catch(e){localStorage.removeItem(SESSION_KEY);}
+    }
+}
+
+function login(){
+    let u = document.getElementById('user').value.trim();
+    let p = document.getElementById('pass').value;
+    let remember = document.getElementById('rememberMe').checked;
+    
+    let found = users.find(x=>x.username === u && x.password === p);
+    if(!found) return alert('❌ Invalid Account!');
+    
+    currentUser = found;
+    
+    if(remember) {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({username:u, password:p}));
+        localStorage.setItem(REMEMBER_ME_KEY, 'true');
+    } else {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({username:u, password:p}));
+        localStorage.removeItem(REMEMBER_ME_KEY);
+    }
+    
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('loginFooter').classList.add('hidden');
+    document.body.classList.remove('login-mode');
+    document.getElementById('mainPage').classList.remove('hidden');
+    
+    loadAll();
+}
+
+function logout(){ 
+    currentUser=null; 
+    localStorage.removeItem(SESSION_KEY); 
+    localStorage.removeItem(REMEMBER_ME_KEY);
+    location.reload(); 
+}
+
+function openTab(id){
+    document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(window.event && window.event.target) window.event.target.classList.add('active');
+}
+function openSubTab(id){
+    document.querySelectorAll('#logistic .tab-content').forEach(e=>e.classList.remove('active'));
+    document.querySelectorAll('#logistic .tab-btn').forEach(e=>e.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(window.event && window.event.target) window.event.target.classList.add('active');
+}
+
+function loadAll(){
+    loadTransNo(); loadDepTransNo(); loadNames(); loadAreas(); loadActivities();
+    loadRet(); loadAcc(); loadInventory(); loadDepMat(); loadDep(); loadMonitoring(); loadUsers();
+    
+    const now = getDate();
+    document.getElementById('retFormDate').value = now;
+    document.getElementById('accDate').value = now;
+    document.getElementById('matDate').value = now;
+    document.getElementById('depDate').value = now;
+
+    const dateGenStr = 'Date Generated: ' + now;
+    const printDateEls = ['printDateRet', 'printDateAcc', 'printDateInv', 'printDateDep', 'printDateMon'];
+    printDateEls.forEach(id => {
+        let el = document.getElementById(id);
+        if(el) el.textContent = dateGenStr;
+    });
+
+    if(currentUser) {
+        let nameVal = currentUser.fullname || currentUser.username;
+        let posVal = currentUser.position || currentUser.role.toUpperCase();
+        
+        ['Ret', 'Acc', 'Inv', 'Dep', 'Mon'].forEach(suffix => {
+            let nameEl = document.getElementById('sigName' + suffix);
+            let posEl = document.getElementById('sigPos' + suffix);
+            if(nameEl) nameEl.textContent = nameVal;
+            if(posEl) posEl.textContent = posVal;
+        });
+    }
+}
+
+function loadTransNo(){
+    let currentInput = document.getElementById('retTrans').value;
+    if(!currentInput.startsWith('ALHAYA-')) {
+        document.getElementById('retTrans').value = `ALHAYA-${String(transCounter).padStart(6,'0')}`;
+    }
+}
+function loadDepTransNo(){
+    let currentInput = document.getElementById('depTrans').value;
+    if(!currentInput.startsWith('TRANS-')) {
+        document.getElementById('depTrans').value = `TRANS-${String(depTransCounter).padStart(5,'0')}`;
+    }
+}
+function loadActivities(){}
+
+function loadNames(){
+    ['retName','accName','depName'].forEach(id=>{
+        let sel = document.getElementById(id); let prevVal = sel.value; sel.innerHTML='';
+        nameList.forEach(n=>sel.innerHTML+=`<option value="${n}">${n}</option>`);
+        if(prevVal) sel.value = prevVal;
+    });
+}
+function addName(id){
+    let n = prompt('New Name:'); if(!n) return;
+    if(nameList.includes(n.trim())) return alert('Already exists!');
+    nameList.push(n.trim()); saveData('names',nameList); loadNames();
+}
+function delName(id){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let sel = document.getElementById(id); let n = sel.value;
+    if(!confirm(`Delete "${n}"?`)) return;
+    nameList = nameList.filter(x=>x!==n); saveData('names',nameList); loadNames();
+}
+
+function loadAreas(){
+    ['retArea','accArea','depArea'].forEach(id=>{
+        let sel = document.getElementById(id); let prevVal = sel.value; sel.innerHTML='';
+        areaList.forEach(a=>sel.innerHTML+=`<option value="${a}">${a}</option>`);
+        if(prevVal) sel.value = prevVal;
+    });
+}
+function addArea(id){
+    let a = prompt('New Area:'); if(!a) return;
+    if(areaList.includes(a.trim())) return alert('Already exists!');
+    areaList.push(a.trim()); saveData('areas',areaList); loadAreas();
+}
+function delArea(id){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let sel = document.getElementById(id); let a = sel.value;
+    if(!confirm(`Delete "${a}"?`)) return;
+    areaList = areaList.filter(x=>x!==a); saveData('areas',areaList); loadAreas();
+}
+
+function addAct(){
+    let a = prompt('New Activity:'); if(!a) return;
+    if(actList.includes(a.trim())) return alert('Already exists!');
+    actList.push(a.trim()); saveData('activities', actList); loadActSelect();
+}
+function delAct(){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let sel = document.getElementById('accAct'); let a = sel.value;
+    if(actList.length <= 1) return alert('Cannot delete all activities!');
+    if(!confirm(`Delete activity "${a}"?`)) return;
+    actList = actList.filter(x => x !== a); saveData('activities', actList); loadActSelect();
+}
+function loadActSelect(){
+    let sel = document.getElementById('accAct'); let prevVal = sel.value; sel.innerHTML = '';
+    actList.forEach(a => sel.innerHTML += `<option value="${a}">${a}</option>`);
+    if(prevVal) sel.value = prevVal;
+}
+
+function getFilteredRet(){
+    let s = normStr(document.getElementById('searchRetAll').value);
+    return retData.filter(x=> normStr(x.transNo+' '+x.wmNo+' '+x.keyNo+' '+x.name+' '+x.area+' '+x.date).includes(s))
+        .sort((a,b)=> parseDateStr(b.date) - parseDateStr(a.date));
+}
+function resetRetFilter(){document.getElementById('searchRetAll').value=''; loadRet();}
+function addRet(){
+    let d = {
+        transNo:document.getElementById('retTrans').value,
+        name:document.getElementById('retName').value,
+        area:document.getElementById('retArea').value,
+        wmNo:document.getElementById('retWm').value.trim(),
+        keyNo:document.getElementById('retKey').value.trim(),
+        date:document.getElementById('retFormDate').value
+    };
+    if(!d.wmNo || !d.keyNo) return alert('Fill all fields!');
+    let existingIndex = retData.findIndex(x=>x.transNo === d.transNo);
+    if(existingIndex > -1){ 
+        retData[existingIndex] = d; 
+        alert('✅ Record Updated!');
+    }else{ 
+        retData.push(d); 
+        transCounter++; 
+        localStorage.setItem(DB_TRANS,transCounter); 
+        alert('✅ Saved!');
+    }
+    saveData('returned',retData); loadRet(); clearRet(); loadTransNo();
+}
+function loadRet(){
+    retData = loadData('returned', []);
+    let list = getFilteredRet();
+    let tb = document.getElementById('retList').querySelector('tbody'); tb.innerHTML='';
+    if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Records Found</td></tr>';
+    list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${index + 1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`);
+}
+function fillRet(t){
+    let x = retData.find(i=>i.transNo===t);
+    document.getElementById('retTrans').value=x.transNo; 
+    document.getElementById('retFormDate').value=x.date || getDate();
+    document.getElementById('retName').value=x.name;
+    document.getElementById('retArea').value=x.area; 
+    document.getElementById('retWm').value=x.wmNo; 
+    document.getElementById('retKey').value=x.keyNo;
+}
+function delRet(){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let t = document.getElementById('retTrans').value; if(!t) return alert('Select record first!');
+    if(!confirm('Delete this record?')) return;
+    retData = retData.filter(x=>x.transNo!==t); saveData('returned',retData); loadRet(); clearRet();
+}
+function clearRet(){ document.getElementById('retWm').value=''; document.getElementById('retKey').value=''; document.getElementById('retFormDate').value=getDate(); document.getElementById('retTrans').value=''; loadTransNo(); }
+
+function getFilteredAcc(){
+    let s = normStr(document.getElementById('searchAccAll').value);
+    return accData.filter(x=> normStr(x.name+' '+x.area+' '+x.activity+' '+x.qty+' '+x.date).includes(s))
+        .sort((a,b)=> parseDateStr(b.date) - parseDateStr(a.date));
+}
+function resetAccFilter(){document.getElementById('searchAccAll').value=''; loadAcc();}
+function addAcc(){
+    let q = parseInt(document.getElementById('accQty').value); if(!q || q<=0) return alert('Enter valid quantity!');
+    let key = document.getElementById('accKey').value;
+    let currentDate = document.getElementById('accDate').value || getDate();
+    
+    if(key) {
+        let idx = accData.findIndex(x => String(x.key) === String(key));
+        if(idx > -1) {
+            accData[idx].name = document.getElementById('accName').value;
+            accData[idx].area = document.getElementById('accArea').value;
+            accData[idx].activity = document.getElementById('accAct').value;
+            accData[idx].qty = q;
+            accData[idx].date = currentDate;
+            alert('✅ Record Updated!');
+        }
+    } else {
+        let d = { key: Date.now(), name: document.getElementById('accName').value, area: document.getElementById('accArea').value, activity: document.getElementById('accAct').value, qty: q, date: currentDate };
+        accData.push(d); 
+        alert('✅ Saved!');
+    }
+    saveData('accomplish', accData); loadAcc(); clearAcc();
+}
+function loadAcc() {
+    accData = loadData('accomplish', []);
+    let list = getFilteredAcc();
+    let tb = document.getElementById('accList').querySelector('tbody'); tb.innerHTML='';
+    if(!list.length) return tb.innerHTML='<tr><td colspan="6" class="empty">No Records Found</td></tr>';
+    list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillAcc('${x.key}')"><td>${index + 1}</td><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`);
+}
+function fillAcc(key) {
+    let x = accData.find(i => String(i.key) === String(key));
+    if(x) {
+        document.getElementById('accKey').value = x.key;
+        document.getElementById('accName').value = x.name;
+        document.getElementById('accArea').value = x.area;
+        document.getElementById('accAct').value = x.activity;
+        document.getElementById('accQty').value = x.qty;
+        document.getElementById('accDate').value = x.date;
+    }
+}
+function delAcc(){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let key = document.getElementById('accKey').value; if(!key) return alert('Select record first!');
+    if(!confirm('Delete this record?')) return;
+    accData = accData.filter(x=>String(x.key)!==String(key)); saveData('accomplish',accData); loadAcc(); clearAcc();
+}
+function clearAcc(){ document.getElementById('accQty').value=''; document.getElementById('accKey').value=''; document.getElementById('accDate').value=getDate(); }
+
+/* HANDLE MATERIAL PHOTO (5x5 Auto Fit & Auto Compression to ~70KB) */
+function handleMaterialPhoto(event) {
+    let file = event.target.files[0];
+    if(!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let img = new Image();
+        img.src = e.target.result;
+        img.onload = function() {
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
+
+            // 5x5 Square aspect ratio processing
+            let size = 500; // high enough resolution for crisp 5x5 display
+            canvas.width = size;
+            canvas.height = size;
+
+            let w = img.width;
+            let h = img.height;
+            let minDim = Math.min(w, h);
+            let sx = (w - minDim) / 2;
+            let sy = (h - minDim) / 2;
+
+            ctx.clearRect(0, 0, size, size);
+            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+            // Compress iteratively to target ~70KB (approx 0.7 quality or lower if needed)
+            let quality = 0.8;
+            let dataUrl = canvas.toDataURL('image/jpeg', quality);
+            
+            // Check approximate size in KB (Base64 string length * 0.75 / 1024)
+            while ((dataUrl.length * 3 / 4) > 70 * 1024 && quality > 0.1) {
+                quality -= 0.1;
+                dataUrl = canvas.toDataURL('image/jpeg', quality);
+            }
+
+            document.getElementById('matPhotoBase64').value = dataUrl;
+            let preview = document.getElementById('matPhotoPreview');
+            let placeholder = document.getElementById('matPhotoPlaceholder');
+            preview.src = dataUrl;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+    }
+    reader.readAsDataURL(file);
+}
+
+function getFilteredInv(){
+    let s = normStr(document.getElementById('searchInvAll').value);
+    return matData.filter(x=> normStr(x.name+' '+x.unit+' '+x.qty+' '+x.date).includes(s))
+                  .sort((a,b)=> parseDateStr(b.date) - parseDateStr(a.date));
+}
+function resetInvFilter(){document.getElementById('searchInvAll').value=''; loadInventory();}
+
+function addMat(){
+    let name = document.getElementById('matName').value.trim(); 
+    let unit = document.getElementById('matUnit').value; 
+    let qty = parseInt(document.getElementById('matQty').value);
+    let photo = document.getElementById('matPhotoBase64').value;
+    
+    if(!name || isNaN(qty) || qty <= 0) return alert('Fill fields correctly!');
+    
+    let origName = document.getElementById('matOrigName').value;
+    
+    if(origName) {
+        let idx = matData.findIndex(x => normStr(x.name) === normStr(origName));
+        if(idx > -1) {
+            matData[idx].qty = parseInt(matData[idx].qty) + qty; 
+            matData[idx].date = getDate();
+            if(photo) matData[idx].photo = photo;
+            alert(`✅ Material Updated! New Qty added. Total: ${matData[idx].qty}`);
+        }
+    } else {
+        let idx = matData.findIndex(x => normStr(x.name) === normStr(name));
+        if(idx > -1){ 
+            matData[idx].qty = parseInt(matData[idx].qty) + qty; 
+            matData[idx].date = getDate(); 
+            if(photo) matData[idx].photo = photo;
+        }else{ 
+            matData.push({name:name, unit:unit, qty:qty, photo:photo, date:getDate()}); 
+            alert('✅ Material Saved!');
+        }
+    }
+    saveData('inventory', matData); loadInventory(); loadMonitoring(); loadDepMat(); clearMat();
+}
+
+function loadInventory(){
+    matData = loadData('inventory', INITIAL_INVENTORY);
+    let list = getFilteredInv(); let tb = document.getElementById('matList').querySelector('tbody'); tb.innerHTML='';
+    if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Items Found</td></tr>';
+    list.forEach((x, index)=>{ 
+        let st = getStockStatus(x.qty, x.unit); 
+        let photoHtml = x.photo ? `<img src="${x.photo}" style="width:35px; height:35px; object-fit:cover; border-radius:4px; border:1px solid #334155;">` : `<span style="color:#64748b; font-size:10px;">No Photo</span>`;
+        tb.innerHTML+=`<tr onclick="fillMat('${x.name}')"><td>${index + 1}</td><td style="text-align:center;">${photoHtml}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td><td>${x.date}</td></tr>`; 
+    });
+}
+
+function fillMat(name) {
+    let x = matData.find(i => normStr(i.name) === normStr(name));
+    if(x) {
+        document.getElementById('matOrigName').value = x.name;
+        document.getElementById('matName').value = x.name;
+        document.getElementById('matUnit').value = x.unit;
+        document.getElementById('matDate').value = x.date || getDate();
+        
+        let preview = document.getElementById('matPhotoPreview');
+        let placeholder = document.getElementById('matPhotoPlaceholder');
+        if(x.photo) {
+            document.getElementById('matPhotoBase64').value = x.photo;
+            preview.src = x.photo;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        } else {
+            document.getElementById('matPhotoBase64').value = '';
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+        }
+        
+        document.getElementById('matName').disabled = true;
+        document.getElementById('matUnit').disabled = true;
+        
+        document.getElementById('matQty').value = '';
+        document.getElementById('matQty').focus();
+    }
+}
+
+function clearMat() { 
+    document.getElementById('matOrigName').value=''; 
+    document.getElementById('matName').value=''; 
+    document.getElementById('matQty').value=''; 
+    document.getElementById('matPhotoBase64').value='';
+    document.getElementById('matPhotoInput').value='';
+    let preview = document.getElementById('matPhotoPreview');
+    let placeholder = document.getElementById('matPhotoPlaceholder');
+    preview.style.display = 'none';
+    placeholder.style.display = 'block';
+    document.getElementById('matDate').value = getDate();
+    document.getElementById('matName').disabled = false;
+    document.getElementById('matUnit').disabled = false;
+}
+
+function delMat(){
+    if(currentUser.role=='user') return alert('No Permission!');
+    let name = document.getElementById('matName').value.trim(); if(!name) return alert('Select a material first!');
+    if(!confirm(`Delete permanently "${name}"?`)) return;
+    let idx = matData.findIndex(x=> normStr(x.name) === normStr(name)); 
+    if(idx === -1) return alert('Not found!');
+    matData.splice(idx,1); saveData('inventory',matData); loadInventory(); loadMonitoring(); loadDepMat(); clearMat();
+}
+
+function loadDepMat(targetSelect = null){
+    if(targetSelect) {
+        targetSelect.innerHTML = '<option value="">-- Material --</option>';
+        matData.forEach(m=>targetSelect.innerHTML+=`<option value="${m.name}">${m.name}</option>`);
+    } else {
+        document.querySelectorAll('.depMatSel').forEach(sel=>{
+            let prevVal = sel.value;
+            sel.innerHTML='<option value="">-- Material --</option>';
+            matData.forEach(m=>sel.innerHTML+=`<option value="${m.name}">${m.name}</option>`);
+            if(prevVal) sel.value = prevVal;
+        });
+    }
+}
+
+function addDepRow(){
+    let container = document.getElementById('multiDepContainer'); 
+    let row = document.createElement('div'); 
+    row.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
+    row.innerHTML = `
+        <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <select class="depMatSel" style="flex: 1;"></select>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+            <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+            <select class="depUnitSel" style="max-width: 90px;">
+                <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                <option value="Box">Box</option><option value="Sack">Sack</option>
+                <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+            </select>
+            <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
+            <div style="display: flex; gap: 4px; margin-left: auto;">
+                <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+            </div>
+        </div>
+    `;
+    container.appendChild(row); 
+    loadDepMat(row.querySelector('.depMatSel'));
+}
+function removeDepRow(btn){
+    let rows = document.querySelectorAll('#multiDepContainer > div');
+    if(rows.length > 1){ btn.closest('div[style*="flex-direction: column"]').remove(); } else { alert('Cannot delete the last row!'); }
+}
+
+function getFilteredDep(){
+    let s = normStr(document.getElementById('searchDepAll').value);
+    return depData.filter(x=> normStr(x.transNo+' '+x.material+' '+x.name+' '+x.area+' '+x.qty+' '+x.date).includes(s)).sort((a,b)=> parseDateStr(b.date) - parseDateStr(a.date));
+}
+function resetDepFilter(){document.getElementById('searchDepAll').value=''; loadDep();}
+function addDep(){
+    let rows = document.querySelectorAll('#multiDepContainer > div'); if(!rows.length) return alert('Add items!');
+    let transNo = document.getElementById('depTrans').value; let name = document.getElementById('depName').value; let area = document.getElementById('depArea').value; let date = document.getElementById('depDate').value || getDate();
+    
+    let isExisting = depData.some(x => x.transNo === transNo);
+    
+    if(isExisting) {
+        let originalLogs = depData.filter(x => x.transNo === transNo);
+        originalLogs.forEach(log => {
+            let matIdx = matData.findIndex(m => normStr(m.name) === normStr(log.material));
+            if(matIdx > -1) matData[matIdx].qty = parseInt(matData[matIdx].qty) + parseInt(log.qty);
+        });
+        depData = depData.filter(x => x.transNo !== transNo);
+    }
+    
+    let valid = true; let saveList = [];
+    rows.forEach(row=>{
+        let mat = row.querySelector('.depMatSel').value; let unit = row.querySelector('.depUnitSel').value; let qty = parseInt(row.querySelector('.depQtyInp').value);
+        if(!mat || !qty || qty<=0) return valid=false;
+        let idx = matData.findIndex(x=> normStr(x.name) === normStr(mat));
+        if(idx === -1 || parseInt(matData[idx].qty) < qty) { alert(`Insufficient Stock: ${mat}`); valid=false; return; }
+        saveList.push({transNo, material:mat, unit, qty, name, area, date});
+        matData[idx].qty = parseInt(matData[idx].qty) - qty;
+    });
+    
+    if(!valid) {
+        if(isExisting) {
+            let originalLogs = depData.filter(x => x.transNo === transNo);
+            originalLogs.forEach(log => {
+                let matIdx = matData.findIndex(m => normStr(m.name) === normStr(log.material));
+                if(matIdx > -1) matData[matIdx].qty = parseInt(matData[matIdx].qty) - parseInt(log.qty);
+            });
+            loadAll();
+        }
+        return;
+    }
+    
+    saveList.forEach(d=>depData.push(d)); 
+    if(!isExisting) {
+        depTransCounter++; 
+        localStorage.setItem(DB_DEP_TRANS, depTransCounter); 
+        alert('✅ Deployed Successfully!');
+    } else {
+        alert('✅ Deployment Record Updated!');
+    }
+    
+    saveData('deployment', depData); saveData('inventory', matData);
+    
+    document.getElementById('multiDepContainer').innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;">
+            <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                <select class="depMatSel" style="flex: 1;"></select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+                <select class="depUnitSel" style="max-width: 90px;">
+                    <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                    <option value="Box">Box</option><option value="Sack">Sack</option>
+                    <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                    <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                    <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                    <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+                </select>
+                <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
+                <div style="display: flex; gap: 4px; margin-left: auto;">
+                    <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                    <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('depTrans').value = '';
+    loadDep(); loadInventory(); loadMonitoring(); loadDepTransNo(); loadDepMat();
+    document.getElementById('depDate').value = getDate();
+}
+function loadDep(){
+    depData = loadData('deployment', []);
+    let list = getFilteredDep(); let tb = document.getElementById('depList').querySelector('tbody'); tb.innerHTML='';
+    if(!list.length) return tb.innerHTML='<tr><td colspan="8" class="empty">No Deployment Records</td></tr>';
+    
+    let counter = 1;
+    list.forEach(x => {
+        let rowHtml = `<tr onclick="fillDep('${x.transNo}')">`;
+        rowHtml += `<td>${counter++}</td><td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`;
+        tb.innerHTML += rowHtml;
+    });
+}
+function fillDep(tNo) {
+    let items = depData.filter(x => x.transNo === tNo);
+    if(!items.length) return;
+    
+    document.getElementById('depTrans').value = items[0].transNo;
+    document.getElementById('depDate').value = items[0].date;
+    document.getElementById('depName').value = items[0].name;
+    document.getElementById('depArea').value = items[0].area;
+    
+    let container = document.getElementById('multiDepContainer');
+    container.innerHTML = '';
+    
+    items.forEach(x => {
+        let row = document.createElement('div');
+        row.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
+        row.innerHTML = `
+            <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                <select class="depMatSel" style="flex: 1;"></select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">MATERIALS UNIT QTY</span>
+                <select class="depUnitSel" style="max-width: 90px;">
+                    <option value="Pcs">Pcs</option><option value="Pack">Pack</option>
+                    <option value="Box">Box</option><option value="Sack">Sack</option>
+                    <option value="Ctns">Ctns</option><option value="Roll">Roll</option>
+                    <option value="Pallet">Pallet</option><option value="Pkg">Pkg</option>
+                    <option value="Drum">Drum</option><option value="PCS">PCS</option>
+                    <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
+                </select>
+                <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;" value="${x.qty}">
+                <div style="display: flex; gap: 4px; margin-left: auto;">
+                    <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
+                    <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+        
+        let matSel = row.querySelector('.depMatSel');
+        loadDepMat(matSel);
+        matSel.value = x.material;
+        row.querySelector('.depUnitSel').value = x.unit;
+    });
+}
+
+function mergeDBBtnTrigger() {
+    if(currentUser.role === 'user') {
+        return alert('❌ User profile level has no access to data merging utilities!');
+    }
+    document.getElementById('mergeFile').click();
+}
+
+function loadMonitoring(){
+    let tb = document.getElementById('monList').querySelector('tbody'); tb.innerHTML='';
+    
+    let searchVal = normStr(document.getElementById('searchMonAll').value);
+    
+    let filtered = matData.filter(x => {
+        let st = getStockStatus(x.qty, x.unit);
+        let isAlert = (st.text === 'CRITICAL' || st.text === 'ORDER NOW' || st.text === 'WARNING');
+        if(!isAlert) return false;
+        
+        if(searchVal) {
+            return normStr(x.name + ' ' + x.unit + ' ' + x.qty + ' ' + st.text).includes(searchVal);
+        }
+        return true;
+    });
+    
+    filtered.sort((a, b) => {
+        let stA = getStockStatus(a.qty, a.unit).text;
+        let stB = getStockStatus(b.qty, b.unit).text;
+        const priority = { 'CRITICAL': 1, 'ORDER NOW': 2, 'WARNING': 3 };
+        return priority[stA] - priority[stB];
+    });
+    
+    if(!filtered.length) {
+        tb.innerHTML = '<tr><td colspan="5" class="empty">No Critical/Low Stock/Warning Items Registered</td></tr>';
+        return;
+    }
+    
+    filtered.forEach((x, index)=>{ 
+        let st = getStockStatus(x.qty, x.unit); 
+        tb.innerHTML+=`<tr><td>${index + 1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td class="${st.class}">${st.text}</td></tr>`; 
+    });
+}
+
+function resetMonFilter() {
+    document.getElementById('searchMonAll').value = '';
+    loadMonitoring();
+}
+
+function exportMonitoringExcel() {
+    let filtered = matData.filter(x => {
+        let st = getStockStatus(x.qty, x.unit);
+        return st.text === 'CRITICAL' || st.text === 'ORDER NOW' || st.text === 'WARNING';
+    });
+    filtered.sort((a, b) => {
+        let stA = getStockStatus(a.qty, a.unit).text;
+        let stB = getStockStatus(b.qty, b.unit).text;
+        const priority = { 'CRITICAL': 1, 'ORDER NOW': 2, 'WARNING': 3 };
+        return priority[stA] - priority[stB];
+    });
+    
+    let reportData = filtered.map((x, index) => ({
+        'No.': index + 1,
+        'MATERIALS': x.name,
+        'UNIT': x.unit,
+        'QTY': x.qty,
+        'STATUS': getStockStatus(x.qty, x.unit).text
+    }));
+    
+    let ws = XLSX.utils.json_to_sheet(reportData.length ? reportData : [{ Status: 'No Alerts Found' }]);
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Stock Alerts');
+    XLSX.writeFile(wb, 'CRITICAL_STOCK_MONITORING.xlsx');
+}
+
+function loadUsers(){
+    users = loadData('users', DEFAULT_USERS);
+    let tb = document.getElementById('userList').querySelector('tbody'); tb.innerHTML='';
+    users.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${index + 1}</td><td>${x.username}</td><td>${x.fullname || ''}</td><td>${x.position || ''}</td><td>${x.role.toUpperCase()}</td></tr>`);
+}
+function fillUser(uname) {
+    let x = users.find(i => normStr(i.username) === normStr(uname));
+    if(x) {
+        document.getElementById('userMode').value = 'edit';
+        document.getElementById('newUser').value = x.username;
+        document.getElementById('newPass').value = x.password;
+        document.getElementById('newFullName').value = x.fullname || '';
+        document.getElementById('newPosition').value = x.position || '';
+        document.getElementById('newRole').value = x.role;
+    }
+}
+function addUser(){
+    if(currentUser.role === 'user') {
+         return alert('❌ Security Privilege Restrained: User module context cannot register profiles.');
+    }
+    let u = document.getElementById('newUser').value.trim(); 
+    let p = document.getElementById('newPass').value; 
+    let fullname = document.getElementById('newFullName').value.trim();
+    let position = document.getElementById('newPosition').value.trim();
+    let r = document.getElementById('newRole').value;
+    
+    if(!u || !p) return alert('Fill fields!');
+    
+    if(u.toLowerCase() === 'nad itallo') {
+         return alert('❌ System Violation: Properties belonging to NAD ITALLO cannot be created or modified.');
+    }
+    if(r === 'programmer') {
+         return alert('❌ Restricted: System only permits one Programmer framework account to stay active.');
+    }
+    
+    let idx = users.findIndex(x=>x.username.toLowerCase() === u.toLowerCase());
+    if(idx > -1){ 
+        if(users[idx].username === 'NAD ITALLO') return alert('❌ Error: NAD ITALLO is system locked.');
+        users[idx] = {username:u, password:p, fullname, position, role:r}; 
+        alert('✅ User Profile Updated!');
+    }else{ 
+        users.push({username:u, password:p, fullname, position, role:r}); 
+        alert('✅ User Profile Saved!');
+    }
+    saveData('users',users); loadUsers(); clearUser();
+}
+function delUser(){
+    if(currentUser.role!=='admin' && currentUser.role!=='programmer') return alert('No Permission!');
+    let u = document.getElementById('newUser').value.trim(); if(!u) return alert('Select user first!');
+    if(u.toLowerCase() === 'nad itallo') return alert('❌ Restriction Triggered: Data parameters matching NAD ITALLO are permanently undeletable.');
+    if(u.toLowerCase() === currentUser.username.toLowerCase()) return alert('Cannot delete active self!');
+    if(!confirm(`Delete user "${u}"?`)) return;
+    users = users.filter(x=>x.username.toLowerCase() !== u.toLowerCase()); saveData('users',users); loadUsers(); clearUser();
+}
+function clearUser() { 
+    document.getElementById('userMode').value = 'new'; 
+    document.getElementById('newUser').value = ''; 
+    document.getElementById('newPass').value = ''; 
+    document.getElementById('newFullName').value = '';
+    document.getElementById('newPosition').value = '';
+}
+
+function exportExcelResult(type){
+    let data, filename;
+    if(type==='ret'){ data=getFilteredRet(); filename='RETURNED_WM.xlsx'; }
+    else if(type==='acc'){ data=getFilteredAcc(); filename='ACCOMPLISHMENT.xlsx'; }
+    else if(type==='inv'){ data=getFilteredInv(); filename='INVENTORY.xlsx'; }
+    else if(type==='dep'){ data=getFilteredDep(); filename='DEPLOYMENT.xlsx'; }
+    else return;
+    
+    let formattedData = data.map((item, index) => {
+        let copy = { 'No.': index + 1, ...item };
+        delete copy.key;
+        delete copy.photo;
+        return copy;
+    });
+
+    let ws = XLSX.utils.json_to_sheet(formattedData);
+    const max_cols = Object.keys(formattedData[0] || {}).map(key => {
+        let max_len = key.length;
+        formattedData.forEach(row => {
+            let val = String(row[key] || '');
+            if(val.length > max_len) max_len = val.length;
+        });
+        return { wch: max_len + 3 };
+    });
+    ws['!cols'] = max_cols;
+
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Data Report');
+    XLSX.writeFile(wb, filename);
+}
+
+function exportAllExcelData() {
+    let wb = XLSX.utils.book_new();
+    let sheets = [
+        { data: retData, name: 'Returned WM' },
+        { data: accData, name: 'Accomplishment' },
+        { data: matData, name: 'Inventory' },
+        { data: depData, name: 'Deployment' }
+    ];
+    
+    sheets.forEach(s => {
+        let cleanData = s.data.map((item, index) => {
+            let copy = { 'No.': index + 1, ...item };
+            delete copy.key; 
+            delete copy.photo;
+            return copy;
+        });
+        let ws = XLSX.utils.json_to_sheet(cleanData.length ? cleanData : [{ Status: 'No Records Found' }]);
+        XLSX.utils.book_append_sheet(wb, ws, s.name);
+    });
+    XLSX.writeFile(wb, 'ALL_SYSTEM_DATA_REPORT.xlsx');
+}
+
+function saveAsPDFResult(){ window.print(); }
+
+function exportAllPDFData() {
+    let printWindow = window.open('', '_blank');
+    if(!printWindow) return alert('Pop-up blocked! Please allow pop-ups for this site.');
+    
+    let nowStr = 'Date Generated: ' + getDate();
+    let loggedName = currentUser ? (currentUser.fullname || currentUser.username) : '';
+    let loggedPos = currentUser ? (currentUser.position || currentUser.role.toUpperCase()) : '';
+
+    let retRows = retData.map((x, i) => `<tr><td>${i+1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`).join('');
+    let accRows = accData.map((x, i) => `<tr><td>${i+1}</td><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
+    let matRows = matData.map((x, i) => `<tr><td>${i+1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('');
+    let depRows = depData.map((x, i) => `<tr><td>${i+1}</td><td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`).join('');
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>CONSOLIDATED ALL DATA REPORT</title>
+            <style>
+                body { font-family: Arial, sans-serif; color: black; padding: 20px; background: white; }
+                .header { margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 15px; text-align: center; }
+                .header img { width: 55px; height: 55px; object-fit: cover; border-radius: 50% !important; }
+                .header-text { display: flex; flex-direction: column; text-align: left; }
+                .header h2 { margin: 0 0 2px 0; font-size: 16px; }
+                .header p { margin: 0; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; }
+                .print-report-title { text-align: left; font-size: 12px; font-weight: bold; margin: 8px 0 3px 0; text-transform: uppercase; color: #000; }
+                .print-date-generated { text-align: left; font-size: 10px; font-weight: bold; margin-bottom: 8px; color: #333; }
+                .sec-title { background: #e2e8f0; padding: 6px 10px; font-size: 12px; font-weight: bold; border: 1px solid #000; border-bottom: none; margin-top: 25px; text-transform: uppercase; text-align: center; break-before: page; page-break-before: always; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10px; background: white !important; }
+                th, td { border: 1px solid #000 !important; padding: 4px 4px !important; text-align: left; color: black !important; background: transparent !important; white-space: normal !important; }
+                th { background: #e2e8f0 !important; color: black !important; font-weight: bold; }
+                .print-signature-section { margin-top: 25px; width: 100%; page-break-inside: avoid; }
+                .print-signature-box { float: right; width: 250px; text-align: left; font-size: 13px; color: #000; }
+                @page { size: A4 landscape; margin: 0.5cm 0.8cm 0.5cm 0.8cm; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <img src="logo.png" alt="Company Logo">
+                <div class="header-text">
+                    <h2>AL HAYAH AL SAHLAH</h2>
+                    <p>Electronics Devices and Repair</p>
+                </div>
+            </div>
+            <div class="print-report-title">CONSOLIDATED SYSTEM MASTER REPORT</div>
+            <div class="print-date-generated">${nowStr}</div>
+
+            <div class="sec-title">RETURNED WM REPORT</div>
+            <table>
+                <thead><tr><th>No.</th><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
+                <tbody>${retRows || '<tr><td colspan="7" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+            </table>
+
+            <div class="sec-title">ACCOMPLISHMENT REPORT</div>
+            <table>
+                <thead><tr><th>No.</th><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
+                <tbody>${accRows || '<tr><td colspan="6" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+            </table>
+
+            <div class="sec-title">INVENTORY STATUS REPORT</div>
+            <table>
+                <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>LAST UPDATED</th></tr></thead>
+                <tbody>${matRows || '<tr><td colspan="5" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+            </table>
+
+            <div class="sec-title">DEPLOYMENT LOGS REPORT</div>
+            <table>
+                <thead><tr><th>No.</th><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
+                <tbody>${depRows || '<tr><td colspan="8" style="text-align:center;">No Records Found</td></tr>'}</tbody>
+            </table>
+
+            <div class="print-signature-section">
+                <div class="print-signature-box">
+                    Prepared by:<br>
+                    <span style="font-size: 14px; font-weight: bold; display: inline-block; margin-top: 4px;">${loggedName}</span><br>
+                    <span style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;">${loggedPos}</span>
+                </div>
+            </div>
+
+            <script>
+                window.onload = function() {
+                    setTimeout(function() {
+                        window.print();
+                    }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+function backupDB(){
+    let backup = { users, nameList, areaList, actList, retData, accData, matData, depData, transCounter, depTransCounter };
+    let blob = new Blob([JSON.stringify(backup,null,2)], {type:'application/json'});
+    let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href=url; a.download=`ALHAYA_BACKUP.json`; a.click();
+}
+function restoreDB(e){
+    let f = e.target.files[0]; if(!f) return;
+    let r = new FileReader(); r.onload = function(ev){
+        try{
+            let d = JSON.parse(ev.target.result);
+            if(d.users) users=d.users; if(d.retData) retData=d.retData; if(d.matData) matData=d.matData; if(d.depData) depData=d.depData;
+            saveData('users',users); saveData('returned',retData); saveData('inventory',matData); saveData('deployment',depData);
+            alert('✅ Restored!'); loadAll();
+        }catch(err){alert('Invalid File!');}
+    }; r.readAsText(f);
+}
+function mergeDB(e){
+    let f = e.target.files[0]; if(!f) return;
+    let r = new FileReader(); r.onload = function(ev){
+        try{
+            let d = JSON.parse(ev.target.result);
+            if(d.retData) retData = [...retData, ...d.retData.filter(x=>!retData.some(y=>y.transNo===x.transNo))];
+            if(d.matData) matData = [...matData, ...d.matData.filter(x=>!matData.some(y=>y.name===x.name))];
+            saveData('returned',retData); saveData('inventory',matData); alert('✅ Merged!'); loadAll();
+        }catch(err){alert('Merge Failed!');}
+    }; r.readAsText(f);
+}
+function importExcel(e){
+    let f = e.target.files[0]; if(!f) return;
+    let r = new FileReader(); r.onload = function(ev){
+        let wb = XLSX.read(ev.target.result, {type:'binary'});
+        let data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+        data.forEach(row=>{
+            let n = String(row['MATERIALS']||row['name']||'').trim(); let q = parseInt(row['QTY']||row['qty']||0);
+            if(!n || !q) return;
+            let ex = matData.find(x=>normStr(x.name)===normStr(n));
+            if(ex){ ex.qty += q; }else{ matData.push({name:n, unit:'Pcs', qty:q, photo:'', date:getDate()}); }
+        });
+        saveData('inventory',matData); loadInventory(); loadMonitoring(); alert('Import Done!');
+    }; r.readAsBinaryString(f);
+}
+function clearAllDB(){ 
+    if(currentUser.role === 'user' || currentUser.role === 'admin') {
+        return alert('❌ Operational Access Revoked: Admin and User profiles cannot flush system databases!');
+    }
+    if(confirm('Delete all data permanently?')){ 
+        localStorage.clear(); 
+        location.reload(); 
+    } 
+}
+</script>
 </body>
 </html>
