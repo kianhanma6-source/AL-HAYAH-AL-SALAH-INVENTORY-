@@ -299,17 +299,17 @@
         <button class="btn-sm btn-danger" onclick="logout()">LOGOUT</button>
     </div>
 
-    <div class="tab-menu">
+    <div class="tab-menu" id="mainTabMenu">
         <button class="tab-btn active" onclick="openTab('returned')">RETURNED WM</button>
         <button class="tab-btn" onclick="openTab('accomplish')">ACCOMPLISHMENT</button>
         <button class="tab-btn" onclick="openTab('logistic')">LOGISTIC</button>
-        <button class="tab-btn" onclick="openTab('users')">USERS</button>
-        <button class="tab-btn" onclick="openTab('settings')">SETTINGS</button>
+        <button class="tab-btn" onclick="openTab('users')" id="btnUsersTab">USERS</button>
+        <button class="tab-btn" onclick="openTab('settings')" id="btnSettingsTab">SETTINGS</button>
     </div>
 
     <!-- RETURNED WM -->
     <div id="returned" class="tab-content active">
-        <div class="card">
+        <div class="card" id="retFormCard">
             <div class="search-panel">
                 <input type="text" id="searchRetAll" placeholder="🔍 Search All..." oninput="loadRet()">
                 <div class="search-actions">
@@ -331,16 +331,16 @@
                 <label>NAME</label>
                 <div class="combo-wrap">
                     <select id="retName"></select>
-                    <button class="btn-sm" onclick="addName('retName')">+</button>
-                    <button class="btn-sm btn-danger" onclick="delName('retName')">-</button>
+                    <button class="btn-sm" onclick="addName('retName')" id="btnAddRetName">+</button>
+                    <button class="btn-sm btn-danger" onclick="delName('retName')" id="btnDelRetName">-</button>
                 </div>
             </div>
             <div class="form-group">
                 <label>AREA</label>
                 <div class="combo-wrap">
                     <select id="retArea"></select>
-                    <button class="btn-sm" onclick="addArea('retArea')">+</button>
-                    <button class="btn-sm btn-danger" onclick="delArea('retArea')">-</button>
+                    <button class="btn-sm" onclick="addArea('retArea')" id="btnAddRetArea">+</button>
+                    <button class="btn-sm btn-danger" onclick="delArea('retArea')" id="btnDelRetArea">-</button>
                 </div>
             </div>
             <div class="form-group">
@@ -351,7 +351,7 @@
                 <label>KEY NO.</label>
                 <input type="text" id="retKey">
             </div>
-            <div class="btn-group">
+            <div class="btn-group" id="retBtnGroup">
                 <button class="btn-sm btn-success" onclick="addRet()">💾 SAVE </button>
                 <button class="btn-sm btn-danger" onclick="delRet()">🗑️DELETE</button>
             </div>
@@ -388,7 +388,7 @@
 
     <!-- ACCOMPLISHMENT -->
     <div id="accomplish" class="tab-content">
-        <div class="card">
+        <div class="card" id="accFormCard">
             <div class="search-panel">
                 <input type="text" id="searchAccAll" placeholder="🔍 Search All..." oninput="loadAcc()">
                 <div class="search-actions">
@@ -407,16 +407,16 @@
                 <label>NAME</label>
                 <div class="combo-wrap">
                     <select id="accName"></select>
-                    <button class="btn-sm" onclick="addName('accName')">+</button>
-                    <button class="btn-sm btn-danger" onclick="delName('accName')">-</button>
+                    <button class="btn-sm" onclick="addName('accName')" id="btnAddAccName">+</button>
+                    <button class="btn-sm btn-danger" onclick="delName('accName')" id="btnDelAccName">-</button>
                 </div>
             </div>
             <div class="form-group">
                 <label>AREA</label>
                 <div class="combo-wrap">
                     <select id="accArea"></select>
-                    <button class="btn-sm" onclick="addArea('accArea')">+</button>
-                    <button class="btn-sm btn-danger" onclick="delArea('accArea')">-</button>
+                    <button class="btn-sm" onclick="addArea('accArea')" id="btnAddAccArea">+</button>
+                    <button class="btn-sm btn-danger" onclick="delArea('accArea')" id="btnDelAccArea">-</button>
                 </div>
             </div>
             <div class="form-group">
@@ -428,15 +428,15 @@
                         <option value="ASSEMBLE MACHINE">ASSEMBLE MACHINE</option>
                         <option value="RENEW MACHINE">RENEW MACHINE</option>
                     </select>
-                    <button class="btn-sm" onclick="addAct()">+</button>
-                    <button class="btn-sm btn-danger" onclick="delAct()">-</button>
+                    <button class="btn-sm" onclick="addAct()" id="btnAddAccAct">+</button>
+                    <button class="btn-sm btn-danger" onclick="delAct()" id="btnDelAccAct">-</button>
                 </div>
             </div>
             <div class="form-group">
                 <label>QTY</label>
                 <input type="number" id="accQty" min="1">
             </div>
-            <div class="btn-group">
+            <div class="btn-group" id="accBtnGroup">
                 <button class="btn-sm btn-success" onclick="addAcc()">💾 SAVE</button>
                 <button class="btn-sm btn-danger" onclick="delAcc()">🗑️ DELETE</button>
             </div>
@@ -481,7 +481,7 @@
         
         <!-- INVENTORY -->
         <div id="inventory" class="tab-content active">
-            <div class="card">
+            <div class="card" id="invFormCard">
                 <div class="search-panel">
                     <input type="text" id="searchInvAll" placeholder="🔍 Search All..." oninput="loadInventory()">
                     <div class="search-actions">
@@ -535,7 +535,7 @@
                     <label>DATE & TIME</label>
                     <input type="text" id="matDate" readonly>
                 </div>
-                <div class="btn-group">
+                <div class="btn-group" id="invBtnGroup">
                     <button class="btn-sm btn-success" onclick="addMat()">💾 SAVE</button>
                     <button class="btn-sm btn-danger" onclick="delMat()">🗑️ DELETE</button>
                 </div>
@@ -571,7 +571,7 @@
         
         <!-- DEPLOYMENT -->
         <div id="deployment" class="tab-content">
-            <div class="card">
+            <div class="card" id="depFormCard">
                 <div class="search-panel">
                     <input type="text" id="searchDepAll" placeholder="🔍 Search All..." oninput="loadDep()">
                     <div class="search-actions">
@@ -596,16 +596,16 @@
                     <label>NAME</label>
                     <div class="combo-wrap">
                         <select id="depName"></select>
-                        <button class="btn-sm" onclick="addName('depName')">+</button>
-                        <button class="btn-sm btn-danger" onclick="delName('depName')">-</button>
+                        <button class="btn-sm" onclick="addName('depName')" id="btnAddDepName">+</button>
+                        <button class="btn-sm btn-danger" onclick="delName('depName')" id="btnDelDepName">-</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>AREA</label>
                     <div class="combo-wrap">
                         <select id="depArea"></select>
-                        <button class="btn-sm" onclick="addArea('depArea')">+</button>
-                        <button class="btn-sm btn-danger" onclick="delArea('depArea')">-</button>
+                        <button class="btn-sm" onclick="addArea('depArea')" id="btnAddDepArea">+</button>
+                        <button class="btn-sm btn-danger" onclick="delArea('depArea')" id="btnDelDepArea">-</button>
                     </div>
                 </div>
                 <div class="form-group" style="align-items: flex-start;">
@@ -627,7 +627,7 @@
                                         <option value="PKGS">PKGS</option><option value="Drums">Drums</option>
                                     </select>
                                     <input type="number" class="depQtyInp" min="1" placeholder="QTY" style="max-width: 80px;">
-                                    <div style="display: flex; gap: 4px; margin-left: auto;">
+                                    <div style="display: flex; gap: 4px; margin-left: auto;" id="depRowButtons">
                                         <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addDepRow()">+</button>
                                         <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeDepRow(this)">-</button>
                                     </div>
@@ -636,7 +636,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="btn-group">
+                <div class="btn-group" id="depBtnGroup">
                     <button class="btn-sm btn-success" onclick="addDep()">💾 RELEASED / SAVE</button>
                 </div>
             </div>
@@ -735,6 +735,7 @@
                 <select id="newRole">
                     <option value="user">USER</option>
                     <option value="admin">ADMIN</option>
+                    <option value="webpage view">WEBPAGE VIEW</option>
                 </select>
             </div>
             <div class="btn-group">
@@ -799,7 +800,8 @@ function getDate(){
 const DEFAULT_USERS = [
     {username:'NAD ITALLO', password:'Onin23', fullname:'NINO ANGELO ITALLO', position:'Lead Programmer', role:'programmer'},
     {username:'LUO', password:'LUO123', fullname:'LUO JIANBIN', position:'Manager', role:'admin'},
-    {username:'Wai', password:'admin123', fullname:'WAI PHYO KYAW', position:'Warehouse Logistics Incharge', role:'user'}
+    {username:'Wai', password:'admin123', fullname:'WAI PHYO KYAW', position:'Warehouse Logistics Incharge', role:'user'},
+    {username:'alhaya', password:'alsalah', fullname:'Alhaya View', position:'Webpage Viewer', role:'webpage view'}
 ];
 const DEFAULT_NAMES = [
     'khan zeb','Rashid Bipuah','Wisdom','Md Rifat Hossain','Abul','afsar','John Kerandi','Alimamy',
@@ -992,7 +994,7 @@ const INITIAL_INVENTORY = [
     {name: 'PVC Pipe (3")', unit: 'PCS', qty: 15, photo: '', date: getDate()},
     {name: 'PVC Pipe (2")', unit: 'PCS', qty: 5, photo: '', date: getDate()},
     {name: 'PPR Pipe (25mm)', unit: 'PCS', qty: 50, photo: '', date: getDate()},
-    {name: 'PVC Black Pipe (20mm)', unit: 'PCS', qty: 25, photo: '', date: getDate()}
+    {name: 'PVC Black Pipe (20mm)', unit: 'PCS', qty: 25, photo: '', date: getDate()]
 ];
 
 let users = loadData('users', DEFAULT_USERS);
@@ -1057,6 +1059,7 @@ function checkSession(){
                 document.getElementById('loginFooter').classList.add('hidden');
                 document.body.classList.remove('login-mode');
                 document.getElementById('mainPage').classList.remove('hidden'); 
+                applyRolePermissions();
                 loadAll(); 
                 return; 
             }
@@ -1087,7 +1090,36 @@ function login(){
     document.body.classList.remove('login-mode');
     document.getElementById('mainPage').classList.remove('hidden');
     
+    applyRolePermissions();
     loadAll();
+}
+
+function applyRolePermissions() {
+    if(!currentUser) return;
+    if(currentUser.role === 'webpage view') {
+        // Hide users and settings tabs completely
+        let usersBtn = document.getElementById('btnUsersTab');
+        let settingsBtn = document.getElementById('btnSettingsTab');
+        if(usersBtn) usersBtn.style.display = 'none';
+        if(settingsBtn) settingsBtn.style.display = 'none';
+
+        // Hide add/edit/delete buttons & form action inputs across data tabs
+        const hideList = [
+            'retFormCard', 'accFormCard', 'invFormCard', 'depFormCard',
+            'retBtnGroup', 'accBtnGroup', 'invBtnGroup', 'depBtnGroup',
+            'btnAddRetName', 'btnDelRetName', 'btnAddRetArea', 'btnDelRetArea',
+            'btnAddAccName', 'btnDelAccName', 'btnAddAccArea', 'btnDelAccArea', 'btnAddAccAct', 'btnDelAccAct',
+            'btnAddDepName', 'btnDelDepName', 'btnAddDepArea', 'btnDelDepArea', 'depRowButton'
+        ];
+        
+        hideList.forEach(id => {
+            let el = document.getElementById(id);
+            if(el) el.style.display = 'none';
+        });
+
+        // Hide multi row add/remove buttons inside deployment
+        document.querySelectorAll('#depRowButtons').forEach(el => el.style.display = 'none');
+    }
 }
 
 function logout(){ 
@@ -1162,12 +1194,13 @@ function loadNames(){
     });
 }
 function addName(id){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let n = prompt('New Name:'); if(!n) return;
     if(nameList.includes(n.trim())) return alert('Already exists!');
     nameList.push(n.trim()); saveData('names',nameList); loadNames();
 }
 function delName(id){
-    if(currentUser.role=='user') return alert('No Permission!');
+    if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
     let sel = document.getElementById(id); let n = sel.value;
     if(!confirm(`Delete "${n}"?`)) return;
     nameList = nameList.filter(x=>x!==n); saveData('names',nameList); loadNames();
@@ -1181,24 +1214,26 @@ function loadAreas(){
     });
 }
 function addArea(id){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let a = prompt('New Area:'); if(!a) return;
     if(areaList.includes(a.trim())) return alert('Already exists!');
     areaList.push(a.trim()); saveData('areas',areaList); loadAreas();
 }
 function delArea(id){
-    if(currentUser.role=='user') return alert('No Permission!');
+    if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
     let sel = document.getElementById(id); let a = sel.value;
     if(!confirm(`Delete "${a}"?`)) return;
     areaList = areaList.filter(x=>x!==a); saveData('areas',areaList); loadAreas();
 }
 
 function addAct(){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let a = prompt('New Activity:'); if(!a) return;
     if(actList.includes(a.trim())) return alert('Already exists!');
     actList.push(a.trim()); saveData('activities', actList); loadActSelect();
 }
 function delAct(){
-    if(currentUser.role=='user') return alert('No Permission!');
+    if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
     let sel = document.getElementById('accAct'); let a = sel.value;
     if(actList.length <= 1) return alert('Cannot delete all activities!');
     if(!confirm(`Delete activity "${a}"?`)) return;
@@ -1217,6 +1252,7 @@ function getFilteredRet(){
 }
 function resetRetFilter(){document.getElementById('searchRetAll').value=''; loadRet();}
 function addRet(){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let d = {
         transNo:document.getElementById('retTrans').value,
         name:document.getElementById('retName').value,
@@ -1246,6 +1282,7 @@ function loadRet(){
     list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${index + 1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`);
 }
 function fillRet(t){
+    if(currentUser && currentUser.role === 'webpage view') return;
     let x = retData.find(i=>i.transNo===t);
     document.getElementById('retTrans').value=x.transNo; 
     document.getElementById('retFormDate').value=x.date || getDate();
@@ -1255,7 +1292,7 @@ function fillRet(t){
     document.getElementById('retKey').value=x.keyNo;
 }
 function delRet(){
-    if(currentUser.role=='user') return alert('No Permission!');
+    if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
     let t = document.getElementById('retTrans').value; if(!t) return alert('Select record first!');
     if(!confirm('Delete this record?')) return;
     retData = retData.filter(x=>x.transNo!==t); saveData('returned',retData); loadRet(); clearRet();
@@ -1269,6 +1306,7 @@ function getFilteredAcc(){
 }
 function resetAccFilter(){document.getElementById('searchAccAll').value=''; loadAcc();}
 function addAcc(){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let q = parseInt(document.getElementById('accQty').value); if(!q || q<=0) return alert('Enter valid quantity!');
     let key = document.getElementById('accKey').value;
     let currentDate = document.getElementById('accDate').value || getDate();
@@ -1298,6 +1336,7 @@ function loadAcc() {
     list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillAcc('${x.key}')"><td>${index + 1}</td><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`);
 }
 function fillAcc(key) {
+    if(currentUser && currentUser.role === 'webpage view') return;
     let x = accData.find(i => String(i.key) === String(key));
     if(x) {
         document.getElementById('accKey').value = x.key;
@@ -1309,7 +1348,7 @@ function fillAcc(key) {
     }
 }
 function delAcc(){
-    if(currentUser.role=='user') return alert('No Permission!');
+    if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
     let key = document.getElementById('accKey').value; if(!key) return alert('Select record first!');
     if(!confirm('Delete this record?')) return;
     accData = accData.filter(x=>String(x.key)!==String(key)); saveData('accomplish',accData); loadAcc(); clearAcc();
@@ -1372,6 +1411,7 @@ function getFilteredInv(){
 function resetInvFilter(){document.getElementById('searchInvAll').value=''; loadInventory();}
 
 function addMat(){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let name = document.getElementById('matName').value.trim(); 
     let unit = document.getElementById('matUnit').value; 
     let qty = parseInt(document.getElementById('matQty').value);
@@ -1415,6 +1455,7 @@ function loadInventory(){
 }
 
 function fillMat(name) {
+    if(currentUser && currentUser.role === 'webpage view') return;
     let x = matData.find(i => normStr(i.name) === normStr(name));
     if(x) {
         document.getElementById('matOrigName').value = x.name;
@@ -1459,7 +1500,7 @@ function clearMat() {
 }
 
 function delMat(){
-    if(currentUser.role=='user') return alert('No Permission!');
+    if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
     let name = document.getElementById('matName').value.trim(); if(!name) return alert('Select a material first!');
     if(!confirm(`Delete permanently "${name}"?`)) return;
     let idx = matData.findIndex(x=> normStr(x.name) === normStr(name)); 
@@ -1482,6 +1523,7 @@ function loadDepMat(targetSelect = null){
 }
 
 function addDepRow(){
+    if(currentUser && currentUser.role === 'webpage view') return;
     let container = document.getElementById('multiDepContainer'); 
     let row = document.createElement('div'); 
     row.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
@@ -1520,6 +1562,7 @@ function getFilteredDep(){
 }
 function resetDepFilter(){document.getElementById('searchDepAll').value=''; loadDep();}
 function addDep(){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
     let rows = document.querySelectorAll('#multiDepContainer > div'); if(!rows.length) return alert('Add items!');
     let transNo = document.getElementById('depTrans').value; let name = document.getElementById('depName').value; let area = document.getElementById('depArea').value; let date = document.getElementById('depDate').value || getDate();
     
@@ -1608,6 +1651,7 @@ function loadDep(){
     });
 }
 function fillDep(tNo) {
+    if(currentUser && currentUser.role === 'webpage view') return;
     let items = depData.filter(x => x.transNo === tNo);
     if(!items.length) return;
     
@@ -1653,7 +1697,7 @@ function fillDep(tNo) {
 }
 
 function mergeDBBtnTrigger() {
-    if(currentUser.role === 'user') {
+    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) {
         return alert('❌ User profile level has no access to data merging utilities!');
     }
     document.getElementById('mergeFile').click();
@@ -1741,8 +1785,8 @@ function fillUser(uname) {
     }
 }
 function addUser(){
-    if(currentUser.role === 'user') {
-         return alert('❌ Security Privilege Restrained: User module context cannot register profiles.');
+    if(currentUser && currentUser.role === 'webpage view') {
+         return alert('❌ Security Privilege Restrained.');
     }
     let u = document.getElementById('newUser').value.trim(); 
     let p = document.getElementById('newPass').value; 
@@ -1771,7 +1815,7 @@ function addUser(){
     saveData('users',users); loadUsers(); clearUser();
 }
 function delUser(){
-    if(currentUser.role!=='admin' && currentUser.role!=='programmer') return alert('No Permission!');
+    if(currentUser && (currentUser.role!=='admin' && currentUser.role!=='programmer')) return alert('No Permission!');
     let u = document.getElementById('newUser').value.trim(); if(!u) return alert('Select user first!');
     if(u.toLowerCase() === 'nad itallo') return alert('❌ Restriction Triggered: Data parameters matching NAD ITALLO are permanently undeletable.');
     if(u.toLowerCase() === currentUser.username.toLowerCase()) return alert('Cannot delete active self!');
@@ -1918,69 +1962,111 @@ function exportAllPDFData() {
                     <span style="font-size: 13px; font-weight: bold; color: #222; margin-top: 2px; display: inline-block;">${loggedPos}</span>
                 </div>
             </div>
-
-            <script>
-                window.onload = function() {
-                    setTimeout(function() {
-                        window.print();
-                    }, 500);
-                };
-            <\/script>
         </body>
         </html>
     `);
     printWindow.document.close();
+    setTimeout(() => { printWindow.print(); }, 500);
 }
 
 function backupDB(){
-    let backup = { users, nameList, areaList, actList, retData, accData, matData, depData, transCounter, depTransCounter };
-    let blob = new Blob([JSON.stringify(backup,null,2)], {type:'application/json'});
-    let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href=url; a.download=`ALHAYA_BACKUP.json`; a.click();
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
+    let db = {
+        transNo: localStorage.getItem(DB_TRANS),
+        depTransNo: localStorage.getItem(DB_DEP_TRANS),
+        users, nameList, areaList, actList, retData, accData, matData, depData
+    };
+    let blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
+    let a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `ALHAYA_SYSTEM_BACKUP_${getDate().replace(/[/:]/g, '-')}.json`; a.click();
 }
+
 function restoreDB(e){
-    let f = e.target.files[0]; if(!f) return;
-    let r = new FileReader(); r.onload = function(ev){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
+    let file = e.target.files[0]; if(!file) return;
+    let r = new FileReader();
+    r.onload = function(evt){
         try{
-            let d = JSON.parse(ev.target.result);
-            if(d.users) users=d.users; if(d.retData) retData=d.retData; if(d.matData) matData=d.matData; if(d.depData) depData=d.depData;
-            saveData('users',users); saveData('returned',retData); saveData('inventory',matData); saveData('deployment',depData);
-            alert('✅ Restored!'); loadAll();
-        }catch(err){alert('Invalid File!');}
-    }; r.readAsText(f);
+            let db = JSON.parse(evt.target.result);
+            if(db.transNo) localStorage.setItem(DB_TRANS, db.transNo);
+            if(db.depTransNo) localStorage.setItem(DB_DEP_TRANS, db.depTransNo);
+            if(db.users) saveData('users', db.users);
+            if(db.nameList) saveData('names', db.nameList);
+            if(db.areaList) saveData('areas', db.areaList);
+            if(db.actList) saveData('activities', db.actList);
+            if(db.retData) saveData('returned', db.retData);
+            if(db.accData) saveData('accomplish', db.accData);
+            if(db.matData) saveData('inventory', db.matData);
+            if(db.depData) saveData('deployment', db.depData);
+            alert('✅ Restore Successful! Reloading...');
+            location.reload();
+        }catch(err){alert('❌ Invalid JSON File!');}
+    };
+    r.readAsText(file);
 }
+
 function mergeDB(e){
-    let f = e.target.files[0]; if(!f) return;
-    let r = new FileReader(); r.onload = function(ev){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
+    let file = e.target.files[0]; if(!file) return;
+    let r = new FileReader();
+    r.onload = function(evt){
         try{
-            let d = JSON.parse(ev.target.result);
-            if(d.retData) retData = [...retData, ...d.retData.filter(x=>!retData.some(y=>y.transNo===x.transNo))];
-            if(d.matData) matData = [...matData, ...d.matData.filter(x=>!matData.some(y=>y.name===x.name))];
-            saveData('returned',retData); saveData('inventory',matData); alert('✅ Merged!'); loadAll();
-        }catch(err){alert('Merge Failed!');}
-    }; r.readAsText(f);
+            let db = JSON.parse(evt.target.result);
+            if(db.retData) { let current = loadData('returned', []); saveData('returned', [...current, ...db.retData]); }
+            if(db.accData) { let current = loadData('accomplish', []); saveData('accomplish', [...current, ...db.accData]); }
+            if(db.matData) { let current = loadData('inventory', []); saveData('inventory', [...current, ...db.matData]); }
+            if(db.depData) { let current = loadData('deployment', []); saveData('deployment', [...current, ...db.depData]); }
+            alert('✅ Merge Successful! Reloading...');
+            location.reload();
+        }catch(err){alert('❌ Invalid JSON File!');}
+    };
+    r.readAsText(file);
 }
+
 function importExcel(e){
-    let f = e.target.files[0]; if(!f) return;
-    let r = new FileReader(); r.onload = function(ev){
-        let wb = XLSX.read(ev.target.result, {type:'binary'});
-        let data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-        data.forEach(row=>{
-            let n = String(row['MATERIALS']||row['name']||'').trim(); let q = parseInt(row['QTY']||row['qty']||0);
-            if(!n || !q) return;
-            let ex = matData.find(x=>normStr(x.name)===normStr(n));
-            if(ex){ ex.qty += q; }else{ matData.push({name:n, unit:'Pcs', qty:q, photo:'', date:getDate()}); }
-        });
-        saveData('inventory',matData); loadInventory(); loadMonitoring(); alert('Import Done!');
-    }; r.readAsBinaryString(f);
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
+    let file = e.target.files[0]; if(!file) return;
+    let r = new FileReader();
+    r.onload = function(evt){
+        try{
+            let data = new Uint8Array(evt.target.result);
+            let workbook = XLSX.read(data, {type:'array'});
+            let firstSheetName = workbook.SheetNames[0];
+            let worksheet = workbook.Sheets[firstSheetName];
+            let json = XLSX.utils.sheet_to_json(worksheet);
+            
+            if(!json.length) return alert('❌ Empty Excel Sheet!');
+            
+            let importedCount = 0;
+            json.forEach(row => {
+                let name = row['MATERIALS'] || row['Material'] || row['name'] || row['Name'];
+                let unit = row['UNIT'] || row['Unit'] || row['unit'] || 'Pcs';
+                let qty = parseInt(row['QTY'] || row['Qty'] || row['qty'] || 0);
+                if(name) {
+                    let idx = matData.findIndex(m => normStr(m.name) === normStr(name));
+                    if(idx > -1) {
+                        matData[idx].qty += qty;
+                    } else {
+                        matData.push({name: String(name).trim(), unit: String(unit).trim(), qty: qty, photo: '', date: getDate()});
+                    }
+                    importedCount++;
+                }
+            });
+            saveData('inventory', matData);
+            alert(`✅ Successfully imported ${importedCount} items! Reloading...`);
+            loadAll();
+        }catch(err){ alert('❌ Failed to parse Excel file!'); }
+    };
+    r.readAsArrayBuffer(file);
 }
-function clearAllDB(){ 
-    if(currentUser.role === 'user' || currentUser.role === 'admin') {
-        return alert('❌ Operational Access Revoked: Admin and User profiles cannot flush system databases!');
-    }
-    if(confirm('Delete all data permanently?')){ 
-        localStorage.clear(); 
-        location.reload(); 
-    } 
+
+function clearAllDB(){
+    if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
+    if(!confirm('⚠️ DANGER: Clear all system databases and logs?')) return;
+    if(!confirm('⚠️ Are you absolutely sure? This cannot be undone!')) return;
+    localStorage.clear();
+    alert('🧹 System cleaned successfully! Reloading...');
+    location.reload();
 }
 </script>
 </body>
