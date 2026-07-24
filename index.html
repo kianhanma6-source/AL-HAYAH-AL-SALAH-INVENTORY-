@@ -7,7 +7,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>AL HAYAH AL SAHLAH - WM SYSTEM</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/emailjs.min.js"></script>
     <style>
         *{box-sizing:border-box; font-family:Arial, sans-serif; margin:0; padding:0;}
         
@@ -270,7 +269,7 @@
         }
     </style>
 </head>
-<body class="login-mode" onload="checkSession(); loadLatestBackup(); setInterval(autoSaveAll, 60000);">
+<body class="login-mode" onload="checkSession()">
 
 <div id="loginPage" class="login-box">
     <img src="logo.png" class="login-logo" alt="Logo">
@@ -301,16 +300,14 @@
     </div>
 
     <div class="tab-menu" id="mainTabMenu">
-        <button class="tab-btn active" onclick="openTab('returned')">SCRAP</button>
+        <button class="tab-btn active" onclick="openTab('returned')">RETURNED WM</button>
         <button class="tab-btn" onclick="openTab('accomplish')">ACCOMPLISHMENT</button>
         <button class="tab-btn" onclick="openTab('logistic')">LOGISTIC</button>
-        <button class="tab-btn" onclick="window.location.href='installation.html'">INSTALLATIONS</button>
-        <button class="tab-btn" onclick="window.location.href='board.html'">BOARD</button>
-        <button class="tab-btn" onclick="openTab('users')" id="btnUsersTab">USER MANAGEMENT</button>
+        <button class="tab-btn" onclick="openTab('users')" id="btnUsersTab">USERS</button>
         <button class="tab-btn" onclick="openTab('settings')" id="btnSettingsTab">SETTINGS</button>
     </div>
 
-    <!-- RETURNED WM / SCRAP -->
+    <!-- RETURNED WM -->
     <div id="returned" class="tab-content active">
         <div class="card" id="retFormCard">
             <div class="search-panel">
@@ -346,23 +343,14 @@
                     <button class="btn-sm btn-danger" onclick="delArea('retArea')" id="btnDelRetArea">-</button>
                 </div>
             </div>
-            
-            <div class="form-group" style="align-items: flex-start;">
-                <label>MULTIPLE TRANSACTIONS</label>
-                <div style="flex: 1; width: 100%;">
-                    <div id="multiRetContainer">
-                        <div style="display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;">
-                            <input type="text" class="retWmInp" placeholder="WM NO." style="flex: 1;">
-                            <input type="text" class="retKeyInp" placeholder="KEY NO." style="flex: 1;">
-                            <div style="display: flex; gap: 4px;">
-                                <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addRetRow()">+</button>
-                                <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeRetRow(this)">-</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label>WM NO.</label>
+                <input type="text" id="retWm">
             </div>
-
+            <div class="form-group">
+                <label>KEY NO.</label>
+                <input type="text" id="retKey">
+            </div>
             <div class="btn-group" id="retBtnGroup">
                 <button class="btn-sm btn-success" onclick="addRet()">💾 SAVE </button>
                 <button class="btn-sm btn-danger" onclick="delRet()">🗑️DELETE</button>
@@ -377,10 +365,10 @@
                         <p>Electronics Devices and Repair</p>
                     </div>
                 </div>
-                <div class="print-report-title">SCRAP REPORT</div>
+                <div class="print-report-title">RETURNED WM REPORT</div>
                 <div class="print-date-generated" id="printDateRet">Date Generated: </div>
             </div>
-            <h4>📋 SCRAP HISTORY</h4>
+            <h4>📋 RETURNED WM HISTORY</h4>
             <div class="table-responsive">
                 <table id="retList">
                     <thead><tr><th>No.</th><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
@@ -792,186 +780,6 @@
 </div>
 
 <script>
-// ==============================================
-// ✅ KUMPLETO NA NGAYON ANG LAHAT NG DETALYE
-// ==============================================
-const GITHUB_CONFIG = {
-username: "kianhanma6-source",
-repo: "AL-HAYAH-AL-SALAH-INVENTORY-",
-token: "ghp_GpQVo6PArwzYiIMbD83oIqAxxFfIy0y1yvy"
-};
-const EMAILJS_CONFIG = {
-publicKey: "CSXinwDSul1N1MZjs",
-serviceId: "service_8t7j9ul",
-templateId: "template_ca6bczz",
-toEmail: "ninoangeloitallo5@gmail.com"
-};
-const ALLOWED_USERS = ["NAD ITALLO", "WAI"];
-const FLAG_GITHUB = "flag_last_github_week";
-const FLAG_EMAIL = "flag_last_email_date";
-// ==============================================
-// 🔒 CHECK: TAYO LANG DALAWA ANG PWEDE
-// ==============================================
-function checkPermission() {
-if (!currentUser || !ALLOWED_USERS.includes(currentUser.username.trim())) {
-alert("❌ ACCESS DENIED: Tanging NAD ITALLO o WAI lang ang pinapayagan!");
-console.log("❌ ACCESS DENIED");
-return false;
-}
-return true;
-}
-// ==============================================
-// 📅 CHECK: GITHUB = TUWING LUNES LANG
-// ==============================================
-function shouldSaveGitHub() {
-const now = new Date();
-const day = now.getDay(); // 1 = Lunes
-const weekId = `${now.getFullYear()}-W${getWeekNum(now)}`;
-const last = localStorage.getItem(FLAG_GITHUB) || "";
-return day === 1 && last !== weekId;
-}
-function getWeekNum(date) {
-const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-const start = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-return Math.ceil((((d - start) / 86400000) + 1) / 7);
-}
-// ==============================================
-// 📧 CHECK: EMAIL = ISANG BESES LANG SA ISANG ARAW
-// ==============================================
-function shouldSendEmail() {
-const today = new Date().toISOString().slice(0,10);
-const last = localStorage.getItem(FLAG_EMAIL) || "";
-return last !== today;
-}
-// ==============================================
-// 📄 PANGALAN NG FILE: inventory-YYYY-MM-DD.json
-// ==============================================
-function getFileName() {
-const d = new Date();
-const y = d.getFullYear();
-const m = String(d.getMonth()+1).padStart(2,'0');
-const day = String(d.getDate()).padStart(2,'0');
-return `inventory-${y}-${m}-${day}.json`;
-}
-// ==============================================
-// 📧 IPADALA SA EMAIL
-// ==============================================
-async function sendBackupToEmail(fileName) {
-try {
-const fullData = {
-returned: localStorage.getItem('returned'),
-accomplish: localStorage.getItem('accomplish'),
-inventory: localStorage.getItem('inventory'),
-deployment: localStorage.getItem('deployment'),
-users: localStorage.getItem('users'),
-names: localStorage.getItem('names'),
-areas: localStorage.getItem('areas'),
-activities: localStorage.getItem('activities'),
-transNo: transCounter,
-depTransNo: depTransCounter,
-savedOn: new Date().toLocaleString()
-};
-await emailjs.send(
-EMAILJS_CONFIG.serviceId,
-EMAILJS_CONFIG.templateId,
-{
-to_email: EMAILJS_CONFIG.toEmail,
-file_name: fileName,
-saved_date: new Date().toLocaleString(),
-backup_content: JSON.stringify(fullData, null, 2)
-},
-EMAILJS_CONFIG.publicKey
-);
-
-localStorage.setItem(FLAG_EMAIL, new Date().toISOString().slice(0,10));
-console.log(`✅ EMAIL SENT: ${fileName}`);
-
-} catch (err) {
-console.warn("⚠️ Email failed:", err.message);
-}
-}
-// ==============================================
-// 🚀 PANGUNAHING AUTO-SAVE
-// ==============================================
-async function autoSaveAll() {
-if (!checkPermission()) return;
-const file = getFileName();
-const fullData = {
-returned: localStorage.getItem('returned'),
-accomplish: localStorage.getItem('accomplish'),
-inventory: localStorage.getItem('inventory'),
-deployment: localStorage.getItem('deployment'),
-users: localStorage.getItem('users'),
-names: localStorage.getItem('names'),
-areas: localStorage.getItem('areas'),
-activities: localStorage.getItem('activities'),
-transNo: transCounter,
-depTransNo: depTransCounter,
-savedOn: new Date().toISOString()
-};
-// ✅ GITHUB: TUWING LUNES LANG
-if (shouldSaveGitHub()) {
-try {
-const content = btoa(unescape(encodeURIComponent(JSON.stringify(fullData, null, 2))));
-const check = await fetch(
-`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${file}`,
-{ headers: { Authorization: `token ${GITHUB_CONFIG.token}` } }
-);
-const body = { message: `Weekly Backup: ${new Date().toLocaleString()}`, content: content };
-if (check.ok) body.sha = (await check.json()).sha;
-
-await fetch(
-`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${file}`,
-{
-method: "PUT",
-headers: { Authorization: `token ${GITHUB_CONFIG.token}`, "Content-Type": "application/json" },
-body: JSON.stringify(body)
-}
-);
-
-localStorage.setItem(FLAG_GITHUB, `${new Date().getFullYear()}-W${getWeekNum(new Date())}`);
-console.log(`✅ GITHUB SAVED: ${file}`);
-} catch(e) { console.log("ℹ️ GitHub skipped:", e.message); }
-
-}
-// ✅ EMAIL: ISANG BESES LANG SA ARAW
-if (shouldSendEmail()) {
-await sendBackupToEmail(file);
-}
-}
-// ==============================================
-// 📅 PAGBUKAS NG SYSTEM: KUNIN ANG PINAKABAGONG DATA
-// ==============================================
-async function loadLatestBackup() {
-if (!checkPermission()) return;
-try {
-const list = await fetch(
-`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/`,
-{ headers: { Authorization: `token ${GITHUB_CONFIG.token}` } }
-);
-if (!list.ok) return;
-const files = await list.json();
-const backups = files
-.filter(f => f.name.startsWith("inventory-") && f.name.endsWith(".json"))
-.sort((a,b) => b.name.localeCompare(a.name));
-
-if (backups.length === 0) return;
-
-const latest = backups[0];
-const data = await (await fetch(latest.download_url)).json();
-
-Object.keys(data).forEach(key => {
-if (key === 'transNo') transCounter = parseInt(data[key]);
-else if (key === 'depTransNo') depTransCounter = parseInt(data[key]);
-else localStorage.setItem(key, data[key]);
-});
-
-console.log(`✅ LOADED LATEST: ${latest.name}`);
-
-} catch(e) { console.log("ℹ️ Gamit lokal na data:", e.message); }
-}
-
 const DB_TRANS = 'transNo';
 const DB_DEP_TRANS = 'depTransNo';
 const SESSION_KEY = 'alhaya_session';
@@ -1434,26 +1242,6 @@ function loadActSelect(){
     if(prevVal) sel.value = prevVal;
 }
 
-function addRetRow(){
-    if(currentUser && currentUser.role === 'webpage view') return;
-    let container = document.getElementById('multiRetContainer'); 
-    let row = document.createElement('div'); 
-    row.style.cssText = 'display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
-    row.innerHTML = `
-        <input type="text" class="retWmInp" placeholder="WM NO." style="flex: 1;">
-        <input type="text" class="retKeyInp" placeholder="KEY NO." style="flex: 1;">
-        <div style="display: flex; gap: 4px;">
-            <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addRetRow()">+</button>
-            <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeRetRow(this)">-</button>
-        </div>
-    `;
-    container.appendChild(row); 
-}
-function removeRetRow(btn){
-    let rows = document.querySelectorAll('#multiRetContainer > div');
-    if(rows.length > 1){ btn.closest('div[style*="gap: 8px"]').remove(); } else { alert('Cannot delete the last row!'); }
-}
-
 function getFilteredRet(){
     let s = normStr(document.getElementById('searchRetAll').value);
     return retData.filter(x=> normStr(x.transNo+' '+x.wmNo+' '+x.keyNo+' '+x.name+' '+x.area+' '+x.date).includes(s))
@@ -1462,37 +1250,25 @@ function getFilteredRet(){
 function resetRetFilter(){document.getElementById('searchRetAll').value=''; loadRet();}
 function addRet(){
     if(currentUser && currentUser.role === 'webpage view') return alert('No Permission!');
-    let rows = document.querySelectorAll('#multiRetContainer > div'); if(!rows.length) return alert('Add items!');
-    let transNo = document.getElementById('retTrans').value; 
-    let name = document.getElementById('retName').value; 
-    let area = document.getElementById('retArea').value; 
-    let date = document.getElementById('retFormDate').value;
-
-    let isExisting = retData.some(x => x.transNo === transNo);
-    if(isExisting) {
-        retData = retData.filter(x => x.transNo !== transNo);
-    }
-
-    let valid = true; let saveList = [];
-    rows.forEach(row=>{
-        let wmNo = row.querySelector('.retWmInp').value.trim(); 
-        let keyNo = row.querySelector('.retKeyInp').value.trim();
-        if(!wmNo || !keyNo) { valid=false; return; }
-        saveList.push({transNo, wmNo, keyNo, name, area, date});
-    });
-
-    if(!valid) return alert('Fill all WM No. and Key No. fields correctly!');
-
-    saveList.forEach(d => retData.push(d));
-
-    if(!isExisting){ 
+    let d = {
+        transNo:document.getElementById('retTrans').value,
+        name:document.getElementById('retName').value,
+        area:document.getElementById('retArea').value,
+        wmNo:document.getElementById('retWm').value.trim(),
+        keyNo:document.getElementById('retKey').value.trim(),
+        date:document.getElementById('retFormDate').value
+    };
+    if(!d.wmNo || !d.keyNo) return alert('Fill all fields!');
+    let existingIndex = retData.findIndex(x=>x.transNo === d.transNo);
+    if(existingIndex > -1){ 
+        retData[existingIndex] = d; 
+        alert('✅ Record Updated!');
+    }else{ 
+        retData.push(d); 
         transCounter++; 
         localStorage.setItem(DB_TRANS,transCounter); 
         alert('✅ Saved!');
-    } else {
-        alert('✅ Record Updated!');
     }
-
     saveData('returned',retData); loadRet(); clearRet(); loadTransNo();
 }
 function loadRet(){
@@ -1500,38 +1276,17 @@ function loadRet(){
     let list = getFilteredRet();
     let tb = document.getElementById('retList').querySelector('tbody'); tb.innerHTML='';
     if(!list.length) return tb.innerHTML='<tr><td colspan="7" class="empty">No Records Found</td></tr>';
-    
-    let counter = 1;
-    list.forEach((x)=> {
-        tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${counter++}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`;
-    });
+    list.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillRet('${x.transNo}')"><td>${index + 1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`);
 }
 function fillRet(t){
     if(currentUser && currentUser.role === 'webpage view') return;
-    let items = retData.filter(i=>i.transNo===t);
-    if(!items.length) return;
-
-    document.getElementById('retTrans').value=items[0].transNo; 
-    document.getElementById('retFormDate').value=items[0].date || getDate();
-    document.getElementById('retName').value=items[0].name;
-    document.getElementById('retArea').value=items[0].area; 
-
-    let container = document.getElementById('multiRetContainer');
-    container.innerHTML = '';
-
-    items.forEach(x => {
-        let row = document.createElement('div');
-        row.style.cssText = 'display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;';
-        row.innerHTML = `
-            <input type="text" class="retWmInp" placeholder="WM NO." style="flex: 1;" value="${x.wmNo}">
-            <input type="text" class="retKeyInp" placeholder="KEY NO." style="flex: 1;" value="${x.keyNo}">
-            <div style="display: flex; gap: 4px;">
-                <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addRetRow()">+</button>
-                <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeRetRow(this)">-</button>
-            </div>
-        `;
-        container.appendChild(row);
-    });
+    let x = retData.find(i=>i.transNo===t);
+    document.getElementById('retTrans').value=x.transNo; 
+    document.getElementById('retFormDate').value=x.date || getDate();
+    document.getElementById('retName').value=x.name;
+    document.getElementById('retArea').value=x.area; 
+    document.getElementById('retWm').value=x.wmNo; 
+    document.getElementById('retKey').value=x.keyNo;
 }
 function delRet(){
     if(currentUser && (currentUser.role=='user' || currentUser.role=='webpage view')) return alert('No Permission!');
@@ -1539,21 +1294,7 @@ function delRet(){
     if(!confirm('Delete this record?')) return;
     retData = retData.filter(x=>x.transNo!==t); saveData('returned',retData); loadRet(); clearRet();
 }
-function clearRet(){ 
-    document.getElementById('multiRetContainer').innerHTML = `
-        <div style="display: flex; gap: 8px; margin-bottom: 10px; align-items: center; background: rgba(15,23,42,0.4); padding: 10px; border-radius: 10px; border: 1px solid #334155;">
-            <input type="text" class="retWmInp" placeholder="WM NO." style="flex: 1;">
-            <input type="text" class="retKeyInp" placeholder="KEY NO." style="flex: 1;">
-            <div style="display: flex; gap: 4px;">
-                <button class="btn-sm btn-success" style="padding: 10px 14px;" onclick="addRetRow()">+</button>
-                <button class="btn-sm btn-danger" style="padding: 10px 14px;" onclick="removeRetRow(this)">-</button>
-            </div>
-        </div>
-    `;
-    document.getElementById('retFormDate').value=getDate(); 
-    document.getElementById('retTrans').value=''; 
-    loadTransNo(); 
-}
+function clearRet(){ document.getElementById('retWm').value=''; document.getElementById('retKey').value=''; document.getElementById('retFormDate').value=getDate(); document.getElementById('retTrans').value=''; loadTransNo(); }
 
 function getFilteredAcc(){
     let s = normStr(document.getElementById('searchAccAll').value);
@@ -2015,280 +1756,336 @@ function exportMonitoringExcel() {
         'STATUS': getStockStatus(x.qty, x.unit).text
     }));
     
-    let ws = XLSX.utils.json_to_sheet(reportData);
+    let ws = XLSX.utils.json_to_sheet(reportData.length ? reportData : [{ Status: 'No Alerts Found' }]);
     let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Critical Stock");
-    XLSX.writeFile(wb, "Critical_Stock_Monitoring.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, 'Stock Alerts');
+    XLSX.writeFile(wb, 'CRITICAL_STOCK_MONITORING.xlsx');
 }
 
 function loadUsers(){
+    users = loadData('users', DEFAULT_USERS);
     let tb = document.getElementById('userList').querySelector('tbody'); tb.innerHTML='';
-    users.forEach((x, index)=>tb.innerHTML+=`<tr><td>${index + 1}</td><td>${x.username}</td><td>${x.fullname||'-'}</td><td>${x.position||'-'}</td><td>${x.role.toUpperCase()}</td></tr>`);
+    users.forEach((x, index)=>tb.innerHTML+=`<tr onclick="fillUser('${x.username}')"><td>${index + 1}</td><td>${x.username}</td><td>${x.fullname || ''}</td><td>${x.position || ''}</td><td>${x.role.toUpperCase()}</td></tr>`);
+}
+function fillUser(uname) {
+    let x = users.find(i => normStr(i.username) === normStr(uname));
+    if(x) {
+        document.getElementById('userMode').value = 'edit';
+        document.getElementById('newUser').value = x.username;
+        document.getElementById('newPass').value = x.password;
+        document.getElementById('newFullName').value = x.fullname || '';
+        document.getElementById('newPosition').value = x.position || '';
+        document.getElementById('newRole').value = x.role;
+    }
 }
 function addUser(){
-    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) return alert('No Permission!');
-    let u = document.getElementById('newUser').value.trim();
-    let p = document.getElementById('newPass').value;
-    let f = document.getElementById('newFullName').value.trim();
-    let pos = document.getElementById('newPosition').value.trim();
-    let r = document.getElementById('newRole').value;
-    if(!u || !p) return alert('Enter Username and Password!');
-    let idx = users.findIndex(x=>x.username === u);
-    if(idx > -1){
-        users[idx].password = p;
-        users[idx].fullname = f;
-        users[idx].position = pos;
-        users[idx].role = r;
-        alert('✅ User Updated!');
-    }else{
-        users.push({username:u, password:p, fullname:f, position:pos, role:r});
-        alert('✅ User Added!');
+    if(currentUser && currentUser.role === 'webpage view') {
+         return alert('❌ Security Privilege Restrained.');
     }
-    saveData('users', users); loadUsers(); clearUser();
+    let u = document.getElementById('newUser').value.trim(); 
+    let p = document.getElementById('newPass').value; 
+    let fullname = document.getElementById('newFullName').value.trim();
+    let position = document.getElementById('newPosition').value.trim();
+    let r = document.getElementById('newRole').value;
+    
+    if(!u || !p) return alert('Fill fields!');
+    
+    if(u.toLowerCase() === 'nad itallo') {
+         return alert('❌ System Violation: Properties belonging to NAD ITALLO cannot be created or modified.');
+    }
+    if(r === 'programmer') {
+         return alert('❌ Restricted: System only permits one Programmer framework account to stay active.');
+    }
+    
+    let idx = users.findIndex(x=>x.username.toLowerCase() === u.toLowerCase());
+    if(idx > -1){ 
+        if(users[idx].username === 'NAD ITALLO') return alert('❌ Error: NAD ITALLO is system locked.');
+        users[idx] = {username:u, password:p, fullname, position, role:r}; 
+        alert('✅ User Profile Updated!');
+    }else{ 
+        users.push({username:u, password:p, fullname, position, role:r}); 
+        alert('✅ User Profile Saved!');
+    }
+    saveData('users',users); loadUsers(); clearUser();
 }
 function delUser(){
-    if(currentUser && (currentUser.role !== 'programmer' && currentUser.role !== 'admin')) return alert('No Permission!');
-    let u = document.getElementById('newUser').value.trim();
-    if(!u) return alert('Enter username to delete!');
-    if(u === 'NAD ITALLO') return alert('Cannot delete master programmer!');
+    if(currentUser && (currentUser.role!=='admin' && currentUser.role!=='programmer')) return alert('No Permission!');
+    let u = document.getElementById('newUser').value.trim(); if(!u) return alert('Select user first!');
+    if(u.toLowerCase() === 'nad itallo') return alert('❌ Restriction Triggered: Data parameters matching NAD ITALLO are permanently undeletable.');
+    if(u.toLowerCase() === currentUser.username.toLowerCase()) return alert('Cannot delete active self!');
     if(!confirm(`Delete user "${u}"?`)) return;
-    users = users.filter(x=>x.username !== u);
-    saveData('users', users); loadUsers(); clearUser();
+    users = users.filter(x=>x.username.toLowerCase() !== u.toLowerCase()); saveData('users',users); loadUsers(); clearUser();
 }
-function clearUser(){
-    document.getElementById('newUser').value='';
-    document.getElementById('newPass').value='';
-    document.getElementById('newFullName').value='';
-    document.getElementById('newPosition').value='';
-}
-
-function backupDB(){
-    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) return alert('No Permission!');
-    let d = {
-        returned: localStorage.getItem('returned'),
-        accomplish: localStorage.getItem('accomplish'),
-        inventory: localStorage.getItem('inventory'),
-        deployment: localStorage.getItem('deployment'),
-        users: localStorage.getItem('users'),
-        names: localStorage.getItem('names'),
-        areas: localStorage.getItem('areas'),
-        activities: localStorage.getItem('activities'),
-        transNo: transCounter,
-        depTransNo: depTransCounter
-    };
-    let blob = new Blob([JSON.stringify(d, null, 2)], {type:'application/json'});
-    let a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `AlHaya_System_Backup_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
+function clearUser() { 
+    document.getElementById('userMode').value = 'new'; 
+    document.getElementById('newUser').value = ''; 
+    document.getElementById('newPass').value = ''; 
+    document.getElementById('newFullName').value = '';
+    document.getElementById('newPosition').value = '';
 }
 
-function restoreDB(e){
-    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) return alert('No Permission!');
-    let file = e.target.files[0]; if(!file) return;
-    let reader = new FileReader();
-    reader.onload = function(evt){
-        try{
-            let data = JSON.parse(evt.target.result);
-            if(data.returned) localStorage.setItem('returned', data.returned);
-            if(data.accomplish) localStorage.setItem('accomplish', data.accomplish);
-            if(data.inventory) localStorage.setItem('inventory', data.inventory);
-            if(data.deployment) localStorage.setItem('deployment', data.deployment);
-            if(data.users) localStorage.setItem('users', data.users);
-            if(data.names) localStorage.setItem('names', data.names);
-            if(data.areas) localStorage.setItem('areas', data.areas);
-            if(data.activities) localStorage.setItem('activities', data.activities);
-            if(data.transNo) { transCounter = parseInt(data.transNo); localStorage.setItem(DB_TRANS, transCounter); }
-            if(data.depTransNo) { depTransCounter = parseInt(data.depTransNo); localStorage.setItem(DB_DEP_TRANS, depTransCounter); }
-            alert('✅ Restore Successful!'); location.reload();
-        }catch(err){alert('❌ Invalid JSON File!');}
-    };
-    reader.readAsText(file);
-}
+function exportExcelResult(type){
+    let data, filename;
+    if(type==='ret'){ data=getFilteredRet(); filename='RETURNED_WM.xlsx'; }
+    else if(type==='acc'){ data=getFilteredAcc(); filename='ACCOMPLISHMENT.xlsx'; }
+    else if(type==='inv'){ data=getFilteredInv(); filename='INVENTORY.xlsx'; }
+    else if(type==='dep'){ data=getFilteredDep(); filename='DEPLOYMENT.xlsx'; }
+    else return;
+    
+    let formattedData = data.map((item, index) => {
+        let copy = { 'No.': index + 1, ...item };
+        delete copy.key;
+        delete copy.photo;
+        return copy;
+    });
 
-function mergeDB(e){
-    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) return alert('No Permission!');
-    let file = e.target.files[0]; if(!file) return;
-    let reader = new FileReader();
-    reader.onload = function(evt){
-        try{
-            let data = JSON.parse(evt.target.result);
-            
-            if(data.returned) {
-                let incomingRet = JSON.parse(data.returned);
-                let currentRet = loadData('returned', []);
-                incomingRet.forEach(inc => {
-                    if(!currentRet.some(c => c.transNo === inc.transNo && c.wmNo === inc.wmNo)) {
-                        currentRet.push(inc);
-                    }
-                });
-                saveData('returned', currentRet);
-            }
-            
-            if(data.accomplish) {
-                let incomingAcc = JSON.parse(data.accomplish);
-                let currentAcc = loadData('accomplish', []);
-                incomingAcc.forEach(inc => {
-                    if(!currentAcc.some(c => c.key === inc.key)) {
-                        currentAcc.push(inc);
-                    }
-                });
-                saveData('accomplish', currentAcc);
-            }
-            
-            if(data.inventory) {
-                let incomingInv = JSON.parse(data.inventory);
-                let currentInv = loadData('inventory', INITIAL_INVENTORY);
-                incomingInv.forEach(inc => {
-                    let idx = currentInv.findIndex(c => normStr(c.name) === normStr(inc.name));
-                    if(idx > -1) {
-                        currentInv[idx].qty = parseInt(currentInv[idx].qty) + parseInt(inc.qty);
-                    } else {
-                        currentInv.push(inc);
-                    }
-                });
-                saveData('inventory', currentInv);
-            }
-            
-            if(data.deployment) {
-                let incomingDep = JSON.parse(data.deployment);
-                let currentDep = loadData('deployment', []);
-                incomingDep.forEach(inc => {
-                    if(!currentDep.some(c => c.transNo === inc.transNo && c.material === inc.material)) {
-                        currentDep.push(inc);
-                    }
-                });
-                saveData('deployment', currentDep);
-            }
-            
-            if(data.names) {
-                let incomingNames = JSON.parse(data.names);
-                let currentNames = loadData('names', DEFAULT_NAMES);
-                incomingNames.forEach(n => {
-                    if(!currentNames.includes(n)) currentNames.push(n);
-                });
-                saveData('names', currentNames);
-            }
-            
-            if(data.areas) {
-                let incomingAreas = JSON.parse(data.areas);
-                let currentAreas = loadData('areas', DEFAULT_AREAS);
-                incomingAreas.forEach(a => {
-                    if(!currentAreas.includes(a)) currentAreas.push(a);
-                });
-                saveData('areas', currentAreas);
-            }
+    let ws = XLSX.utils.json_to_sheet(formattedData);
+    const max_cols = Object.keys(formattedData[0] || {}).map(key => {
+        let max_len = key.length;
+        formattedData.forEach(row => {
+            let val = String(row[key] || '');
+            if(val.length > max_len) max_len = val.length;
+        });
+        return { wch: max_len + 3 };
+    });
+    ws['!cols'] = max_cols;
 
-            alert('✅ Merge Successful!'); location.reload();
-        }catch(err){alert('❌ Invalid JSON File for Merge!');}
-    };
-    reader.readAsText(file);
-}
-
-function importExcel(e){
-    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) return alert('No Permission!');
-    let file = e.target.files[0]; if(!file) return;
-    let reader = new FileReader();
-    reader.onload = function(evt){
-        try{
-            let data = new Uint8Array(evt.target.result);
-            let workbook = XLSX.read(data, {type: 'array'});
-            let firstSheet = workbook.SheetNames[0];
-            let rows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
-            
-            let currentInv = loadData('inventory', INITIAL_INVENTORY);
-            rows.forEach(r => {
-                let name = r['MATERIALS'] || r['Material'] || r['name'] || r['NAME'];
-                let unit = r['UNIT'] || r['Unit'] || r['unit'] || 'Pcs';
-                let qty = parseInt(r['QTY'] || r['Qty'] || r['qty'] || 0);
-                if(name) {
-                    let idx = currentInv.findIndex(c => normStr(c.name) === normStr(name));
-                    if(idx > -1) {
-                        currentInv[idx].qty += qty;
-                    } else {
-                        currentInv.push({name: String(name), unit: String(unit), qty: qty, photo: '', date: getDate()});
-                    }
-                }
-            });
-            saveData('inventory', currentInv);
-            alert('✅ Excel Imported Successfully!'); location.reload();
-        }catch(err){alert('❌ Error parsing Excel file!');}
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-function exportExcelResult(type) {
-    let ws, filename;
-    if(type === 'ret') {
-        let list = getFilteredRet();
-        let data = list.map((x, i)=>({ 'No.': i+1, 'TRANS NO': x.transNo, 'WM NO.': x.wmNo, 'KEY NO.': x.keyNo, 'NAME': x.name, 'AREA': x.area, 'DATE & TIME': x.date }));
-        ws = XLSX.utils.json_to_sheet(data);
-        filename = "Scrap_Report.xlsx";
-    } else if(type === 'acc') {
-        let list = getFilteredAcc();
-        let data = list.map((x, i)=>({ 'No.': i+1, 'NAME': x.name, 'AREA': x.area, 'ACTIVITY': x.activity, 'QTY': x.qty, 'DATE & TIME': x.date }));
-        ws = XLSX.utils.json_to_sheet(data);
-        filename = "Accomplishment_Report.xlsx";
-    } else if(type === 'inv') {
-        let list = getFilteredInv();
-        let data = list.map((x, i)=>({ 'No.': i+1, 'MATERIALS': x.name, 'UNIT': x.unit, 'QTY': x.qty, 'STATUS': getStockStatus(x.qty, x.unit).text, 'LAST UPDATED': x.date }));
-        ws = XLSX.utils.json_to_sheet(data);
-        filename = "Inventory_Report.xlsx";
-    } else if(type === 'dep') {
-        let list = getFilteredDep();
-        let data = list.map((x, i)=>({ 'No.': i+1, 'TRANS NO': x.transNo, 'DATE': x.date, 'MATERIALS': x.material, 'UNIT': x.unit, 'QTY': x.qty, 'NAME': x.name, 'AREA': x.area }));
-        ws = XLSX.utils.json_to_sheet(data);
-        filename = "Deployment_Report.xlsx";
-    }
-    if(ws) {
-        let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, filename);
-    }
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Data Report');
+    XLSX.writeFile(wb, filename);
 }
 
 function exportAllExcelData() {
     let wb = XLSX.utils.book_new();
+    let sheets = [
+        { data: retData, name: 'Returned WM' },
+        { data: accData, name: 'Accomplishment' },
+        { data: matData, name: 'Inventory' },
+        { data: depData, name: 'Deployment' }
+    ];
     
-    let retList = getFilteredRet();
-    if(retList.length) {
-        let d = retList.map((x, i)=>({ 'No.': i+1, 'TRANS NO': x.transNo, 'WM NO.': x.wmNo, 'KEY NO.': x.keyNo, 'NAME': x.name, 'AREA': x.area, 'DATE & TIME': x.date }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d), "Scrap");
-    }
-    
-    let accList = getFilteredAcc();
-    if(accList.length) {
-        let d = accList.map((x, i)=>({ 'No.': i+1, 'NAME': x.name, 'AREA': x.area, 'ACTIVITY': x.activity, 'QTY': x.qty, 'DATE & TIME': x.date }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d), "Accomplishment");
-    }
-    
-    let invList = getFilteredInv();
-    if(invList.length) {
-        let d = invList.map((x, i)=>({ 'No.': i+1, 'MATERIALS': x.name, 'UNIT': x.unit, 'QTY': x.qty, 'STATUS': getStockStatus(x.qty, x.unit).text, 'LAST UPDATED': x.date }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d), "Inventory");
-    }
-    
-    let depList = getFilteredDep();
-    if(depList.length) {
-        let d = depList.map((x, i)=>({ 'No.': i+1, 'TRANS NO': x.transNo, 'DATE': x.date, 'MATERIALS': x.material, 'UNIT': x.unit, 'QTY': x.qty, 'NAME': x.name, 'AREA': x.area }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d), "Deployment");
-    }
-    
-    XLSX.writeFile(wb, "AlHaya_Complete_System_Report.xlsx");
+    sheets.forEach(s => {
+        let cleanData = s.data.map((item, index) => {
+            let copy = { 'No.': index + 1, ...item };
+            delete copy.key; 
+            delete copy.photo;
+            return copy;
+        });
+        let ws = XLSX.utils.json_to_sheet(cleanData.length ? cleanData : [{ Status: 'No Records Found' }]);
+        XLSX.utils.book_append_sheet(wb, ws, s.name);
+    });
+    XLSX.writeFile(wb, 'ALL_SYSTEM_DATA_REPORT.xlsx');
 }
 
-function saveAsPDFResult(){
-    window.print();
-}
+function saveAsPDFResult(){ window.print(); }
 
 function exportAllPDFData() {
-    window.print();
+    let printWindow = window.open('', '_blank');
+    if(!printWindow) return alert('Pop-up blocked! Please allow pop-ups for this site.');
+    
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>AL HAYAH AL SAHLAH - ALL SYSTEM DATA REPORT</title>
+            <style>
+                body { font-family: Arial, sans-serif; color: #000; padding: 20px; }
+                h2 { color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 5px; margin-top: 30px; font-size: 14px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11px; }
+                th, td { border: 1px solid #000; padding: 6px 5px; text-align: left; }
+                th { background: #e2e8f0; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <h1 style="text-align: center; font-size: 18px;">AL HAYAH AL SAHLAH</h1>
+            <p style="text-align: center; font-weight: bold; font-size: 12px;">COMPLETE SYSTEM DATA REPORT</p>
+            
+            <h2>1. RETURNED WM</h2>
+            <table>
+                <thead><tr><th>No.</th><th>TRANS NO</th><th>WM NO.</th><th>KEY NO.</th><th>NAME</th><th>AREA</th><th>DATE & TIME</th></tr></thead>
+                <tbody>
+                    ${retData.length ? retData.map((x, i) => `<tr><td>${i+1}</td><td>${x.transNo}</td><td>${x.wmNo}</td><td>${x.keyNo}</td><td>${x.name}</td><td>${x.area}</td><td>${x.date}</td></tr>`).join('') : '<tr><td colspan="7">No records</td></tr>'}
+                </tbody>
+            </table>
+
+            <h2>2. ACCOMPLISHMENT</h2>
+            <table>
+                <thead><tr><th>No.</th><th>NAME</th><th>AREA</th><th>ACTIVITY</th><th>QTY</th><th>DATE & TIME</th></tr></thead>
+                <tbody>
+                    ${accData.length ? accData.map((x, i) => `<tr><td>${i+1}</td><td>${x.name}</td><td>${x.area}</td><td>${x.activity}</td><td>${x.qty}</td><td>${x.date}</td></tr>`).join('') : '<tr><td colspan="6">No records</td></tr>'}
+                </tbody>
+            </table>
+
+            <h2>3. INVENTORY</h2>
+            <table>
+                <thead><tr><th>No.</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>STATUS</th><th>LAST UPDATED</th></tr></thead>
+                <tbody>
+                    ${matData.length ? matData.map((x, i) => {
+                        let st = getStockStatus(x.qty, x.unit);
+                        return `<tr><td>${i+1}</td><td>${x.name}</td><td>${x.unit}</td><td>${x.qty}</td><td>${st.text}</td><td>${x.date}</td></tr>`;
+                    }).join('') : '<tr><td colspan="6">No records</td></tr>'}
+                </tbody>
+            </table>
+
+            <h2>4. DEPLOYMENT</h2>
+            <table>
+                <thead><tr><th>No.</th><th>TRANS NO</th><th>DATE</th><th>MATERIALS</th><th>UNIT</th><th>QTY</th><th>NAME</th><th>AREA</th></tr></thead>
+                <tbody>
+                    ${depData.length ? depData.map((x, i) => `<tr><td>${i+1}</td><td>${x.transNo}</td><td>${x.date}</td><td>${x.material}</td><td>${x.unit}</td><td>${x.qty}</td><td>${x.name}</td><td>${x.area}</td></tr>`).join('') : '<tr><td colspan="8">No records</td></tr>'}
+                </tbody>
+            </table>
+
+            <script>
+                window.onload = function() { window.print(); }
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
 }
 
-function clearAllDB(){
-    if(currentUser && (currentUser.role !== 'programmer' && currentUser.role !== 'admin')) return alert('No Permission!');
-    if(!confirm('⚠️ DANGER: This will clear all system records permanently! Proceed?')) return;
-    localStorage.clear();
-    location.reload();
+function backupDB() {
+    let db = {
+        users, nameList, areaList, actList, retData, accData, matData, depData,
+        transCounter, depTransCounter
+    };
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+    let dlAnchorElem = document.createElement('a');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", "AL_HAYAH_AL_SAHLAH_BACKUP.json");
+    dlAnchorElem.click();
+}
+
+function restoreDB(event) {
+    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) {
+        return alert('❌ Permission Denied!');
+    }
+    let file = event.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let db = JSON.parse(e.target.result);
+            if(db.users) { users = db.users; saveData('users', users); }
+            if(db.nameList) { nameList = db.nameList; saveData('names', nameList); }
+            if(db.areaList) { areaList = db.areaList; saveData('areas', areaList); }
+            if(db.actList) { actList = db.actList; saveData('activities', actList); }
+            if(db.retData) { retData = db.retData; saveData('returned', retData); }
+            if(db.accData) { accData = db.accData; saveData('accomplish', accData); }
+            if(db.matData) { matData = db.matData; saveData('inventory', matData); }
+            if(db.depData) { depData = db.depData; saveData('deployment', depData); }
+            if(db.transCounter) { transCounter = db.transCounter; localStorage.setItem(DB_TRANS, transCounter); }
+            if(db.depTransCounter) { depTransCounter = db.depTransCounter; localStorage.setItem(DB_DEP_TRANS, depTransCounter); }
+            alert('✅ Database restored successfully!');
+            loadAll();
+        } catch(err) {
+            alert('❌ Invalid JSON backup file!');
+        }
+    };
+    reader.readAsText(file);
+}
+
+function mergeDB(event) {
+    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) {
+        return alert('❌ Permission Denied!');
+    }
+    let file = event.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let db = JSON.parse(e.target.result);
+            if(db.retData) {
+                db.retData.forEach(item => {
+                    if(!retData.some(x => x.transNo === item.transNo)) retData.push(item);
+                });
+                saveData('returned', retData);
+            }
+            if(db.accData) {
+                db.accData.forEach(item => {
+                    if(!accData.some(x => String(x.key) === String(item.key))) accData.push(item);
+                });
+                saveData('accomplish', accData);
+            }
+            if(db.matData) {
+                db.matData.forEach(item => {
+                    let idx = matData.findIndex(x => normStr(x.name) === normStr(item.name));
+                    if(idx > -1) {
+                        matData[idx].qty += parseInt(item.qty || 0);
+                    } else {
+                        matData.push(item);
+                    }
+                });
+                saveData('inventory', matData);
+            }
+            if(db.depData) {
+                db.depData.forEach(item => {
+                    if(!depData.some(x => x.transNo === item.transNo && x.material === item.material)) depData.push(item);
+                });
+                saveData('deployment', depData);
+            }
+            alert('✅ Database merged successfully!');
+            loadAll();
+        } catch(err) {
+            alert('❌ Invalid JSON merge file!');
+        }
+    };
+    reader.readAsText(file);
+}
+
+function importExcel(event) {
+    if(currentUser && (currentUser.role === 'user' || currentUser.role === 'webpage view')) {
+        return alert('❌ Permission Denied!');
+    }
+    let file = event.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let data = new Uint8Array(e.target.result);
+            let workbook = XLSX.read(data, {type: 'array'});
+            let firstSheetName = workbook.SheetNames[0];
+            let worksheet = workbook.Sheets[firstSheetName];
+            let json = XLSX.utils.sheet_to_json(worksheet);
+            
+            json.forEach(row => {
+                let name = row['MATERIALS'] || row['Name'] || row['Material'] || '';
+                let unit = row['UNIT'] || row['Unit'] || 'Pcs';
+                let qty = parseInt(row['QTY'] || row['Qty'] || 0);
+                if(name && qty > 0) {
+                    let idx = matData.findIndex(x => normStr(x.name) === normStr(name));
+                    if(idx > -1) {
+                        matData[idx].qty += qty;
+                    } else {
+                        matData.push({name: name, unit: unit, qty: qty, photo: '', date: getDate()});
+                    }
+                }
+            });
+            saveData('inventory', matData);
+            alert('✅ Excel imported and inventory updated successfully!');
+            loadAll();
+        } catch(err) {
+            alert('❌ Error reading Excel file!');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function clearAllDB() {
+    if(currentUser && (currentUser.role !== 'admin' && currentUser.role !== 'programmer')) {
+        return alert('❌ Permission Denied! Admin access required.');
+    }
+    if(!confirm('⚠️ WARNING: This will clear all transaction history and inventory data. Are you sure?')) return;
+    localStorage.removeItem('returned');
+    localStorage.removeItem('accomplish');
+    localStorage.removeItem('inventory');
+    localStorage.removeItem('deployment');
+    retData = [];
+    accData = [];
+    matData = INITIAL_INVENTORY;
+    depData = [];
+    saveData('inventory', matData);
+    alert('✅ System data cleared and reset to default inventory.');
+    loadAll();
 }
 </script>
 </body>
